@@ -1,0 +1,229 @@
+
+// 1. TOPIC REGISTRY
+const CURRICULUM = {
+    
+    known: [
+        { id: 'big', title: 'Big O Notation', type: 'standard' },
+        { id: 'omega', title: 'Omega Ω', type: 'standard' },
+        { id: 'theta', title: 'Theta Θ ', type: 'standard' },
+        { id: 'comp', title: 'Comparing Big O, Omega Ω, Theta Θ ', type: 'standard' }
+    ],
+    algo: [
+        { id: 'sums', title: 'Summation', type: 'custom' },
+        { id: 'recurrence', title: 'Recurrence Relations', type: 'Distribution' }
+    ],
+    dec: [
+        { id: 'mgf_calc', title: 'Moment Generating Functions', type: 'advanced' },
+        { id: 'transform', title: 'Transformations of RVs', type: 'advanced' }
+    ],
+    div: [
+        { id: 'joint_dist', title: 'Joint Distributions (Discrete)', type: 'joint' },
+        { id: 'cond_exp', title: 'Conditional Expectation E[X|Y]', type: 'joint' }
+    ],
+   tra: [
+        { id: 'sheet_taylor', title: 'Taylor, Geometric & Summation', type: 'sheet' },
+        { id: 'sheet_dist', title: 'Distribution Properties Sheet', type: 'sheet' }
+    ],
+    spa: [
+
+    ],
+    gre: [
+        
+    ],
+    qna: [
+        { id: 'brute', title: 'Brute Force', type: 'standard' },
+        { id: 'decrease', title: 'Decrese and Conquer', type: 'standard' },
+        { id: 'divide', title: 'Divide and Conquer', type: 'standard' },
+        { id: 'trans', title: 'Transformation', type: 'standard' },
+        { id: 'space', title: 'Spacetime/Tradeoff', type: 'standard' },
+        { id: 'greed', title: 'Greedy', type: 'standard' }
+       
+    ]
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupNavigation();
+    loadTopic('big', 'known');
+});
+
+function setupNavigation() {
+    const tabs = document.querySelectorAll('.nav-tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            tabs.forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            renderMenu(e.target.dataset.category);
+        });
+    });
+    renderMenu('known');
+}
+
+function renderMenu(category) {
+    const menu = document.getElementById('topic-menu');
+    menu.innerHTML = '';
+    const items = CURRICULUM[category] || [];
+    items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = "p-3 rounded glass cursor-pointer hover:bg-white/5 transition-colors flex items-center gap-3";
+        div.onclick = () => loadTopic(item.id, category);
+        div.innerHTML = `<div class="w-2 h-2 rounded-full bg-red-500"></div><span class="text-sm font-medium">${item.title}</span>`;
+        menu.appendChild(div);
+    });
+}
+
+function loadTopic(id, category) {
+    const root = document.getElementById('topic-root');
+    if (category === 'known' || ALGO_CONTENT[id]) {
+        renderStandardTopic(id, root);
+    } else {
+        root.innerHTML = `<div class="p-10 text-center opacity-50">Content coming soon...</div>`;
+    }
+}
+
+function renderStandardTopic(id, container) {
+    const content = ALGO_CONTENT[id];
+    if (!content) return;
+
+    container.innerHTML = `
+        <div class="flex flex-col h-full">
+            <h2 class="text-2xl font-bold mb-4 border-b border-white/10 pb-2">${content.title}</h2>
+            <div class="flex gap-2 mb-4">
+                <button onclick="switchContentTab('notes')" class="content-tab-btn btn btn-primary text-xs" id="tab-notes">Notes</button>
+                <button onclick="switchContentTab('code')" class="content-tab-btn btn btn-ghost text-xs" id="tab-code">Code</button>
+                <button onclick="switchContentTab('exercise')" class="content-tab-btn btn btn-ghost text-xs" id="tab-exercise">Exercise</button>
+            </div>
+            <div id="content-notes" class="tab-content block animate-fade-in">
+                <div class="text-sm md:text-base leading-relaxed">${content.notes}</div>
+            </div>
+            <div id="content-code" class="tab-content hidden">
+                <pre class="bg-black/30 p-4 rounded-lg overflow-x-auto text-sm text-green-400 font-mono border border-white/10"><code>${content.code}</code></pre>
+            </div>
+            <div id="content-exercise" class="tab-content hidden">
+                <div id="exercise-container" class="glass p-6 rounded-lg min-h-[300px]"></div>
+            </div>
+        </div>
+    `;
+
+    // Initialize logic
+    if (window.exerciseEngine) window.exerciseEngine = null; // Clear old instance
+    window.exerciseEngine = new NotationExercise('exercise-container');
+    window.exerciseEngine.init();
+
+    if (window.MathJax) MathJax.typesetPromise();
+
+    // DRAW THE CHARTS (New Logic)
+    if (id === 'big') drawNotationChart('big', 'chart-big');
+    if (id === 'omega') drawNotationChart('omega', 'chart-omega');
+    if (id === 'theta') drawNotationChart('theta', 'chart-theta');
+}
+
+// --- NEW CHART FUNCTION ---
+function drawNotationChart(type, canvasId) {
+    const ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+
+    // Generate Data points for n = 0 to 10
+    const labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    let datasets = [];
+
+    // Common styling
+    const red = 'rgba(239, 68, 68, 1)';
+    const blue = 'rgba(59, 130, 246, 1)';
+    const green = 'rgba(34, 197, 94, 1)';
+
+    if (type === 'big') {
+        // Big O: t(n) <= c*g(n)
+        // t(n) fluctuates but stays under c*g(n)
+        datasets = [
+            {
+                label: 'c · g(n) (Upper Bound)',
+                data: labels.map(n => n * 1.5 + 2), // Smooth line
+                borderColor: red,
+                borderWidth: 2,
+                borderDash: [5, 5],
+                tension: 0.4
+            },
+            {
+                label: 't(n) (Algorithm)',
+                data: labels.map(n => n + Math.sin(n)*2), // Wobbly line below
+                borderColor: blue,
+                borderWidth: 2,
+                tension: 0.4
+            }
+        ];
+    } else if (type === 'omega') {
+        // Omega: t(n) >= c*g(n)
+        datasets = [
+            {
+                label: 't(n) (Algorithm)',
+                data: labels.map(n => n * 2 + Math.sin(n)*3 + 5), // High wobbly
+                borderColor: blue,
+                borderWidth: 2,
+                tension: 0.4
+            },
+            {
+                label: 'c · g(n) (Lower Bound)',
+                data: labels.map(n => n * 0.8), // Low smooth
+                borderColor: green,
+                borderWidth: 2,
+                borderDash: [5, 5],
+                tension: 0.4
+            }
+        ];
+    } else if (type === 'theta') {
+        // Theta: Sandwiched
+        datasets = [
+            {
+                label: 'c1 · g(n) (Upper)',
+                data: labels.map(n => n * 2.5 + 5),
+                borderColor: red,
+                borderWidth: 1,
+                borderDash: [5, 5],
+                tension: 0.4
+            },
+            {
+                label: 't(n) (Exact)',
+                data: labels.map(n => n * 1.8 + Math.sin(n)), // Middle
+                borderColor: blue,
+                borderWidth: 3,
+                tension: 0.4
+            },
+            {
+                label: 'c2 · g(n) (Lower)',
+                data: labels.map(n => n * 1.0),
+                borderColor: green,
+                borderWidth: 1,
+                borderDash: [5, 5],
+                tension: 0.4
+            }
+        ];
+    }
+
+    new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { display: false, grid: { display: false } },
+                x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888' } }
+            },
+            plugins: {
+                legend: { labels: { color: '#ddd' } }
+            }
+        }
+    });
+}
+
+window.switchContentTab = function(tabName) {
+    document.querySelectorAll('.content-tab-btn').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-ghost');
+    });
+    document.getElementById(`tab-${tabName}`).classList.remove('btn-ghost');
+    document.getElementById(`tab-${tabName}`).classList.add('btn-primary');
+
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById(`content-${tabName}`).classList.remove('hidden');
+}
