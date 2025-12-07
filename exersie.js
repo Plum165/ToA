@@ -37,7 +37,43 @@ class NotationExercise {
                 explanation = "The loop variable 'i' is multiplied by 2 each time. This cuts the problem space in half, resulting in logarithmic time.";
                 break;
         }
+         const qTypes = [
+        {
+            q: "What is the complexity of Brute Force String Matching in the worst case?",
+            a: "O(nm)",
+            options: ["O(n)", "O(nm)", "O(n^2)", "O(log n)"],
+            expl: "We check all 'm' characters of the pattern for every 'n' characters of text."
+        },
+        {
+            q: "How many subsets must be checked for the Knapsack problem (Exhaustive)?",
+            a: "2^n",
+            options: ["n!", "n^2", "2^n", "n"],
+            expl: "Every item can either be IN or OUT. 2 choices for n items = 2^n."
+        },
+        {
+            q: "Which algorithm finds the Convex Hull in O(n^3)?",
+            a: "Brute Force",
+            options: ["QuickHull", "Brute Force", "Graham Scan", "MergeSort"],
+            expl: "Brute force checks every line segment against every other point."
+        }
+    ];
 
+    const randomQ = qTypes[Math.floor(Math.random() * qTypes.length)];
+    
+    this.currentQuestion = { type: randomQ.a, explanation: randomQ.expl };
+    
+    this.container.innerHTML = `
+        <div class="flex flex-col gap-4">
+            <h4 class="text-lg font-bold text-accent">Quiz</h4>
+            <p>${randomQ.q}</p>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                ${randomQ.options.map(opt => 
+                    `<button onclick="exerciseEngine.checkAnswer('${opt}')" class="btn btn-ghost">${opt}</button>`
+                ).join('')}
+            </div>
+            <div id="feedback-area" class="hidden mt-4 p-3 rounded"></div>
+        </div>
+    `;
         this.currentQuestion = { type, explanation };
         this.renderUI(codeSnippet);
     }
@@ -106,6 +142,7 @@ class EfficiencyExercise {
         } else {
             this.generateRecurrenceQuestion();
         }
+        
     }
 
     generateSumQuestion() {

@@ -13,8 +13,11 @@ const CURRICULUM = {
         { id: 'recurrence', title: 'Recurrence Relations', type: 'Distribution' }
     ],
     dec: [
-        { id: 'mgf_calc', title: 'Moment Generating Functions', type: 'advanced' },
-        { id: 'transform', title: 'Transformations of RVs', type: 'advanced' }
+        { id: 'dec_intro', title: 'Intro & Insertion Sort', type: 'standard' },
+        { id: 'dec_topo', title: 'Topological Sort', type: 'standard' },
+        { id: 'dec_perm', title: 'Generating Permutations', type: 'standard' },
+        { id: 'dec_factor', title: 'Decrease by Factor', type: 'standard' },
+        { id: 'dec_var', title: 'Variable Size Decrease', type: 'standard' }
     ],
     div: [
         { id: 'joint_dist', title: 'Joint Distributions (Discrete)', type: 'joint' },
@@ -26,6 +29,12 @@ const CURRICULUM = {
     ],
     spa: [
 
+    ],
+     bru: [
+        { id: 'brute_intro', title: 'Intro & Closest Pair', type: 'standard' },
+        { id: 'bf_string', title: 'String Matching', type: 'standard' },
+    { id: 'bf_geom', title: 'Geometric Problems', type: 'standard' },
+    { id: 'bf_exhaust', title: 'Exhaustive Search', type: 'standard' }
     ],
     gre: [
         
