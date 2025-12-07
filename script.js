@@ -109,6 +109,15 @@ function renderStandardTopic(id, container) {
     window.exerciseEngine = new NotationExercise('exercise-container');
     window.exerciseEngine.init();
 
+    // Determine which exercise engine to use
+    if (id === 'sums' || id === 'recurrence') {
+        window.exerciseEngine = new EfficiencyExercise('exercise-container');
+    } else {
+        // Default for notations (big, omega, etc)
+        window.exerciseEngine = new NotationExercise('exercise-container');
+    }
+    
+    window.exerciseEngine.init();
     if (window.MathJax) MathJax.typesetPromise();
 
     // DRAW THE CHARTS (New Logic)
@@ -116,6 +125,7 @@ function renderStandardTopic(id, container) {
     if (id === 'omega') drawNotationChart('omega', 'chart-omega');
     if (id === 'theta') drawNotationChart('theta', 'chart-theta');
 }
+
 
 // --- NEW CHART FUNCTION ---
 function drawNotationChart(type, canvasId) {

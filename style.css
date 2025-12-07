@@ -182,3 +182,45 @@ canvas {
 ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+/* Force the notes section to ignore code-editor line breaks */
+#content-notes, #content-notes div, #content-notes p {
+    white-space: normal !important; 
+}
+
+/* Force MathJax to stay inline */
+mjx-container[display="false"] {
+    display: inline !important;
+    margin: 0 !important;
+}
+
+
+.code-section-title {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 0.25rem;
+}
+
+.code-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #888;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.05em;
+}
+
+.code-box {
+    background: rgba(0,0,0,0.3);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #a7f3d0; /* Soft Green */
+    overflow-x: auto;
+    border: 1px solid rgba(255,255,255,0.05);
+}

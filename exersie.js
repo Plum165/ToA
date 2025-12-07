@@ -86,5 +86,102 @@ ${code}
     }
 }
 
+class EfficiencyExercise {
+    constructor(containerId) {
+        this.container = document.getElementById(containerId);
+        this.score = 0;
+        this.currentQuestion = null;
+    }
+
+    init() {
+        this.generateQuestion();
+    }
+
+    generateQuestion() {
+        // Randomly decide between Summation (Loop) or Recurrence (Master Theorem)
+        const mode = Math.random() > 0.5 ? 'sum' : 'recurrence';
+        
+        if (mode === 'sum') {
+            this.generateSumQuestion();
+        } else {
+            this.generateRecurrenceQuestion();
+        }
+    }
+
+    generateSumQuestion() {
+        // Generate a loop structure
+        const scenarios = [
+            { code: "for(i=0; i<n; i++)", complexity: "O(n)", explanation: "Single loop from 0 to n." },
+            { code: "for(i=0; i<n; i+=2)", complexity: "O(n)", explanation: "Stepping by 2 still touches n/2 items, which is O(n)." },
+            { code: "for(i=0; i<n; i++) {\n  for(j=0; j<n; j++) { ... } \n}", complexity: "O(n^2)", explanation: "Nested loops: n * n operations." },
+            { code: "for(i=1; i<n; i=i*2)", complexity: "O(log n)", explanation: "The loop variable doubles each time (1, 2, 4, 8...), reaching n in log steps." }
+        ];
+
+        const q = scenarios[Math.floor(Math.random() * scenarios.length)];
+        this.currentQuestion = { ...q, type: 'Summation' };
+        
+        this.renderUI(q.code, ['O(1)', 'O(log n)', 'O(n)', 'O(n^2)']);
+    }
+
+    generateRecurrenceQuestion() {
+        // Generate T(n) = aT(n/b) + n^d
+        // Case 1: a < b^d -> O(n^d)
+        // Case 2: a = b^d -> O(n^d log n)
+        // Case 3: a > b^d -> O(n^log_b(a))
+        
+        const scenarios = [
+            { text: "T(n) = 2T(n/2) + n", ans: "O(n log n)", exp: "Master Theorem: a=2, b=2, d=1. 2 = 2^1. Case 2." }, // Merge Sort
+            { text: "T(n) = 1T(n/2) + 1", ans: "O(log n)", exp: "Binary Search: a=1, b=2, d=0. 1 = 2^0. Case 2." }, // Binary Search
+            { text: "T(n) = 4T(n/2) + n", ans: "O(n^2)", exp: "a=4, b=2, d=1. 4 > 2^1. Roots dominate: n^(log2 4) = n^2." },
+            { text: "T(n) = 1T(n/2) + n", ans: "O(n)", exp: "a=1, b=2, d=1. 1 < 2^1. Driver dominates: n^1." }
+        ];
+
+        const q = scenarios[Math.floor(Math.random() * scenarios.length)];
+        this.currentQuestion = { code: q.text, complexity: q.ans, explanation: q.exp, type: 'Recurrence' };
+
+        this.renderUI(q.text, ['O(log n)', 'O(n)', 'O(n log n)', 'O(n^2)']);
+    }
+
+    renderUI(problemText, options) {
+        this.container.innerHTML = `
+            <div class="flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <h4 class="text-lg font-bold text-accent">Efficiency Analysis: ${this.currentQuestion.type}</h4>
+                    <span class="text-sm bg-white/10 px-2 py-1 rounded">Score: ${this.score}</span>
+                </div>
+                
+                <div class="code-box border-l-4 border-blue-500 text-white whitespace-pre text-base">
+${problemText}
+                </div>
+
+                <p class="text-sm opacity-80">Determine the Time Complexity:</p>
+
+                <div class="grid grid-cols-2 gap-2 mt-2">
+                    ${options.map(opt => 
+                        `<button onclick="exerciseEngine.checkAnswer('${opt}')" class="btn btn-ghost">${opt}</button>`
+                    ).join('')}
+                </div>
+
+                <div id="feedback-area" class="hidden mt-4 p-3 rounded"></div>
+            </div>
+        `;
+    }
+
+    checkAnswer(userAnswer) {
+        const feedback = document.getElementById('feedback-area');
+        feedback.classList.remove('hidden');
+        
+        if (userAnswer === this.currentQuestion.complexity) {
+            this.score++;
+            feedback.className = "mt-4 p-3 rounded bg-green-500/20 border border-green-500 text-green-200";
+            feedback.innerHTML = `<strong>Correct!</strong> <br> ${this.currentQuestion.explanation} <br><br> <button class="btn btn-primary text-xs" onclick="exerciseEngine.generateQuestion()">Next Question</button>`;
+        } else {
+            feedback.className = "mt-4 p-3 rounded bg-red-500/20 border border-red-500 text-red-200";
+            feedback.innerHTML = `<strong>Incorrect.</strong> The answer is ${this.currentQuestion.complexity}. <br> ${this.currentQuestion.explanation} <br><br> <button class="btn btn-ghost text-xs" onclick="exerciseEngine.generateQuestion()">Try Another</button>`;
+        }
+    }
+}
+
 // Global instance to be accessed by onclick events
 let exerciseEngine;
+
