@@ -921,5 +921,528 @@ function fibMemo(n) {
                 '</div>' +
             '</div>'
     },
+    // ============================================
+    // TOPIC: DECREASE & CONQUER INTRO
+    // ============================================
+    'dec_intro': {
+        title: "Decrease & Conquer: Intro & Insertion Sort",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Strategy</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Reduce the problem instance to a smaller instance of the same problem, solve the smaller instance, and then extend the solution to the original instance.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Three Variations</span>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li><strong>Decrease by Constant:</strong> Reduce size by 1 (e.g., Insertion Sort, DFS).</li>' +
+                        '<li><strong>Decrease by Constant Factor:</strong> Reduce size by a factor, usually 2 (e.g., Binary Search, Fake Coin).</li>' +
+                        '<li><strong>Variable Size Decrease:</strong> Size reduction depends on data (e.g., Euclid GCD, Interpolation Search).</li>' +
+                    '</ul>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Insertion Sort</h4>' +
+                    '<p class="text-sm">Considers the element $A[i]$ and inserts it into the already sorted list $A[0 \\dots i-1]$. It works bottom-up.</p>' +
+                    '<p class="text-sm mt-2"><strong>Efficiency:</strong> $\\Theta(n^2)$ worst case, but excellent ($\\{Theta(n)$) for partially sorted arrays.</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">INSERTION SORT</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm InsertionSort(A[0..n-1])\n' +
+                        '  for i <- 1 to n-1 do\n' +
+                        '    v <- A[i]\n' +
+                        '    j <- i - 1\n' +
+                        '    while j >= 0 AND A[j] > v do\n' +
+                        '      A[j + 1] <- A[j]\n' +
+                        '      j <- j - 1\n' +
+                        '    A[j + 1] <- v' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'void insertionSort(int[] arr) {\n' +
+                        '    for (int i = 1; i < arr.length; i++) {\n' +
+                        '        int v = arr[i];\n' +
+                        '        int j = i - 1;\n' +
+                        '        // Shift elements greater than v\n' +
+                        '        while (j >= 0 && arr[j] > v) {\n' +
+                        '            arr[j + 1] = arr[j];\n' +
+                        '            j--;\n' +
+                        '        }\n' +
+                        '        arr[j + 1] = v;\n' +
+                        '    }\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Basic Op: Comparison (arr[j] > v)\n' +
+                        '// Worst Case (Reverse sorted): Sum(1 to n-1) of i\n' +
+                        '// = n(n-1)/2  => Theta(n^2)\n' +
+                        '// Best Case (Sorted): Theta(n)' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: TOPOLOGICAL SORT
+    // ============================================
+    'dec_topo': {
+        title: "Topological Sort",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Definition</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'For a Directed Acyclic Graph (DAG), list the vertices in an order such that for every edge $u \\to v$, $u$ appears before $v$ in the list.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Source Removal Method (Decrease by 1)</span>' +
+                    '<ol class="list-decimal pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li>Identify a <strong>Source</strong> vertex (a vertex with no incoming edges).</li>' +
+                        '<li>Add it to the sorted list.</li>' +
+                        '<li>"Remove" it and all its outgoing edges from the graph.</li>' +
+                        '<li>Repeat until the graph is empty.</li>' +
+                    '</ol>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<p class="text-sm"><strong>Note:</strong> If at any point there are vertices but no source, the graph has a cycle (not a DAG).</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">SOURCE REMOVAL ALGORITHM</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm TopoSort(Graph G)\n' +
+                        '  List L <- empty\n' +
+                        '  while G is not empty do\n' +
+                        '    S <- FindSource(G) // Vertex with in-degree 0\n' +
+                        '    if S is null return "Cycle Detected"\n' +
+                        '    L.append(S)\n' +
+                        '    G.removeVertex(S) // Decreases size by 1\n' +
+                        '  return L' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Concept (Using In-Degree)</span>' +
+                    '<div class="code-box">' +
+                        'List<Integer> topoSort(int V, List<List<Integer>> adj) {\n' +
+                        '    int[] inDegree = new int[V];\n' +
+                        '    // Calculate in-degrees\n' +
+                        '    for (int u = 0; u < V; u++)\n' +
+                        '        for (int v : adj.get(u)) inDegree[v]++;\n' +
+                        '    \n' +
+                        '    Queue<Integer> q = new LinkedList<>();\n' +
+                        '    for (int i = 0; i < V; i++)\n' +
+                        '        if (inDegree[i] == 0) q.add(i);\n' +
+                        '        \n' +
+                        '    List<Integer> result = new ArrayList<>();\n' +
+                        '    while (!q.isEmpty()) {\n' +
+                        '        int u = q.poll();\n' +
+                        '        result.add(u);\n' +
+                        '        // Decrease "virtual" graph size\n' +
+                        '        for (int v : adj.get(u)) {\n' +
+                        '            inDegree[v]--;\n' +
+                        '            if (inDegree[v] == 0) q.add(v);\n' +
+                        '        }\n' +
+                        '    }\n' +
+                        '    return result;\n' +
+                        '}' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: GENERATING PERMUTATIONS
+    // ============================================
+    'dec_perm': {
+        title: "Generating Permutations (Johnson-Trotter)",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Johnson-Trotter Algorithm</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'An algorithm to generate all $n!$ permutations without recursion. It uses the concept of <strong>Mobile Integers</strong>.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Rules</span>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li>Each number has a direction (arrow). Initially: $\\leftarrow 1~ \\leftarrow 2~ \\dots~ \\leftarrow n$.</li>' +
+                        '<li>A number $k$ is <strong>Mobile</strong> if its arrow points to a smaller adjacent neighbor.</li>' +
+                        '<li><strong>Step 1:</strong> Find the largest mobile integer $k$.</li>' +
+                        '<li><strong>Step 2:</strong> Swap $k$ with the neighbor it points to.</li>' +
+                        '<li><strong>Step 3:</strong> Reverse the direction of all elements larger than $k$.</li>' +
+                    '</ul>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">JOHNSON-TROTTER</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm JohnsonTrotter(n)\n' +
+                        '  Initialize array with arrows pointing left\n' +
+                        '  while there exists a mobile integer do\n' +
+                        '    k <- largest mobile integer\n' +
+                        '    swap k and its neighbor in arrow direction\n' +
+                        '    reverse direction of all elements > k\n' +
+                        '    print current permutation' +
+                    '</div>' +
+
+                    '<span class="code-label">Trace Example (n=3)</span>' +
+                    '<div class="code-box">' +
+                        '1. <-1 <-2 <-3  (3 is mobile, swap left)\n' +
+                        '2. <-1 <-3 <-2  (3 is mobile, swap left)\n' +
+                        '3. <-3 <-1 <-2  (3 stuck. 2 is mobile, swap left)\n' +
+                        '4. <-3 <-2 <-1  (Flip 3 > 2. Now: ->3 <-2 <-1)\n' +
+                        '5. ->3 <-2 <-1  (3 mobile right, swap)\n' +
+                        '   ...' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Efficiency: Theta(n!)\n' +
+                        '// It generates every permutation exactly once.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: DECREASE BY FACTOR
+    // ============================================
+    'dec_factor': {
+        title: "Decrease by Constant Factor",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'In these algorithms, the size of the instance is reduced by a constant factor (usually divided by 2) at each step. This typically results in logarithmic complexity $\\Theta(\\log n)$.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Fake Coin Problem</span>' +
+                    '<p class="text-sm">Identify one lighter fake coin among $n$ coins using a balance scale.</p>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">' +
+                        '<li>Divide coins into two piles of size $\\lfloor n/2 \\rfloor$.</li>' +
+                        '<li>Weigh the piles. If equal, the extra coin (if $n$ odd) is fake.</li>' +
+                        '<li>If unequal, repeat with the lighter pile.</li>' +
+                        '<li><strong>Complexity:</strong> $\\Theta(\\log_2 n)$.</li>' +
+                    '</ul>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Multiplication à la Russe</span>' +
+                    '<p class="text-sm">Russian Peasant Multiplication reduces $n \\times m$ to addition and shifting.</p>' +
+                    '<p class="text-sm opacity-80 mt-1">If $n$ is even: $n \\cdot m = (n/2) \\cdot (2m)$</p>' +
+                    '<p class="text-sm opacity-80">If $n$ is odd: $n \\cdot m = ((n-1)/2) \\cdot (2m) + m$</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">RUSSIAN PEASANT MULTIPLICATION</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm Russe(n, m)\n' +
+                        '  res <- 0\n' +
+                        '  while n > 0 do\n' +
+                        '    if n is odd\n' +
+                        '      res <- res + m\n' +
+                        '    n <- n / 2  (Ignore remainder)\n' +
+                        '    m <- m * 2\n' +
+                        '  return res' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'int russianMult(int n, int m) {\n' +
+                        '    int res = 0;\n' +
+                        '    while (n > 0) {\n' +
+                        '        if ((n & 1) == 1) { // is odd\n' +
+                        '            res += m;\n' +
+                        '        }\n' +
+                        '        n = n >> 1; // divide by 2\n' +
+                        '        m = m << 1; // multiply by 2\n' +
+                        '    }\n' +
+                        '    return res;\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// The loop runs log2(n) times.\n' +
+                        '// Only uses addition and bit-shifting (very fast in hardware).\n' +
+                        '// Complexity: Theta(log n)' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: VARIABLE SIZE DECREASE
+    // ============================================
+    'dec_var': {
+        title: "Variable Size Decrease",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Here the size reduction pattern varies at each step. It is not always 1, and not always half.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Euclid\'s Algorithm (GCD)</span>' +
+                    '<p class="text-sm mb-2">Finds Greatest Common Divisor of $m$ and $n$.</p>' +
+                    '<p class="text-sm font-mono bg-black/20 p-2 rounded">gcd(m, n) = gcd(n, m mod n)</p>' +
+                    '<p class="text-sm mt-2">The size reduces by the result of the modulo, which varies.</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Interpolation Search</span>' +
+                    '<p class="text-sm">Like finding a name in a phonebook. Estimate position based on value distribution, rather than just middle.</p>' +
+                    '<p class="text-sm mt-1">Average Case: $\\Theta(\\log \\log n)$ (Very fast). Worst Case: $\\Theta(n)$.</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">SELECTION PROBLEM (k-th Smallest)</div>' +
+                    
+                    '<span class="code-label">Pseudocode (Lomuto Partition)</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm QuickSelect(A[l..r], k)\n' +
+                        '  s <- Partition(A, l, r) // places pivot at s\n' +
+                        '  if s == k return A[s]\n' +
+                        '  else if s > k\n' +
+                        '    QuickSelect(A[l..s-1], k)\n' +
+                        '  else\n' +
+                        '    QuickSelect(A[s+1..r], k)' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'int quickSelect(int[] arr, int l, int r, int k) {\n' +
+                        '    int p = partition(arr, l, r);\n' +
+                        '    if (p == k) return arr[p];\n' +
+                        '    else if (p > k) return quickSelect(arr, l, p - 1, k);\n' +
+                        '    else return quickSelect(arr, p + 1, r, k);\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Unlike QuickSort, we only follow ONE side of the partition.\n' +
+                        '// Average Case: T(n) = T(n/2) + n => Theta(n)\n' +
+                        '// Worst Case: Theta(n^2) (if sorted)\n' +
+                        '// This is Variable Decrease because partition pivot varies.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+    // ============================================
+    // TOPIC: DIVIDE & CONQUER INTRO (MERGE SORT)
+    // ============================================
+    'div_intro': {
+        title: "Divide & Conquer: Merge Sort",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Strategy</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Divide and Conquer involves three steps: <strong>Divide</strong> the problem into smaller sub-problems, <strong>Conquer</strong> them recursively, and <strong>Combine</strong> the results to solve the original problem.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Merge Sort Logic</span>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li><strong>Divide:</strong> Split array $A[0..n-1]$ in half into $B$ and $C$.</li>' +
+                        '<li><strong>Conquer:</strong> Recursively sort $B$ and $C$.</li>' +
+                        '<li><strong>Combine:</strong> Merge sorted arrays $B$ and $C$ back into $A$.</li>' +
+                    '</ul>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Efficiency</h4>' +
+                    '<p class="text-sm">Recurrence: $T(n) = 2T(n/2) + c \\cdot n$</p>' +
+                    '<p class="text-sm mt-1"><strong>Complexity:</strong> $\\Theta(n \\log n)$ in all cases (Best, Average, Worst).</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">MERGE SORT</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm MergeSort(A[0..n-1])\n' +
+                        '  if n > 1\n' +
+                        '    copy A[0..n/2-1] to B\n' +
+                        '    copy A[n/2..n-1] to C\n' +
+                        '    MergeSort(B)\n' +
+                        '    MergeSort(C)\n' +
+                        '    Merge(B, C, A)' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'void mergeSort(int[] a, int n) {\n' +
+                        '    if (n < 2) return;\n' +
+                        '    int mid = n / 2;\n' +
+                        '    int[] l = new int[mid];\n' +
+                        '    int[] r = new int[n - mid];\n' +
+                        '    \n' +
+                        '    // Fill sub-arrays...\n' +
+                        '    mergeSort(l, mid);\n' +
+                        '    mergeSort(r, n - mid);\n' +
+                        '    merge(a, l, r, mid, n - mid);\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Merge Logic</span>' +
+                    '<div class="code-box">' +
+                        '// Merge step compares heads of B and C\n' +
+                        '// and places the smaller one into A.\n' +
+                        '// Efficiency of Merge is Theta(n).' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: QUICKSORT
+    // ============================================
+    'div_quick': {
+        title: "QuickSort",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Partitioning Strategy</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Unlike MergeSort which divides by position (index), QuickSort divides by <strong>value</strong> using a pivot.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Algorithm Steps</span>' +
+                    '<ol class="list-decimal pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li>Select a <strong>Pivot</strong> (e.g., first element, or median).</li>' +
+                        '<li><strong>Partition:</strong> Rearrange list so elements < pivot are on left, elements > pivot are on right.</li>' +
+                        '<li>Exchange pivot with last element of first sublist.</li>' +
+                        '<li>Recursively QuickSort the two sublists.</li>' +
+                    '</ol>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Efficiency Analysis</h4>' +
+                    '<ul class="space-y-1 text-sm font-mono">' +
+                        '<li>Best/Avg: $\\Theta(n \\log n)$ (Split in middle)</li>' +
+                        '<li>Worst: $\\Theta(n^2)$ (Sorted array, bad pivot)</li>' +
+                        '<li>Space: In-place (unlike MergeSort).</li>' +
+                    '</ul>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">QUICKSORT</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm QuickSort(A[l..r])\n' +
+                        '  if l < r\n' +
+                        '    s <- Partition(A, l, r) // s is split position\n' +
+                        '    QuickSort(A, l, s - 1)\n' +
+                        '    QuickSort(A, s + 1, r)' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'void quickSort(int[] arr, int low, int high) {\n' +
+                        '    if (low < high) {\n' +
+                        '        int pi = partition(arr, low, high);\n' +
+                        '        quickSort(arr, low, pi - 1);\n' +
+                        '        quickSort(arr, pi + 1, high);\n' +
+                        '    }\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Partition Logic (Hoare/Lomuto)</span>' +
+                    '<div class="code-box">' +
+                        '// Scans from left (i) finding > pivot\n' +
+                        '// Scans from right (j) finding < pivot\n' +
+                        '// Swaps them until i and j cross.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: GEOMETRIC D&C
+    // ============================================
+    'div_geom': {
+        title: "Geometric D&C: Closest Pair & QuickHull",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Closest Pair (D&C)</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Beats Brute Force ($O(n^2)$) by sorting points by X-coordinate and dividing the plane in half.' +
+                    '</p>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">' +
+                        '<li>Divide points into Left and Right sets by vertical line.</li>' +
+                        '<li>Solve recursively: $d = \\min(d_{left}, d_{right})$.</li>' +
+                        '<li><strong>Straddle Zone:</strong> Check points within distance $d$ of the line. (Only need to check next 5-7 points sorted by Y).</li>' +
+                        '<li><strong>Efficiency:</strong> $\\Theta(n \\log n)$.</li>' +
+                    '</ul>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">QuickHull</span>' +
+                    '<p class="text-sm">Finds Convex Hull using strategy similar to QuickSort.</p>' +
+                    '<ol class="list-decimal pl-5 mt-2 space-y-1 text-sm">' +
+                        '<li>Find left-most ($P_1$) and right-most ($P_2$) points. Draw line $P_1P_2$.</li>' +
+                        '<li>Find point $P_{max}$ furthest from line.</li>' +
+                        '<li>Points inside triangle $P_1 P_{max} P_2$ are ignored.</li>' +
+                        '<li>Recursively process regions to the left/right of the new lines.</li>' +
+                    '</ol>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">QUICKHULL ALGORITHM</div>' +
+                    
+                    '<span class="code-label">Pseudocode Logic</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm QuickHull(S, P1, P2)\n' +
+                        '  if S is empty return\n' +
+                        '  Find Pmax in S furthest from line P1-P2\n' +
+                        '  Add Pmax to Hull\n' +
+                        '  S1 = points to left of P1-Pmax\n' +
+                        '  S2 = points to left of Pmax-P2\n' +
+                        '  QuickHull(S1, P1, Pmax)\n' +
+                        '  QuickHull(S2, Pmax, P2)' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Average Case: Theta(n log n)\n' +
+                        '// Worst Case: Theta(n^2) (if points form a circle)\n' +
+                        '// Much faster than Brute Force O(n^3).' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
 };
 

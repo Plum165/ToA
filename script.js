@@ -20,8 +20,9 @@ const CURRICULUM = {
         { id: 'dec_var', title: 'Variable Size Decrease', type: 'standard' }
     ],
     div: [
-        { id: 'joint_dist', title: 'Joint Distributions (Discrete)', type: 'joint' },
-        { id: 'cond_exp', title: 'Conditional Expectation E[X|Y]', type: 'joint' }
+        { id: 'div_intro', title: 'Intro & Merge Sort', type: 'standard' },
+        { id: 'div_quick', title: 'QuickSort', type: 'standard' },
+        { id: 'div_geom', title: 'Geometric D&C', type: 'standard' }
     ],
    tra: [
         { id: 'sheet_taylor', title: 'Taylor, Geometric & Summation', type: 'sheet' },
