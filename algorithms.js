@@ -1444,5 +1444,651 @@ function fibMemo(n) {
                 '</div>' +
             '</div>'
     },
+    // ============================================
+    // TOPIC: INSTANCE SIMPLIFICATION (PRE-SORTING)
+    // ============================================
+    'trans_presort': {
+        title: "Instance Simplification: Pre-sorting",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Concept</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Instance Simplification transforms an instance of a problem into a "simpler" or "more convenient" version of the same problem. A classic example is <strong>Pre-sorting</strong>.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Why Sort First?</span>' +
+                    '<p class="text-sm">Many problems are harder on unsorted lists ($O(n^2)$) but trivial on sorted lists ($O(n)$ or $O(1)$).</p>' +
+                    '<p class="text-sm mt-2"><strong>Total Cost =</strong> Cost to Sort + Cost to Solve</p>' +
+                    '<p class="text-sm font-mono mt-1">Total = $O(n \\log n) + O(n) = O(n \\log n)$</p>' +
+                    '<p class="text-sm mt-1 text-green-300">This is often better than the $O(n^2)$ Brute Force approach.</p>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-center text-accent">Examples</h4>' +
+                    '<ul class="list-disc pl-5 space-y-1 text-sm">' +
+                        '<li><strong>Element Uniqueness:</strong> Sort, then check adjacent elements only.</li>' +
+                        '<li><strong>Mode (Frequency):</strong> Sort, then longest run of adjacent equal numbers.</li>' +
+                        '<li><strong>Finding Median:</strong> Sort, then take $A[n/2]$.</li>' +
+                    '</ul>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">ELEMENT UNIQUENESS</div>' +
+                    
+                    '<span class="code-label">Pseudocode (Pre-sorting)</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm UniqueElements(A[0..n-1])\n' +
+                        '  Sort(A) // Cost: n log n\n' +
+                        '  for i <- 0 to n-2 do\n' +
+                        '    if A[i] == A[i+1] return false // Cost: n\n' +
+                        '  return true' +
+                    '</div>' +
+
+                    '<span class="code-label">Comparison vs Brute Force</span>' +
+                    '<div class="code-box">' +
+                        '// Brute Force:\n' +
+                        '// Compare every element with every other element.\n' +
+                        '// Complexity: O(n^2)\n\n' +
+                        '// Transform & Conquer (Pre-sorting):\n' +
+                        '// Sort (n log n) + Linear Scan (n)\n' +
+                        '// Complexity: O(n log n)\n' +
+                        '// Result: Much faster for large n.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: HORNER'S RULE (REPRESENTATION CHANGE)
+    // ============================================
+    'trans_horner': {
+        title: "Representation Change: Horner's Rule",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Evaluating Polynomials</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Problem: Evaluate $P(x) = a_n x^n + a_{n-1} x^{n-1} + \\dots + a_0$ for a specific $x$.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">The Transformation</span>' +
+                    '<p class="text-sm mb-2">Brute force requires $O(n^2)$ multiplications (or $2n$ with an accumulator). Horner\'s rule factorizes the polynomial to use exactly $n$ multiplications and $n$ additions.</p>' +
+                    '<div class="latex-output text-center">$$P(x) = (\\dots((a_n x + a_{n-1})x + a_{n-2})x + \\dots)x + a_0$$</div>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Example Trace</h4>' +
+                    '<p class="text-sm font-mono">P(x) = 2x^3 - 6x^2 + 2x - 1 for x=3</p>' +
+                    '<ul class="list-decimal pl-5 mt-2 space-y-1 text-sm opacity-80">' +
+                        '<li>Start with coeff $a_n = 2$</li>' +
+                        '<li>$2 \\cdot 3 + (-6) = 0$</li>' +
+                        '<li>$0 \\cdot 3 + 2 = 2$</li>' +
+                        '<li>$2 \\cdot 3 + (-1) = 5$</li>' +
+                        '<li>Result = 5</li>' +
+                    '</ul>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">HORNER\'S RULE ALGORITHM</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm Horner(P[0..n], x)\n' +
+                        '  // P contains coefficients, P[n] is highest degree\n' +
+                        '  result <- P[n]\n' +
+                        '  for i <- n-1 downto 0 do\n' +
+                        '    result <- result * x + P[i]\n' +
+                        '  return result' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'double horner(double[] coeffs, double x) {\n' +
+                        '    int n = coeffs.length - 1;\n' +
+                        '    double res = coeffs[n];\n' +
+                        '    // Iterate downwards from second highest term\n' +
+                        '    for (int i = n - 1; i >= 0; i--) {\n' +
+                        '        res = (res * x) + coeffs[i];\n' +
+                        '    }\n' +
+                        '    return res;\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Efficiency Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Number of Multiplications: n\n' +
+                        '// Number of Additions: n\n' +
+                        '// Complexity: Theta(n)\n' +
+                        '// This is theoretically optimal.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: BINARY EXPONENTIATION
+    // ============================================
+    'trans_expo': {
+        title: "Binary Exponentiation",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Computing $a^n$</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'This is an application of Representation Change. We change $n$ into its binary representation to compute the power in logarithmic time.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Left-to-Right (Horner Application)</span>' +
+                    '<p class="text-sm">Based on the factorization of the exponent. If binary of $n$ is $b_I \\dots b_0$:</p>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">' +
+                        '<li>Start with the leading 1.</li>' +
+                        '<li>For every bit, <strong>Square</strong> the current value.</li>' +
+                        '<li>If the bit is 1, also <strong>Multiply</strong> by $a$.</li>' +
+                    '</ul>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Right-to-Left (Common)</span>' +
+                    '<p class="text-sm">Often easier to code. While $n > 0$, if $n$ is odd, multiply result by current base. Always square the base and halve $n$.</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">BINARY EXPONENTIATION (Right-to-Left)</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm BinaryPower(a, n)\n' +
+                        '  res <- 1\n' +
+                        '  while n > 0 do\n' +
+                        '    if (n mod 2 == 1) // n is odd\n' +
+                        '      res <- res * a\n' +
+                        '    a <- a * a\n' +
+                        '    n <- floor(n / 2)\n' +
+                        '  return res' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'long power(long a, long n) {\n' +
+                        '    long res = 1;\n' +
+                        '    while (n > 0) {\n' +
+                        '        if ((n & 1) == 1) res = res * a;\n' +
+                        '        a = a * a;\n' +
+                        '        n = n >> 1; // Bitwise divide by 2\n' +
+                        '    }\n' +
+                        '    return res;\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Trace Example: 3^13</span>' +
+                    '<div class="code-box">' +
+                        '// 13 in binary: 1101\n' +
+                        '// n=13 (odd): res = 1*3 = 3, a = 3*3=9\n' +
+                        '// n=6 (even): res = 3, a = 9*9=81\n' +
+                        '// n=3 (odd):  res = 3*81=243, a = 81^2\n' +
+                        '// n=1 (odd):  res = 243*81^2...\n' +
+                        '// Complexity: Theta(log n)' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: PROBLEM REDUCTION
+    // ============================================
+    'trans_red': {
+        title: "Problem Reduction: LCM & Optimization",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Definition</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'If a problem $P$ can be transformed into a problem $Q$, solvable by algorithm $A$, then we can solve $P$ by: $P \\to Q \\to A(Q) \\to \\text{Solution}(P)$.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Example: Least Common Multiple (LCM)</span>' +
+                    '<p class="text-sm">Calculating the LCM of $u$ and $v$ can be <strong>reduced</strong> to the problem of finding the Greatest Common Divisor (GCD).</p>' +
+                    '<p class="text-sm font-mono bg-black/20 p-2 mt-2 rounded text-center">LCM(u, v) = (u * v) / GCD(u, v)</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Example: Maximization to Minimization</span>' +
+                    '<p class="text-sm">Standard optimization libraries often only solve minimization. We reduce maximization to minimization by negating the function.</p>' +
+                    '<p class="text-sm font-mono bg-black/20 p-2 mt-2 rounded text-center">max f(x) = - [ min ( -f(x) ) ]</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">LCM via REDUCTION</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm LCM(u, v)\n' +
+                        '  // Reduces the problem to GCD\n' +
+                        '  g <- EuclidGCD(u, v)\n' +
+                        '  return (u * v) / g' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'int gcd(int a, int b) {\n' +
+                        '    return b == 0 ? a : gcd(b, a % b);\n' +
+                        '}\n\n' +
+                        'int lcm(int u, int v) {\n' +
+                        '    if (u == 0 || v == 0) return 0;\n' +
+                        '    return (u * v) / gcd(u, v);\n' +
+                        '}' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: SPACE-TIME TRADEOFF INTRO & COUNTING SORT
+    // ============================================
+    'spa_intro': {
+        title: "Space-Time Tradeoff: Counting Sort",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Concept</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'We can reduce the running time of an algorithm by using more memory (space). This is called <strong>Input Enhancement</strong> (preprocessing the input to store info) or <strong>Prestructuring</strong> (hashing, indexing).' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Sorting by Counting</span>' +
+                    '<p class="text-sm">Sorts a list of integers falling within a restricted range $[L..U]$ (e.g., numbers 1 to 10).</p>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">' +
+                        '<li><strong>Frequency Table:</strong> Counts occurrences of each value.</li>' +
+                        '<li><strong>Distribution Table:</strong> Accumulates counts to determine the final index positions.</li>' +
+                        '<li><strong>Linear Time:</strong> $\\Theta(n)$. Much faster than comparison sorts ($\\{Theta(n \\log n)$), but consumes extra memory.' +
+                    '</ul>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">COUNTING SORT</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm CountingSort(A[0..n-1], k)\n' +
+                        '  // k is the range of values (0 to k-1)\n' +
+                        '  D[0..k-1] initialized to 0 (Frequencies)\n' +
+                        '  S[0..n-1] (Result array)\n' +
+                        '  \n' +
+                        '  // 1. Compute Frequencies\n' +
+                        '  for i <- 0 to n-1 do D[A[i]]++\n' +
+                        '  \n' +
+                        '  // 2. Compute Distribution (Prefix Sums)\n' +
+                        '  for j <- 1 to k-1 do D[j] <- D[j] + D[j-1]\n' +
+                        '  \n' +
+                        '  // 3. Place elements (Reverse order for stability)\n' +
+                        '  for i <- n-1 downto 0 do\n' +
+                        '    j <- A[i]\n' +
+                        '    S[D[j] - 1] <- A[i]\n' +
+                        '    D[j]--\n' +
+                        '  return S' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'int[] countingSort(int[] arr, int maxVal) {\n' +
+                        '    int[] count = new int[maxVal + 1];\n' +
+                        '    int[] output = new int[arr.length];\n' +
+                        '\n' +
+                        '    // Frequencies\n' +
+                        '    for (int num : arr) count[num]++;\n' +
+                        '\n' +
+                        '    // Distribution (Prefix Sum)\n' +
+                        '    for (int i = 1; i <= maxVal; i++)\n' +
+                        '        count[i] += count[i - 1];\n' +
+                        '\n' +
+                        '    // Placement\n' +
+                        '    for (int i = arr.length - 1; i >= 0; i--) {\n' +
+                        '        output[count[arr[i]] - 1] = arr[i];\n' +
+                        '        count[arr[i]]--;\n' +
+                        '    }\n' +
+                        '    return output;\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Time Complexity: Theta(n + k)\n' +
+                        '// Space Complexity: Theta(n + k)\n' +
+                        '// If k is small (~n), this is linear Theta(n).\n' +
+                        '// If k is huge (e.g. range 1 to 1 billion), this is terrible.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: HORSPOOL'S ALGORITHM
+    // ============================================
+    'spa_horspool': {
+        title: "Horspool's Algorithm (String Matching)",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Input Enhancement Strategy</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Instead of shifting by 1 on mismatch (Brute Force), we pre-compute a <strong>Shift Table</strong> based on the pattern to shift as far as possible.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">How it works</span>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li>Align pattern with text. Scan from <strong>Right to Left</strong>.</li>' +
+                        '<li>If mismatch, look at the character in the <strong>Text</strong> aligned with the <strong>Last</strong> character of pattern.</li>' +
+                        '<li>Shift according to the table value for that text character.</li>' +
+                    '</ul>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Shift Table Logic</h4>' +
+                    '<p class="text-sm">For a pattern of length $m$ and character $c$:</p>' +
+                    '<ul class="list-disc pl-5 mt-1 space-y-1 text-sm font-mono opacity-80">' +
+                        '<li>If c is not in pattern: Shift = m</li>' +
+                        '<li>If c is in pattern: Shift = m - 1 - (rightmost index of c)</li>' +
+                        '<li>(Note: We ignore the very last character of the pattern for the calculation)</li>' +
+                    '</ul>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">HORSPOOL\'S ALGORITHM</div>' +
+                    
+                    '<span class="code-label">Example Trace</span>' +
+                    '<div class="code-box">' +
+                        'Pattern: BARBER (Length m=6)\n' +
+                        'Table Construction (excluding last R):\n' +
+                        'B: m - 1 - 3 = 2 (index 3 is second B)\n' +
+                        'A: m - 1 - 1 = 4\n' +
+                        'R: m - 1 - 2 = 3 (index 2 is middle R)\n' +
+                        'E: m - 1 - 4 = 1\n' +
+                        'Others: 6\n\n' +
+                        'Text:    JIM_SAW_ME_IN_A_BARBER_SHOP\n' +
+                        'Pattern: BARBER\n' +
+                        '1. Match R vs _ (underscore). _ not in pattern. Shift 6.\n' +
+                        '2. ... continues shifting by large jumps ...' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation (Shift Table)</span>' +
+                    '<div class="code-box">' +
+                        'int[] shiftTable(String p) {\n' +
+                        '    int m = p.length();\n' +
+                        '    int[] table = new int[256]; // ASCII\n' +
+                        '    \n' +
+                        '    // 1. Initialize all to m\n' +
+                        '    for (int i = 0; i < 256; i++) table[i] = m;\n' +
+                        '    \n' +
+                        '    // 2. Update for chars in pattern (except last)\n' +
+                        '    for (int j = 0; j < m - 1; j++) {\n' +
+                        '        table[p.charAt(j)] = m - 1 - j;\n' +
+                        '    }\n' +
+                        '    return table;\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation (Search)</span>' +
+                    '<div class="code-box">' +
+                        'int horspoolSearch(String t, String p) {\n' +
+                        '    int n = t.length(), m = p.length();\n' +
+                        '    int[] table = shiftTable(p);\n' +
+                        '    int i = m - 1; // Align end of pattern\n' +
+                        '    \n' +
+                        '    while (i < n) {\n' +
+                        '        int k = 0;\n' +
+                        '        // Compare right to left\n' +
+                        '        while (k < m && p.charAt(m-1-k) == t.charAt(i-k))\n' +
+                        '            k++;\n' +
+                        '        if (k == m) return i - m + 1; // Match found\n' +
+                        '        else i += table[t.charAt(i)]; // Shift\n' +
+                        '    }\n' +
+                        '    return -1;\n' +
+                        '}' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: BOYER-MOORE ALGORITHM
+    // ============================================
+    'spa_boyer': {
+        title: "Boyer-Moore Algorithm",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Advanced String Matching</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Boyer-Moore improves on Horspool by using two heuristics to determine the maximum safe shift. It is the standard for matching in many systems (like grep).' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">1. Bad Symbol Shift</span>' +
+                    '<p class="text-sm">Similar to Horspool, but calculation is slightly different. Upon mismatch at index $k$ (from back):</p>' +
+                    '<p class="text-sm font-mono bg-black/20 p-2 mt-1 rounded">Shift = max(T[c] - k, 1)</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">2. Good Suffix Shift</span>' +
+                    '<p class="text-sm">If we matched a suffix (e.g., "AB") before failing, we can shift to align the next occurrence of "AB" in the pattern.</p>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<p class="text-sm"><strong>Efficiency:</strong> $\\Theta(n/m)$ in best case (skipping large chunks). $\\Theta(nm)$ worst case (rare). Generally faster than Horspool.</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">BOYER-MOORE CONCEPTS</div>' +
+                    
+                    '<span class="code-label">Bad Symbol vs Horspool</span>' +
+                    '<div class="code-box">' +
+                        '// Text:    ... T A N S E R ...\n' +
+                        '// Pattern:     B A R B E R\n' +
+                        '\n' +
+                        '// Horspool looks at the character in Text aligned with\n' +
+                        '// the END of the pattern (S).\n' +
+                        '// Boyer-Moore looks at the character that CAUSED\n' +
+                        '// the mismatch (S) and shifts to align S with an S in pattern.\n' +
+                        '// Since S is not in BARBER, it shifts past it.' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Code (Bad Symbol Heuristic)</span>' +
+                    '<div class="code-box">' +
+                        '// Simplified Bad Character Heuristic\n' +
+                        'int max(int a, int b) { return (a > b) ? a : b; }\n' +
+                        '\n' +
+                        'void search(char txt[], char pat[]) {\n' +
+                        '    int m = pat.length;\n' +
+                        '    int n = txt.length;\n' +
+                        '    int badChar[] = new int[256];\n' +
+                        '\n' +
+                        '    // Initialize badChar array like Horspool\n' +
+                        '    for (int i = 0; i < 256; i++) badChar[i] = -1;\n' +
+                        '    for (int i = 0; i < m; i++) badChar[pat[i]] = i;\n' +
+                        '\n' +
+                        '    int s = 0;\n' +
+                        '    while (s <= (n - m)) {\n' +
+                        '        int j = m - 1;\n' +
+                        '        while (j >= 0 && pat[j] == txt[s + j])\n' +
+                        '            j--;\n' +
+                        '        if (j < 0) {\n' +
+                        '            System.out.println("Found at: " + s);\n' +
+                        '            s += (s + m < n) ? m - badChar[txt[s + m]] : 1;\n' +
+                        '        } else {\n' +
+                        '            s += max(1, j - badChar[txt[s + j]]);\n' +
+                        '        }\n' +
+                        '    }\n' +
+                        '}' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+    // ============================================
+    // TOPIC: GREEDY INTRO & CHANGE MAKING
+    // ============================================
+    'gre_intro': {
+        title: "Greedy: Intro & Change Making",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Greedy Principle</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'A greedy algorithm constructs a solution through a sequence of steps. At each step, it makes the choice that looks <strong>best at the moment</strong> (locally optimal), hoping this leads to a globally optimal solution.' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Three Characteristics</span>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">' +
+                        '<li><strong>Feasible:</strong> Satisfies problem constraints.</li>' +
+                        '<li><strong>Locally Optimal:</strong> Best choice among current options.</li>' +
+                        '<li><strong>Irrevocable:</strong> Once made, a choice cannot be changed (no backtracking).</li>' +
+                    '</ul>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Change Making Problem</h4>' +
+                    '<p class="text-sm">Give change for amount $n$ using the least number of coins.</p>' +
+                    '<p class="text-sm mt-2"><strong>Greedy Strategy:</strong> Repeatedly choose the largest coin denomination $d$ such that $d \\le \\text{remaining amount}$.</p>' +
+                    '<div class="warn-box mt-2">' +
+                        '<strong>Warning:</strong> Optimal for standard currencies (US, SA), but fails for arbitrary sets (e.g., Coins {1, 3, 4}, Target 6). Greedy gives {4, 1, 1} (3 coins). Optimal is {3, 3} (2 coins).' +
+                    '</div>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">GREEDY CHANGE MAKING</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm MakeChange(Coins D[1..m], Amount n)\n' +
+                        '  Sort D from largest to smallest\n' +
+                        '  Solution S <- empty\n' +
+                        '  for i <- 1 to m do\n' +
+                        '    while n >= D[i] do\n' +
+                        '      n <- n - D[i]\n' +
+                        '      S.add(D[i])\n' +
+                        '  if n > 0 return "No solution"\n' +
+                        '  return S' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'List<Integer> getChange(int[] denominations, int amount) {\n' +
+                        '    // Assume denominations sorted descending\n' +
+                        '    List<Integer> result = new ArrayList<>();\n' +
+                        '    for (int coin : denominations) {\n' +
+                        '        while (amount >= coin) {\n' +
+                        '            amount -= coin;\n' +
+                        '            result.add(coin);\n' +
+                        '        }\n' +
+                        '    }\n' +
+                        '    return result;\n' +
+                        '}' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Time Efficiency: O(n) in worst case (if we mostly use 1s)\n' +
+                        '// or O(m) if we can use modulo division.\n' +
+                        '// Note: It is fast, but not always optimal.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: HUFFMAN CODING
+    // ============================================
+    'gre_huff': {
+        title: "Huffman Coding",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Variable Length Encoding</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Assigns shorter bit patterns to characters that occur more frequently. Used for file compression (ZIP, MP3).' +
+                    '</p>' +
+                '</div>' +
+                '<div class="step-card">' +
+                    '<span class="step-title">Prefix-Free Codes</span>' +
+                    '<p class="text-sm">No code is a prefix of another (e.g., if A=0, B=01 is invalid because B starts with A). This ensures unambiguous decoding without separators.</p>' +
+                '</div>' +
+                '<div class="glass p-4 rounded-lg">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">The Algorithm</h4>' +
+                    '<ol class="list-decimal pl-5 space-y-1 text-sm opacity-80">' +
+                        '<li>Create leaf nodes for all characters with their frequencies (weights).</li>' +
+                        '<li>Put all nodes in a priority queue.</li>' +
+                        '<li>While queue size > 1:</li>' +
+                        '<ul class="list-disc pl-5">' +
+                            '<li>Remove two smallest nodes ($T_1, T_2$).</li>' +
+                            '<li>Create new parent with weight $T_1+T_2$.</li>' +
+                            '<li>Insert parent back into queue.</li>' +
+                        '</ul>' +
+                    '</ol>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">HUFFMAN TREE CONSTRUCTION</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm Huffman(C)\n' +
+                        '  PQ <- PriorityQueue(C) // Ordered by frequency\n' +
+                        '  for i <- 1 to n-1 do\n' +
+                        '    z <- AllocateNode()\n' +
+                        '    x <- PQ.extractMin()\n' +
+                        '    y <- PQ.extractMin()\n' +
+                        '    z.left <- x\n' +
+                        '    z.right <- y\n' +
+                        '    z.freq <- x.freq + y.freq\n' +
+                        '    PQ.insert(z)\n' +
+                        '  return PQ.extractMin() // Root of tree' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Concepts</span>' +
+                    '<div class="code-box">' +
+                        'PriorityQueue<Node> pq = new PriorityQueue<>();\n' +
+                        '// ... fill pq ...\n' +
+                        '\n' +
+                        'while (pq.size() > 1) {\n' +
+                        '    Node left = pq.poll();\n' +
+                        '    Node right = pq.poll();\n' +
+                        '    \n' +
+                        '    // Combine weights\n' +
+                        '    Node parent = new Node(left.freq + right.freq);\n' +
+                        '    parent.left = left;\n' +
+                        '    parent.right = right;\n' +
+                        '    \n' +
+                        '    pq.add(parent);\n' +
+                        '}\n' +
+                        '// Tree built. 0 = Left Edge, 1 = Right Edge.' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis</span>' +
+                    '<div class="code-box">' +
+                        '// Time Efficiency: O(n log n)\n' +
+                        '// n: Number of characters\n' +
+                        '// Heap operations (insert/extract) take log n.\n' +
+                        '// We do this 2n - 2 times.' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
 };
 

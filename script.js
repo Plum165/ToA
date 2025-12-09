@@ -25,11 +25,15 @@ const CURRICULUM = {
         { id: 'div_geom', title: 'Geometric D&C', type: 'standard' }
     ],
    tra: [
-        { id: 'sheet_taylor', title: 'Taylor, Geometric & Summation', type: 'sheet' },
-        { id: 'sheet_dist', title: 'Distribution Properties Sheet', type: 'sheet' }
+        { id: 'trans_presort', title: 'Instance Simplification (Pre-sorting)', type: 'standard' },
+        { id: 'trans_horner', title: 'Horner\'s Rule (Polynomials)', type: 'standard' },
+        { id: 'trans_expo', title: 'Binary Exponentiation', type: 'standard' },
+        { id: 'trans_red', title: 'Problem Reduction (LCM)', type: 'standard' }
     ],
     spa: [
-
+        { id: 'spa_intro', title: 'Intro & Counting Sort', type: 'standard' },
+        { id: 'spa_horspool', title: 'Horspool\'s Algorithm', type: 'standard' },
+        { id: 'spa_boyer', title: 'Boyer-Moore Algorithm', type: 'standard' }
     ],
      bru: [
         { id: 'brute_intro', title: 'Intro & Closest Pair', type: 'standard' },
@@ -37,8 +41,9 @@ const CURRICULUM = {
     { id: 'bf_geom', title: 'Geometric Problems', type: 'standard' },
     { id: 'bf_exhaust', title: 'Exhaustive Search', type: 'standard' }
     ],
-    gre: [
-        
+   gre: [
+        { id: 'gre_intro', title: 'Intro & Change Making', type: 'standard' },
+        { id: 'gre_huff', title: 'Huffman Coding', type: 'standard' }
     ],
     qna: [
         { id: 'brute', title: 'Brute Force', type: 'standard' },
