@@ -174,75 +174,102 @@ function fibIterative(n) {
 `
     },
 
-    // ============================================
-    // TOPIC 3: THETA (TIGHT BOUND)
+   // ============================================
+    // TOPIC: THETA (TIGHT BOUND)
     // ============================================
     'theta': {
         title: "Theta Notation Θ (Tight Bound)",
         notes: 
             '<div class="space-y-6">' +
+                // --- DEFINITION ---
                 '<div>' +
                     '<h3 class="text-xl font-bold text-accent mb-2">Definition</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
-                        'A function $t(n) \\in \\Theta(g(n))$ iff there are constants $c_1, c_2$ and $n_0$ such that <span class="font-bold text-green-400 whitespace-nowrap">$c_2 g(n) \\le t(n) \\le c_1 g(n)$</span> for all $n \\ge n_0$.' +
+                        'A function $t(n) \\in \\Theta(g(n))$ iff there are constants $c_1, c_2$ and $n_0$ such that:' +
                     '</p>' +
-                    '<p class="mt-2 text-sm opacity-80">' +
-                        'This sandwiches the function. It means the algorithm behaves <strong>exactly</strong> proportional to $g(n)$ in all cases.' +
+                    '<div class="latex-output text-center">$$c_2 g(n) \\le t(n) \\le c_1 g(n) \\quad \\forall n \\ge n_0$$</div>' +
+                    '<p class="text-sm opacity-80 mt-2">' +
+                        'This "sandwiches" the function. It means the algorithm behaves <strong>exactly</strong> proportional to $g(n)$ (asymptotically).' +
                     '</p>' +
                 '</div>' +
+
+                // --- KEY DIFFERENCE (FROM IMAGE) ---
+                '<div class="step-card">' +
+                    '<span class="step-title">Theta vs Big O</span>' +
+                    '<p class="text-sm mb-2">Theta is same as Big O, except functions in this class <strong>cannot be in a more efficient class</strong>.</p>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li><strong class="text-green-400">Correct:</strong> $100n + 5 \\in \\Theta(n)$ <span class="opacity-60">(Tight bound)</span></li>' +
+                        '<li><strong class="text-yellow-400">Correct:</strong> $100n + 5 \\in O(n^2)$ <span class="opacity-60">(Loose upper bound)</span></li>' +
+                        '<li><strong class="text-red-400">Incorrect:</strong> $100n + 5 \\notin \\Theta(n^2)$</li>' +
+                    '</ul>' +
+                    '<div class="warn-box mt-3">' +
+                        '<strong>Why not $\\Theta(n^2)$?</strong><br>' +
+                        'Although $n^2$ is an upper bound ($O$), it grows <em>much faster</em> than $100n$. We cannot find a constant $c_2$ to make $n^2$ a lower bound. Thus, it is not a tight bound.' +
+                    '</div>' +
+                '</div>' +
+
+                // --- HOW TO CALCULATE ---
                 '<div class="glass p-4 rounded-lg">' +
-                    '<h4 class="font-bold text-sm mb-2 text-center text-accent">Visualizing Theta</h4>' +
-                    '<div class="h-64"><canvas id="chart-theta"></canvas></div>' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">How to Determine $\\Theta$</h4>' +
+                    '<ol class="list-decimal pl-5 space-y-2 text-sm">' +
+                        '<li><strong>Drop low-order terms:</strong> $3n^2 + 10n + 50 \\to 3n^2$</li>' +
+                        '<li><strong>Drop constants:</strong> $3n^2 \\to n^2$</li>' +
+                        '<li><strong>Result:</strong> $\\Theta(n^2)$</li>' +
+                        '<li><strong>Verify:</strong> Ensure the limit of $\\frac{t(n)}{g(n)}$ is a constant $> 0$.</li>' +
+                    '</ol>' +
+                '</div>' +
+
+                // --- QUESTIONS ---
+                '<div>' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Test Yourself</h4>' +
+                    '<div class="space-y-2 text-sm">' +
+                        '<p><strong>Q1:</strong> Is $n^2 + n \\in \\Theta(n)$? <span class="text-red-400 font-bold ml-2">NO</span> (Grows too fast)</p>' +
+                        '<p><strong>Q2:</strong> Is $n \\log n \\in O(n^2)$? <span class="text-green-400 font-bold ml-2">YES</span> (Upper bound holds)</p>' +
+                        '<p><strong>Q3:</strong> Is $n \\log n \\in \\Theta(n^2)$? <span class="text-red-400 font-bold ml-2">NO</span> (Not a tight bound)</p>' +
+                    '</div>' +
                 '</div>' +
             '</div>',
-        code: `
-// ==========================================
-// 1. LINEAR SEARCH
-// ==========================================
-// NOT typically Θ(n) because runtime varies based on 
-// where the item is. 
-// It is Θ(n) ONLY if we assume worst-case always.
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">THETA EXAMPLES</div>' +
+                    
+                    // --- 1. Summation ---
+                    '<span class="code-label">1. Summing an Array</span>' +
+                    '<div class="code-box">' +
+                        'int sum(int[] arr) {\n' +
+                        '    int total = 0;\n' +
+                        '    // Loop runs EXACTLY n times\n' +
+                        '    for(int i = 0; i < arr.length; i++) {\n' +
+                        '        total += arr[i];\n' +
+                        '    }\n' +
+                        '    return total;\n' +
+                        '}\n' +
+                        '// Best Case: n steps\n' +
+                        '// Worst Case: n steps\n' +
+                        '// Conclusion: Theta(n)' +
+                    '</div>' +
 
-
-// ==========================================
-// 2. SORTING (Selection Sort)
-// ==========================================
-// Unlike Bubble Sort, Selection Sort always scans the 
-// remaining array to find the min, sorted or not.
-// Best Case: n^2
-// Worst Case: n^2
-// Efficiency: Θ(n^2)
-function selectionSort(arr) {
-    let n = arr.length;
-    for(let i = 0; i < n; i++) {
-        let min = i;
-        for(let j = i+1; j < n; j++){
-            if(arr[j] < arr[min]) min = j;
-        }
-        if (min != i) [arr[i], arr[min]] = [arr[min], arr[i]];
-    }
-}
-
-// ==========================================
-// 3. FIBONACCI (Memoized)
-// ==========================================
-// With caching, we solve each sub-problem exactly once.
-// Efficiency: Θ(n)
-const memo = {};
-function fibMemo(n) {
-    if (n in memo) return memo[n];
-    if (n <= 1) return n;
-    
-    memo[n] = fibMemo(n - 1) + fibMemo(n - 2);
-    return memo[n];
-}
-
-// ==========================================
-// 4. POWERSETS
-// ==========================================
-// Generating subsets always takes 2^n steps.
-// Efficiency: Θ(2^n)
-`
+                    // --- 2. Selection Sort ---
+                    '<span class="code-label">2. Selection Sort (Quadratic)</span>' +
+                    '<div class="code-box">' +
+                        'void selectionSort(int[] arr) {\n' +
+                        '    int n = arr.length;\n' +
+                        '    for (int i = 0; i < n; i++) {\n' +
+                        '        int min = i;\n' +
+                        '        // Inner loop ALWAYS runs n-1-i times\n' +
+                        '        // regardless of data values\n' +
+                        '        for (int j = i+1; j < n; j++) {\n' +
+                        '            if (arr[j] < arr[min]) min = j;\n' +
+                        '        }\n' +
+                        '        swap(arr, i, min);\n' +
+                        '    }\n' +
+                        '}\n' +
+                        '// Comparisions = n(n-1)/2\n' +
+                        '// Conclusion: Theta(n^2)' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
     },
 
     // ============================================
@@ -341,143 +368,176 @@ function fibMemo(n) {
 // Scale:          Set of 20 items = 1,000,000 operations
 `
     },
-     // ============================================
+    // ============================================
     // TOPIC: SUMMATION (SEQUENTIAL EFFICIENCY)
     // ============================================
     'sums': {
         title: "Efficiency: Summation (Sequential)",
         notes: 
             '<div class="space-y-6">' +
+                // --- INTRO ---
                 '<div>' +
-                    '<h3 class="text-xl font-bold text-accent mb-2">Analyzing Sequential Algorithms</h3>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Analyzing Loops</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
-                        'For non-recursive algorithms (loops), we measure efficiency by counting the <strong>Basic Operation</strong> using summation.' +
+                        'For non-recursive algorithms (loops), we measure efficiency by counting the <strong>Basic Operation</strong> using summation. We set up a sum representing how many times the loop body executes.' +
                     '</p>' +
                 '</div>' +
-                '<div class="step-card">' +
-                    '<span class="step-title">3 Steps for Calculation</span>' +
-                    '<ol class="list-decimal pl-5 mt-2 space-y-2 text-sm">' +
-                        '<li><strong>Identify Basic Operation:</strong> The operation executed most frequently (e.g., comparison inside the innermost loop).</li>' +
-                        '<li><strong>Set up Summation:</strong> Write an equation $C(n)$ summing the number of times the op runs.</li>' +
-                        '<li><strong>Solve:</strong> Simplify the sum using mathematical rules to find the Big O class.</li>' +
-                    '</ol>' +
-                '</div>' +
+
+                // --- EXPANDED RULES (R1 - R5) ---
                 '<div class="glass p-4 rounded-lg">' +
-                    '<h4 class="font-bold text-sm mb-2 text-center text-accent">Essential Math Tools</h4>' +
-                    '<ul class="space-y-2 text-sm font-mono">' +
-                        '<li>1. $\\sum_{i=1}^{n} 1 = n$</li>' +
-                        '<li>2. $\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2} \\approx \\frac{1}{2}n^2 \\in \\Theta(n^2)$</li>' +
-                        '<li>3. $\\sum_{i=0}^{n} 2^i = 2^{n+1} - 1$</li>' +
+                    '<h4 class="font-bold text-sm mb-2 text-center text-accent">Essential Math Rules</h4>' +
+                    '<ul class="space-y-3 text-sm font-mono">' +
+                        '<li><strong>R1 (Constant):</strong> $\\sum_{i=l}^{u} 1 = (u - l + 1)$<br><span class="opacity-60 text-xs">// e.g. sum of 1 from 1 to n is n</span></li>' +
+                        '<li><strong>R2 (Linear):</strong> $\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2} \\approx \\frac{1}{2}n^2$<br><span class="opacity-60 text-xs">// Arithmetic Series (1+2+3...+n)</span></li>' +
+                        '<li><strong>R3 (Squares):</strong> $\\sum_{i=1}^{n} i^2 = \\frac{n(n+1)(2n+1)}{6} \\approx \\frac{1}{3}n^3$</li>' +
+                        '<li><strong>R4 (Geometric):</strong> $\\sum_{i=0}^{n} 2^i = 2^{n+1} - 1$<br><span class="opacity-60 text-xs">// Powers of 2 (1+2+4+8...)</span></li>' +
+                        '<li><strong>R5 (Additivity):</strong> $\\sum (ca_i + b_i) = c\\sum a_i + \\sum b_i$<br><span class="opacity-60 text-xs">// You can split sums and pull out constants</span></li>' +
                     '</ul>' +
+                '</div>' +
+
+                // --- DETAILED STEP-BY-STEP EXAMPLE ---
+                '<div class="step-card">' +
+                    '<span class="step-title">Worked Example: Dependent Loops</span>' +
+                    '<div class="code-box text-xs mb-2">for i = 0 to n-1 do<br>  for j = 0 to i do<br>    print(j)</div>' +
+                    '<p class="text-sm mb-2">The inner loop runs $i+1$ times. The outer loop runs $n$ times.</p>' +
+                    '<p class="text-sm"><strong>Step 1:</strong> Set up sum.</p>' +
+                    '<div class="latex-output text-center">$$ \\sum_{i=0}^{n-1} (i+1) $$</div>' +
+                    '<p class="text-sm"><strong>Step 2:</strong> Split using R5.</p>' +
+                    '<div class="latex-output text-center">$$ \\sum_{i=0}^{n-1} i + \\sum_{i=0}^{n-1} 1 $$</div>' +
+                    '<p class="text-sm"><strong>Step 3:</strong> Apply R2 and R1.</p>' +
+                    '<div class="latex-output text-center">$$ \\frac{(n-1)n}{2} + n = \\frac{n^2 - n + 2n}{2} \\approx \\Theta(n^2) $$</div>' +
+                '</div>' +
+
+                // --- 3 EXERCISES ---
+                '<div>' +
+                    '<h4 class="font-bold text-sm mb-4 text-accent">Practice Exercises</h4>' +
+                    
+                    // Ex 1
+                    '<div class="mb-4 border-b border-white/10 pb-4">' +
+                        '<p class="font-bold text-sm text-green-400">Exercise 1: Simple Loop</p>' +
+                        '<p class="text-sm font-mono mb-2">for k = 1 to n do: x = x + 5</p>' +
+                        '<details class="bg-black/20 p-2 rounded cursor-pointer"><summary class="text-xs text-accent opacity-80 hover:opacity-100">Show Solution</summary>' +
+                        '<p class="mt-2 text-sm">$\\sum_{k=1}^{n} 1 = n$. <br><strong>Complexity:</strong> $\\Theta(n)$</p></details>' +
+                    '</div>' +
+
+                    // Ex 2
+                    '<div class="mb-4 border-b border-white/10 pb-4">' +
+                        '<p class="font-bold text-sm text-yellow-400">Exercise 2: Independent Loops</p>' +
+                        '<p class="text-sm font-mono mb-2">for i = 1 to n do:<br>  for j = 1 to n do:<br>    x++</p>' +
+                        '<details class="bg-black/20 p-2 rounded cursor-pointer"><summary class="text-xs text-accent opacity-80 hover:opacity-100">Show Solution</summary>' +
+                        '<p class="mt-2 text-sm">$\\sum_{i=1}^{n} \\sum_{j=1}^{n} 1 = \\sum_{i=1}^{n} n = n \\cdot n = n^2$. <br><strong>Complexity:</strong> $\\Theta(n^2)$</p></details>' +
+                    '</div>' +
+
+                    // Ex 3
+                    '<div class="mb-4">' +
+                        '<p class="font-bold text-sm text-red-400">Exercise 3: "Down to" Loop</p>' +
+                        '<p class="text-sm font-mono mb-2">for i = n downto 1 do:<br>  for j = 1 to i do:<br>    x++</p>' +
+                        '<details class="bg-black/20 p-2 rounded cursor-pointer"><summary class="text-xs text-accent opacity-80 hover:opacity-100">Show Solution</summary>' +
+                        '<p class="mt-2 text-sm">Even though i goes down, the logic is the same. <br>When i=n, inner runs n. When i=1, inner runs 1.<br>Sum is $n + (n-1) + ... + 1 = \\frac{n(n+1)}{2}$. <br><strong>Complexity:</strong> $\\Theta(n^2)$</p></details>' +
+                    '</div>' +
                 '</div>' +
             '</div>',
         code: 
             '<div class="space-y-8">' +
-                // --- EXAMPLE 1 ---
                 '<div>' +
-                    '<div class="code-section-title">1. FIND MAX ELEMENT (Linear)</div>' +
+                    '<div class="code-section-title">MATRIX ADDITION ANALYSIS</div>' +
                     
-                    '<span class="code-label">Pseudocode</span>' +
+                    '<span class="code-label">Algorithm Code</span>' +
                     '<div class="code-box">' +
-                        'Algorithm MaxElement(A[0..n-1])\n' +
-                        '  maxVal <- A[0]\n' +
-                        '  for i <- 1 to n-1 do\n' +
-                        '    if A[i] > maxVal\n' +
-                        '      maxVal <- A[i]\n' +
-                        '  return maxVal' +
-                    '</div>' +
-
-                    '<span class="code-label">Java Code</span>' +
-                    '<div class="code-box">' +
-                        'int maxElement(int[] A) {\n' +
-                        '    int maxVal = A[0];\n' +
-                        '    for (int i = 1; i < A.length; i++) {\n' +
-                        '        if (A[i] > maxVal) { // Basic Op\n' +
-                        '             maxVal = A[i];\n' +
+                        '// Adding two n x n matrices\n' +
+                        'void addMatrix(int[][] A, int[][] B, int n) {\n' +
+                        '    for (int i = 0; i < n; i++) {\n' +
+                        '        for (int j = 0; j < n; j++) {\n' +
+                        '            C[i][j] = A[i][j] + B[i][j]; // Basic Op\n' +
                         '        }\n' +
                         '    }\n' +
-                        '    return maxVal;\n' +
                         '}' +
                     '</div>' +
 
-                    '<span class="code-label">JavaScript Code (Analysis)</span>' +
+                    '<span class="code-label">Formal Derivation</span>' +
                     '<div class="code-box">' +
-                        '// Summation Setup:\n' +
-                        '// Loop runs from 1 to n-1.\n' +
-                        '// Sigma i=1 to n-1 of (1)\n' +
-                        '// = (n - 1) - 1 + 1 \n' +
-                        '// = n - 1\n' +
-                        '// Complexity: Theta(n)' +
-                    '</div>' +
-                '</div>' +
-
-                // --- EXAMPLE 2 ---
-                '<div>' +
-                    '<div class="code-section-title">2. CHECK DUPLICATES (Quadratic)</div>' +
-                    
-                    '<span class="code-label">Pseudocode</span>' +
-                    '<div class="code-box">' +
-                        'Algorithm UniqueElements(A[0..n-1])\n' +
-                        '  for i <- 0 to n-2 do\n' +
-                        '    for j <- i+1 to n-1 do\n' +
-                        '      if A[i] == A[j] return false\n' +
-                        '  return true' +
-                    '</div>' +
-
-                    '<span class="code-label">Java Code</span>' +
-                    '<div class="code-box">' +
-                        'boolean isUnique(int[] A) {\n' +
-                        '    int n = A.length;\n' +
-                        '    for (int i = 0; i < n - 1; i++) {\n' +
-                        '        for (int j = i + 1; j < n; j++) {\n' +
-                        '            if (A[i] == A[j]) return false;\n' +
-                        '        }\n' +
-                        '    }\n' +
-                        '    return true;\n' +
-                        '}' +
-                    '</div>' +
-
-                    '<span class="code-label">JavaScript Code (Analysis)</span>' +
-                    '<div class="code-box">' +
-                        '// Summation Setup:\n' +
-                        '// Outer: i=0 to n-2. Inner: j=i+1 to n-1\n' +
-                        '// We sum the inner loop execution.\n' +
-                        '// Sum(i=0 to n-2) of [ (n-1) - (i+1) + 1 ]\n' +
-                        '// = Sum(n - 1 - i)\n' +
-                        '// = (n-1) + (n-2) + ... + 1\n' +
-                        '// = n(n-1)/2\n' +
-                        '// Complexity: Theta(n^2)' +
+                        '// 1. Setup Summation\n' +
+                        '// Outer runs 0 to n-1. Inner runs 0 to n-1.\n' +
+                        '// Cost is 1 per inner step.\n' +
+                        '// Sum(i=0 to n-1) [ Sum(j=0 to n-1) [ 1 ] ]\n\n' +
+                        '// 2. Solve Inner\n' +
+                        '// Sum(j=0 to n-1) of 1 = (n-1 - 0 + 1) = n\n\n' +
+                        '// 3. Solve Outer\n' +
+                        '// Sum(i=0 to n-1) of n\n' +
+                        '// = n * (n - 0) = n^2\n\n' +
+                        '// Conclusion: Theta(n^2)' +
                     '</div>' +
                 '</div>' +
             '</div>'
     },
 
-    // ============================================
-    // TOPIC: RECURRENCE RELATIONS (RECURSIVE)
+
+   // ============================================
+    // TOPIC: RECURRENCE RELATIONS & MASTER THEOREM
     // ============================================
     'recurrence': {
         title: "Efficiency: Recurrence Relations",
         notes: 
             '<div class="space-y-6">' +
+                // --- PART 1: GENERAL THEORY ---
                 '<div>' +
                     '<h3 class="text-xl font-bold text-accent mb-2">Analyzing Recursive Algorithms</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
-                        'For recursive algorithms, we cannot just use summation. We use <strong>Recurrence Relations</strong> defined by $T(n)$.' +
+                        'For recursive algorithms, we cannot just use summation. We use <strong>Recurrence Relations</strong> defined by $T(n)$ in terms of itself with smaller inputs.' +
                     '</p>' +
                 '</div>' +
+                
+                // --- MASTER THEOREM DEFINITION ---
                 '<div class="step-card">' +
                     '<span class="step-title">The Master Theorem</span>' +
                     '<p class="text-sm mb-2">Used for Divide & Conquer relations of form: $T(n) = aT(n/b) + f(n)$</p>' +
                     '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
-                        '<li><strong>$a$:</strong> Number of sub-problems.</li>' +
+                        '<li><strong>$a$:</strong> Number of sub-problems (recursive calls).</li>' +
                         '<li><strong>$b$:</strong> Factor by which problem size splits.</li>' +
                         '<li><strong>$d$:</strong> Driver function power ($f(n) \\in \\Theta(n^d)$).</li>' +
                     '</ul>' +
                     '<div class="mt-4 p-3 bg-white/5 rounded text-sm font-mono">' +
-                        'If $a < b^d$ : $\\Theta(n^d)$ (Driver dominates)<br>' +
-                        'If $a = b^d$ : $\\Theta(n^d \\log n)$ (Balanced)<br>' +
-                        'If $a > b^d$ : $\\Theta(n^{\\log_b a})$ (Roots dominate)' +
+                        '1. If $a < b^d$ : $\\Theta(n^d)$ (Driver dominates)<br>' +
+                        '2. If $a = b^d$ : $\\Theta(n^d \\log n)$ (Balanced)<br>' +
+                        '3. If $a > b^d$ : $\\Theta(n^{\\log_b a})$ (Roots dominate)' +
                     '</div>' +
+                '</div>' +
+
+                // --- PART 2: QUESTION 4 SCENARIO ---
+                '<div class="glass p-4 rounded-lg border-l-4 border-yellow-500">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Exam Application (Question 4)</h4>' +
+                    '<p class="text-sm"><strong>Scenario:</strong> You write a Divide & Conquer algorithm to sum an array of size $n$.</p>' +
+                    '<p class="text-sm mt-2"><strong>The Claim:</strong> A classmate argues this runs in $\\log n$ time because it splits in half like Binary Search.</p>' +
+                    '<p class="text-sm mt-2 text-red-300"><strong>Task:</strong> Prove them WRONG by solving the recurrence.</p>' +
+                '</div>' +
+
+                // --- STEP 1: DEFINE ---
+                '<div>' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Step 1: Define Recurrence</h4>' +
+                    '<p class="text-sm leading-relaxed">To sum $n$ elements, we split into 2 halves. We solve recursively ($2 \\times A(n/2)$), then perform 1 addition to combine.</p>' +
+                    '<div class="latex-output text-center">$$A(n) = 2A(n/2) + 1$$</div>' +
+                '</div>' +
+
+                // --- STEP 2: SOLVE ---
+                '<div>' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Step 2: Solve (Master Theorem)</h4>' +
+                    '<p class="text-sm mt-2 mb-1">Identify parameters from $A(n) = 2A(n/2) + 1$:</p>' +
+                    '<ul class="list-disc pl-5 space-y-1 text-sm font-mono">' +
+                        '<li>$a = 2$ (2 calls)</li>' +
+                        '<li>$b = 2$ (Size / 2)</li>' +
+                        '<li>$f(n) = 1 = n^0 \\implies d = 0$</li>' +
+                    '</ul>' +
+
+                    '<p class="text-sm mt-3 mb-1"><strong>Compare $a$ vs $b^d$:</strong></p>' +
+                    '<div class="latex-output text-center">$$2 \\quad \\text{vs} \\quad 2^0 (=1)$$</div>' +
+                    '<p class="text-sm text-center mt-1">Since $2 > 1$, Case 3 applies (Roots dominate).</p>' +
+                '</div>' +
+
+                // --- CONCLUSION ---
+                '<div class="glass p-4 rounded-lg border border-red-500/30">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Final Calculation</h4>' +
+                    '<div class="latex-output text-center">$$A(n) \\in \\Theta(n^{\\log_b a}) = \\Theta(n^{\\log_2 2}) = \\Theta(n^1) = \\Theta(n)$$</div>' +
+                    '<p class="text-sm mt-2"><strong>Conclusion:</strong> The complexity is $\\Theta(n)$ (Linear). The classmate is <strong>WRONG</strong>. Splitting the problem doesn\'t help if you still have to process every single element.</p>' +
                 '</div>' +
             '</div>',
         code: 
