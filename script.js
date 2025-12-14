@@ -1,4 +1,10 @@
 
+// script.js
+import { ALGO_CONTENT } from './algorithms.js';  // Adjust path if needed
+
+console.log(ALGO_CONTENT);          // Should print all topics
+console.log(getTopicContent('sums')); // Should print the object for sums
+
 // 1. TOPIC REGISTRY
 const CURRICULUM = {
     
@@ -58,6 +64,7 @@ const CURRICULUM = {
     ]
 };
 
+
 document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     loadTopic('big', 'known');
@@ -87,10 +94,19 @@ function renderMenu(category) {
         menu.appendChild(div);
     });
 }
+function getTopicContent(id) {
+    for (const moduleKey in ALGO_CONTENT) {
+        const module = ALGO_CONTENT[moduleKey];
+        if (module[id]) return module[id];
+    }
+    return null;
+}
+
 
 function loadTopic(id, category) {
     const root = document.getElementById('topic-root');
-    if (category === 'known' || ALGO_CONTENT[id]) {
+    const content = getTopicContent(id);
+    if (content) {
         renderStandardTopic(id, root);
     } else {
         root.innerHTML = `<div class="p-10 text-center opacity-50">Content coming soon...</div>`;
@@ -98,8 +114,11 @@ function loadTopic(id, category) {
 }
 
 function renderStandardTopic(id, container) {
-    const content = ALGO_CONTENT[id];
-    if (!content) return;
+   const content = getTopicContent(id); // <-- use lookup
+    if (!content) {
+        container.innerHTML = `<div class="p-10 text-center opacity-50">Content not found.</div>`;
+        return;
+    }
 
     container.innerHTML = `
         <div class="flex flex-col h-full">
