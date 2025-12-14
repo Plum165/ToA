@@ -224,3 +224,111 @@ mjx-container[display="false"] {
     overflow-x: auto;
     border: 1px solid rgba(255,255,255,0.05);
 }
+
+/* --- TREE DIAGRAM CSS --- */
+.tree {
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.tree ul {
+    position: relative;
+    padding-top: 20px; 
+    display: flex;
+    justify-content: center;
+}
+
+.tree li {
+    position: relative;
+    padding: 20px 5px 0 5px;
+    text-align: center;
+    list-style-type: none;
+}
+
+/* Connecting Lines */
+.tree li::before, .tree li::after {
+    content: '';
+    position: absolute; 
+    top: 0; 
+    right: 50%;
+    border-top: 2px solid rgba(255,255,255,0.2);
+    width: 50%; 
+    height: 20px;
+}
+
+.tree li::after {
+    right: auto; 
+    left: 50%;
+    border-left: 2px solid rgba(255,255,255,0.2);
+}
+
+/* Remove connectors from single children */
+.tree li:only-child::after, .tree li:only-child::before {
+    display: none;
+}
+.tree li:only-child { padding-top: 0; }
+
+/* Remove left connector from first child and right from last child */
+.tree li:first-child::before, .tree li:last-child::after {
+    border: 0 none;
+}
+
+/* Adding back the vertical connector to the last nodes */
+.tree li:last-child::before{
+    border-right: 2px solid rgba(255,255,255,0.2);
+    border-radius: 0 5px 0 0;
+}
+.tree li:first-child::after{
+    border-radius: 5px 0 0 0;
+}
+
+/* Downward connector from parents */
+.tree ul ul::before{
+    content: '';
+    position: absolute; 
+    top: 0; 
+    left: 50%;
+    border-left: 2px solid rgba(255,255,255,0.2);
+    width: 0; 
+    height: 20px;
+}
+
+/* The Node Styling */
+.tree-node {
+    display: inline-block;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 50%; /* Make circles */
+    width: 40px;
+    height: 40px;
+    line-height: 24px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    position: relative;
+    z-index: 10;
+}
+
+.tree-node.pivot {
+    background: rgba(234, 179, 8, 0.2); /* Yellow */
+    border-color: rgba(234, 179, 8, 0.8);
+    color: #fce7f3;
+}
+
+.tree-node.leaf {
+    background: rgba(59, 130, 246, 0.2); /* Blue */
+    border-color: rgba(59, 130, 246, 0.8);
+}
+
+.tree-node.null {
+    background: transparent;
+    border: 1px dashed rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.2);
+    font-size: 10px;
+    width: 30px;
+    height: 30px;
+    line-height: 15px;
+}

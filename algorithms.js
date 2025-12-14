@@ -1057,27 +1057,130 @@ function fibIterative(n) {
     // ============================================
     'dec_topo': {
         title: "Topological Sort",
-        notes: 
+       notes: 
             '<div class="space-y-6">' +
+                // --- INTRO ---
                 '<div>' +
                     '<h3 class="text-xl font-bold text-accent mb-2">Definition</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
-                        'For a Directed Acyclic Graph (DAG), list the vertices in an order such that for every edge $u \\to v$, $u$ appears before $v$ in the list.' +
+                        'For a Directed Acyclic Graph (DAG), list the vertices so that for every edge $u \\to v$, $u$ comes before $v$. The <strong>Source Removal</strong> method repeatedly finds a vertex with 0 in-degree.' +
                     '</p>' +
                 '</div>' +
+
+                // --- VISUAL EXAMPLE (SVG GRAPH) ---
+                '<div class="glass p-4 rounded-lg border border-white/10">' +
+                    '<h4 class="font-bold text-sm mb-6 text-center text-accent">Visual Trace: Source Removal</h4>' +
+                    
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">' +
+                        
+                        // --- STEP 1 ---
+                        '<div class="bg-black/20 rounded-lg p-2 text-center">' +
+                            '<div class="text-xs font-bold text-blue-300 mb-2">Step 1: Remove "a"</div>' +
+                            '<svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">' +
+                                '<defs><marker id="head" orient="auto" markerWidth="6" markerHeight="6" refX="5" refY="3"><path d="M0,0 V6 L6,3 Z" fill="#999"/></marker></defs>' +
+                                
+                                // Edges (A is removing edges to B and C)
+                                '<line x1="30" y1="60" x2="90" y2="20" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />' +
+                                '<line x1="30" y1="60" x2="90" y2="100" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />' +
+                                '<line x1="110" y1="20" x2="170" y2="60" stroke="#555" stroke-width="2" marker-end="url(#head)" />' +
+                                '<line x1="110" y1="100" x2="170" y2="60" stroke="#555" stroke-width="2" marker-end="url(#head)" />' +
+
+                                // Nodes
+                                '<circle cx="20" cy="60" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />' + // A (Green)
+                                '<text x="20" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">a</text>' +
+                                
+                                '<circle cx="100" cy="20" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />' + // B
+                                '<text x="100" y="25" text-anchor="middle" fill="#fff" font-size="12">b</text>' +
+                                
+                                '<circle cx="100" cy="100" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />' + // C
+                                '<text x="100" y="105" text-anchor="middle" fill="#fff" font-size="12">c</text>' +
+                                
+                                '<circle cx="180" cy="60" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />' + // D
+                                '<text x="180" y="65" text-anchor="middle" fill="#fff" font-size="12">d</text>' +
+                            '</svg>' +
+                            '<p class="text-xs mt-1 text-green-400">List: { a }</p>' +
+                        '</div>' +
+
+                        // --- STEP 2 ---
+                        '<div class="bg-black/20 rounded-lg p-2 text-center">' +
+                            '<div class="text-xs font-bold text-blue-300 mb-2">Step 2: Remove "b"</div>' +
+                            '<svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">' +
+                                // Edges (B removing edge to D)
+                                '<line x1="110" y1="20" x2="170" y2="60" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />' +
+                                '<line x1="110" y1="100" x2="170" y2="60" stroke="#555" stroke-width="2" marker-end="url(#head)" />' +
+
+                                // Nodes
+                                '<circle cx="20" cy="60" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />' + // A (Gone)
+                                '<text x="20" y="65" text-anchor="middle" fill="#555" font-size="12">a</text>' +
+                                
+                                '<circle cx="100" cy="20" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />' + // B (Green)
+                                '<text x="100" y="25" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">b</text>' +
+                                
+                                '<circle cx="100" cy="100" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />' + // C
+                                '<text x="100" y="105" text-anchor="middle" fill="#fff" font-size="12">c</text>' +
+                                
+                                '<circle cx="180" cy="60" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />' + // D
+                                '<text x="180" y="65" text-anchor="middle" fill="#fff" font-size="12">d</text>' +
+                            '</svg>' +
+                            '<p class="text-xs mt-1 text-green-400">List: { a, b }</p>' +
+                        '</div>' +
+
+                        // --- STEP 3 ---
+                        '<div class="bg-black/20 rounded-lg p-2 text-center">' +
+                            '<div class="text-xs font-bold text-blue-300 mb-2">Step 3: Remove "c"</div>' +
+                            '<svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">' +
+                                // Edges (C removing edge to D)
+                                '<line x1="110" y1="100" x2="170" y2="60" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />' +
+
+                                // Nodes
+                                '<circle cx="20" cy="60" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />' + // A
+                                '<text x="20" y="65" text-anchor="middle" fill="#555" font-size="12">a</text>' +
+                                
+                                '<circle cx="100" cy="20" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />' + // B
+                                '<text x="100" y="25" text-anchor="middle" fill="#555" font-size="12">b</text>' +
+                                
+                                '<circle cx="100" cy="100" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />' + // C (Green)
+                                '<text x="100" y="105" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">c</text>' +
+                                
+                                '<circle cx="180" cy="60" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />' + // D
+                                '<text x="180" y="65" text-anchor="middle" fill="#fff" font-size="12">d</text>' +
+                            '</svg>' +
+                            '<p class="text-xs mt-1 text-green-400">List: { a, b, c }</p>' +
+                        '</div>' +
+
+                        // --- STEP 4 ---
+                        '<div class="bg-black/20 rounded-lg p-2 text-center">' +
+                            '<div class="text-xs font-bold text-blue-300 mb-2">Step 4: Remove "d"</div>' +
+                            '<svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">' +
+                                // Nodes
+                                '<circle cx="20" cy="60" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />' + 
+                                '<text x="20" y="65" text-anchor="middle" fill="#555" font-size="12">a</text>' +
+                                '<circle cx="100" cy="20" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />' + 
+                                '<text x="100" y="25" text-anchor="middle" fill="#555" font-size="12">b</text>' +
+                                '<circle cx="100" cy="100" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />' + 
+                                '<text x="100" y="105" text-anchor="middle" fill="#555" font-size="12">c</text>' +
+                                
+                                '<circle cx="180" cy="60" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />' + // D (Green)
+                                '<text x="180" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">d</text>' +
+                            '</svg>' +
+                            '<p class="text-xs mt-1 text-green-400">List: { a, b, c, d }</p>' +
+                        '</div>' +
+
+                    '</div>' +
+                '</div>' +
+
+                // --- ALGORITHM STEPS ---
                 '<div class="step-card">' +
-                    '<span class="step-title">Source Removal Method (Decrease by 1)</span>' +
+                    '<span class="step-title">The Algorithm (Decrease by 1)</span>' +
                     '<ol class="list-decimal pl-5 mt-2 space-y-2 text-sm">' +
-                        '<li>Identify a <strong>Source</strong> vertex (a vertex with no incoming edges).</li>' +
-                        '<li>Add it to the sorted list.</li>' +
-                        '<li>"Remove" it and all its outgoing edges from the graph.</li>' +
-                        '<li>Repeat until the graph is empty.</li>' +
+                        '<li><strong>Find Source:</strong> Identify vertex with in-degree 0 (No incoming edges).</li>' +
+                        '<li><strong>Output:</strong> Add it to the sorted list.</li>' +
+                        '<li><strong>Remove:</strong> Delete vertex and all outgoing edges.</li>' +
+                        '<li><strong>Repeat:</strong> Continue until graph is empty.</li>' +
                     '</ol>' +
                 '</div>' +
-                '<div class="glass p-4 rounded-lg">' +
-                    '<p class="text-sm"><strong>Note:</strong> If at any point there are vertices but no source, the graph has a cycle (not a DAG).</p>' +
-                '</div>' +
             '</div>',
+       
         code: 
             '<div class="space-y-8">' +
                 '<div>' +
@@ -1123,66 +1226,146 @@ function fibIterative(n) {
                 '</div>' +
             '</div>'
     },
-
     // ============================================
     // TOPIC: GENERATING PERMUTATIONS
     // ============================================
     'dec_perm': {
         title: "Generating Permutations (Johnson-Trotter)",
         notes: 
-            '<div class="space-y-6">' +
+            '<div class="space-y-8">' +
+                // --- INTRO ---
                 '<div>' +
                     '<h3 class="text-xl font-bold text-accent mb-2">Johnson-Trotter Algorithm</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
-                        'An algorithm to generate all $n!$ permutations without recursion. It uses the concept of <strong>Mobile Integers</strong>.' +
+                        'This algorithm generates all $n!$ permutations without recursion. It relies on the concept of <strong>Mobile Integers</strong>.' +
                     '</p>' +
                 '</div>' +
-                '<div class="step-card">' +
-                    '<span class="step-title">Rules</span>' +
-                    '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
-                        '<li>Each number has a direction (arrow). Initially: $\\leftarrow 1~ \\leftarrow 2~ \\dots~ \\leftarrow n$.</li>' +
-                        '<li>A number $k$ is <strong>Mobile</strong> if its arrow points to a smaller adjacent neighbor.</li>' +
-                        '<li><strong>Step 1:</strong> Find the largest mobile integer $k$.</li>' +
-                        '<li><strong>Step 2:</strong> Swap $k$ with the neighbor it points to.</li>' +
-                        '<li><strong>Step 3:</strong> Reverse the direction of all elements larger than $k$.</li>' +
+
+                // --- RULES CARD ---
+                '<div class="glass p-4 rounded-lg border-l-4 border-blue-500">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">The Rules</h4>' +
+                    '<ul class="list-decimal pl-5 space-y-2 text-sm">' +
+                        '<li><strong>Direction:</strong> Every number has an arrow (e.g., $\\leftarrow 3$). Initially, all point Left.</li>' +
+                        '<li><strong>Mobility:</strong> A number is <em>Mobile</em> if it points to a <strong>smaller</strong> adjacent neighbor.</li>' +
+                        '<li><strong>The Loop:</strong>' +
+                            '<ul class="list-disc pl-5 mt-1 opacity-80">' +
+                                '<li>Find the <strong>largest</strong> mobile integer ($k$).</li>' +
+                                '<li><strong>Swap</strong> $k$ in the direction of its arrow.</li>' +
+                                '<li><strong>Reverse</strong> the direction of all elements <strong>larger than</strong> $k$.</li>' +
+                            '</ul>' +
+                        '</li>' +
                     '</ul>' +
+                '</div>' +
+
+                // --- VISUAL TRACE ---
+                '<div>' +
+                    '<h3 class="text-lg font-bold text-white mb-4 pl-2 border-l-4 border-accent">Visual Trace (n=3)</h3>' +
+                    
+                    // STATE 1
+                    '<div class="step-card">' +
+                        '<div class="flex justify-between items-center mb-2">' +
+                            '<span class="text-xs font-mono text-gray-400">Step 1</span>' +
+                            '<span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Largest Mobile: 3</span>' +
+                        '</div>' +
+                        '<div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">' +
+                            '<span class="text-gray-500">←1</span> <span class="text-gray-500">←2</span> <span class="text-green-400 font-bold">←3</span>' +
+                        '</div>' +
+                        '<p class="text-xs mt-2 opacity-80">3 points to 2. (3 > 2), so 3 is mobile. <strong>Swap Left.</strong></p>' +
+                    '</div>' +
+
+                    // STATE 2
+                    '<div class="step-card">' +
+                        '<div class="flex justify-between items-center mb-2">' +
+                            '<span class="text-xs font-mono text-gray-400">Step 2</span>' +
+                            '<span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Largest Mobile: 3</span>' +
+                        '</div>' +
+                        '<div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">' +
+                            '<span class="text-gray-500">←1</span> <span class="text-green-400 font-bold">←3</span> <span class="text-gray-500">←2</span>' +
+                        '</div>' +
+                        '<p class="text-xs mt-2 opacity-80">3 points to 1. (3 > 1), so 3 is mobile. <strong>Swap Left.</strong></p>' +
+                    '</div>' +
+
+                    // STATE 3
+                    '<div class="step-card">' +
+                        '<div class="flex justify-between items-center mb-2">' +
+                            '<span class="text-xs font-mono text-gray-400">Step 3</span>' +
+                            '<span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">Largest Mobile: 2</span>' +
+                        '</div>' +
+                        '<div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">' +
+                            '<span class="text-red-400 opacity-60">←3</span> <span class="text-gray-500">←1</span> <span class="text-yellow-400 font-bold">←2</span>' +
+                        '</div>' +
+                        '<div class="text-xs mt-2 space-y-1">' +
+                            '<p>3 is at the wall (stuck). <strong>2</strong> is now the largest mobile (points to 1).</p>' +
+                            '<p class="text-white font-bold">Action: Swap 2 Left.</p>' +
+                        '</div>' +
+                    '</div>' +
+
+                    // STATE 4 (THE FLIP)
+                    '<div class="step-card border-l-4 border-purple-500">' +
+                        '<div class="flex justify-between items-center mb-2">' +
+                            '<span class="text-xs font-mono text-gray-400">Step 4 (The Flip)</span>' +
+                            '<span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Rule #3 Triggered</span>' +
+                        '</div>' +
+                        '<div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">' +
+                            '<span class="text-purple-300 font-bold">→3</span> <span class="text-yellow-400">←2</span> <span class="text-gray-500">←1</span>' +
+                        '</div>' +
+                        '<div class="text-xs mt-2 space-y-1">' +
+                            '<p>We just moved <strong>2</strong>. Rule #3 says: Reverse direction of all elements larger than 2.</p>' +
+                            '<p><strong>3 > 2</strong>, so <span class="text-red-400">←3</span> becomes <span class="text-green-400">→3</span>.</p>' +
+                        '</div>' +
+                    '</div>' +
+
+                    // STATE 5
+                    '<div class="step-card">' +
+                        '<div class="flex justify-between items-center mb-2">' +
+                            '<span class="text-xs font-mono text-gray-400">Step 5</span>' +
+                            '<span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Largest Mobile: 3</span>' +
+                        '</div>' +
+                        '<div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">' +
+                            '<span class="text-gray-500">←2</span> <span class="text-green-400 font-bold">→3</span> <span class="text-gray-500">←1</span>' +
+                        '</div>' +
+                        '<p class="text-xs mt-2 opacity-80">3 is mobile again! It points to 1 (3 > 1). <strong>Swap Right.</strong></p>' +
+                    '</div>' +
+
                 '</div>' +
             '</div>',
         code: 
             '<div class="space-y-8">' +
                 '<div>' +
-                    '<div class="code-section-title">JOHNSON-TROTTER</div>' +
+                    '<div class="code-section-title">PSEUDOCODE</div>' +
                     
-                    '<span class="code-label">Pseudocode</span>' +
+                    '<span class="code-label">Algorithm Logic</span>' +
                     '<div class="code-box">' +
-                        'Algorithm JohnsonTrotter(n)\n' +
-                        '  Initialize array with arrows pointing left\n' +
-                        '  while there exists a mobile integer do\n' +
-                        '    k <- largest mobile integer\n' +
-                        '    swap k and its neighbor in arrow direction\n' +
-                        '    reverse direction of all elements > k\n' +
-                        '    print current permutation' +
+                        'JohnsonTrotter(n)\n' +
+                        '  // 1. Initialize\n' +
+                        '  val[] = {1, 2, ..., n}\n' +
+                        '  dir[] = {L, L, ..., L} // All point left\n' +
+                        '  \n' +
+                        '  while (exists mobile integer) do\n' +
+                        '    // 2. Find k\n' +
+                        '    k = FindLargestMobile()\n' +
+                        '    \n' +
+                        '    // 3. Swap k\n' +
+                        '    Swap k with neighbor in its direction\n' +
+                        '    \n' +
+                        '    // 4. Reverse Directions\n' +
+                        '    for i = 1 to n do\n' +
+                        '      if val[i] > k\n' +
+                        '        Reverse direction of val[i]\n' +
+                        '        \n' +
+                        '    print(current_permutation)\n' +
+                        '  end while' +
                     '</div>' +
 
-                    '<span class="code-label">Trace Example (n=3)</span>' +
+                    '<span class="code-label">Efficiency Analysis</span>' +
                     '<div class="code-box">' +
-                        '1. <-1 <-2 <-3  (3 is mobile, swap left)\n' +
-                        '2. <-1 <-3 <-2  (3 is mobile, swap left)\n' +
-                        '3. <-3 <-1 <-2  (3 stuck. 2 is mobile, swap left)\n' +
-                        '4. <-3 <-2 <-1  (Flip 3 > 2. Now: ->3 <-2 <-1)\n' +
-                        '5. ->3 <-2 <-1  (3 mobile right, swap)\n' +
-                        '   ...' +
-                    '</div>' +
-
-                    '<span class="code-label">Analysis</span>' +
-                    '<div class="code-box">' +
-                        '// Efficiency: Theta(n!)\n' +
-                        '// It generates every permutation exactly once.' +
+                        '// Time Complexity: Theta(n!)\n' +
+                        '// It generates every permutation exactly once.\n' +
+                        '// This is optimal because there are n! permutations.' +
                     '</div>' +
                 '</div>' +
             '</div>'
     },
-
     // ============================================
     // TOPIC: DECREASE BY FACTOR
     // ============================================
@@ -1315,32 +1498,276 @@ function fibIterative(n) {
             '</div>'
     },
     // ============================================
+    // TOPIC: K-TH ORDER STATISTIC (QUICKSELECT)
+    // ============================================
+    'dec_kth': {
+        title: "k-th Order Statistic (QuickSelect)",
+        notes: 
+            '<div class="space-y-8">' +
+                
+                // --- INTRO ---
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Selection Problem</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'We want to find the $k$-th smallest element in an array without sorting the whole array first. <br>' +
+                        '<span class="opacity-80 text-xs bg-black/20 px-2 py-1 rounded inline-block mt-1">Example: If k=0 (Min), k=n/2 (Median), k=n-1 (Max).</span>' +
+                    '</p>' +
+                '</div>' +
+
+                // --- VISUAL FLOW DIAGRAM ---
+                '<div class="glass p-5 rounded-xl border border-white/10 text-center">' +
+                    '<h4 class="font-bold text-sm mb-4 text-accent uppercase tracking-wider">How it works</h4>' +
+                    '<div class="flex flex-col gap-3 max-w-md mx-auto">' +
+                        '<div class="flex rounded-lg overflow-hidden font-mono text-xs font-bold">' +
+                            '<div class="bg-blue-600/40 flex-1 py-3 border-r border-white/10">Smaller<br>(Left)</div>' +
+                            '<div class="bg-yellow-600/40 w-16 py-3 text-yellow-200">PIVOT<br>(s)</div>' +
+                            '<div class="bg-red-600/40 flex-1 py-3 border-l border-white/10">Larger<br>(Right)</div>' +
+                        '</div>' +
+                        '<div class="text-xs opacity-70">Compare Pivot Index (s) with Target (k)</div>' +
+                        '<div class="grid grid-cols-3 gap-2 text-xs font-bold">' +
+                            '<div class="bg-blue-500/10 p-2 rounded border border-blue-500/30 text-blue-300">If k < s<br>Go Left</div>' +
+                            '<div class="bg-green-500/10 p-2 rounded border border-green-500/30 text-green-300">If k == s<br>FOUND!</div>' +
+                            '<div class="bg-red-500/10 p-2 rounded border border-red-500/30 text-red-300">If k > s<br>Go Right</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+
+                // --- PRETTY STEP-BY-STEP TRACE ---
+                '<div>' +
+                    '<h3 class="text-lg font-bold text-white mb-4 pl-2 border-l-4 border-accent">Step-by-Step Walkthrough</h3>' +
+                    
+                    // INPUT CARD
+                    '<div class="bg-white/5 p-4 rounded-lg mb-4">' +
+                        '<div class="flex justify-between items-center mb-2">' +
+                            '<span class="text-xs font-bold text-gray-400 uppercase">Input</span>' +
+                            '<span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Target Index: k=2</span>' +
+                        '</div>' +
+                        '<p class="font-mono text-lg tracking-wide text-center">[ 7, 10, 4, 3, 20, 15 ]</p>' +
+                        '<p class="text-center text-xs opacity-60 mt-1">We want the 3rd smallest number (Index 2)</p>' +
+                    '</div>' +
+
+                    // STEP 1
+                    '<div class="step-card">' +
+                        '<div class="flex justify-between">' +
+                            '<span class="step-title">Step 1: Partition</span>' +
+                            '<span class="text-xs font-mono text-yellow-400">Pivot = 15</span>' +
+                        '</div>' +
+                        '<p class="text-sm mb-2">Move smaller items left, larger right.</p>' +
+                        '<div class="font-mono text-center bg-black/30 p-2 rounded mb-2">' +
+                            '<span class="text-blue-300">7, 10, 4, 3</span> | <span class="text-yellow-400 font-bold">15</span> | <span class="text-red-400">20</span>' +
+                        '</div>' +
+                        '<p class="text-xs text-center">Pivot ends at <strong>Index 4</strong>.</p>' +
+                        '<div class="mt-2 text-center text-sm font-bold text-blue-300 bg-blue-500/10 p-2 rounded">' +
+                            '4 > 2 (Target) &rarr; Too High! Recurse Left.' +
+                        '</div>' +
+                    '</div>' +
+
+                    // STEP 2
+                    '<div class="step-card">' +
+                        '<div class="flex justify-between">' +
+                            '<span class="step-title">Step 2: Partition Left Side</span>' +
+                            '<span class="text-xs font-mono text-yellow-400">Pivot = 3</span>' +
+                        '</div>' +
+                        '<p class="text-sm mb-2">Working on [ 7, 10, 4, 3 ]</p>' +
+                        '<div class="font-mono text-center bg-black/30 p-2 rounded mb-2">' +
+                            '<span class="opacity-50">[]</span> | <span class="text-yellow-400 font-bold">3</span> | <span class="text-red-400">7, 10, 4</span>' +
+                        '</div>' +
+                        '<p class="text-xs text-center">Pivot ends at <strong>Index 0</strong>.</p>' +
+                        '<div class="mt-2 text-center text-sm font-bold text-red-300 bg-red-500/10 p-2 rounded">' +
+                            '0 < 2 (Target) &rarr; Too Low! Recurse Right.' +
+                        '</div>' +
+                    '</div>' +
+
+                    // STEP 3
+                    '<div class="step-card">' +
+                        '<div class="flex justify-between">' +
+                            '<span class="step-title">Step 3: Partition Right Side</span>' +
+                            '<span class="text-xs font-mono text-yellow-400">Pivot = 7</span>' +
+                        '</div>' +
+                        '<p class="text-sm mb-2">Working on [ 7, 10, 4 ]</p>' +
+                        '<div class="font-mono text-center bg-black/30 p-2 rounded mb-2">' +
+                            '<span class="opacity-50">4</span> | <span class="text-yellow-400 font-bold">7</span> | <span class="text-red-400"> 10</span>' +
+                        '</div>' +
+                        '<p class="text-xs text-center">Pivot ends at <strong>Index 2</strong>.</p>' +
+                        '<div class="mt-2 text-center text-sm font-bold text-green-400 bg-green-500/10 p-2 rounded border border-green-500/30">' +
+                            '2 == 2 (Target) &rarr; FOUND IT! The answer is 7.' +
+                        '</div>' +
+                    '</div>' +
+
+                    // Output CARD
+                    '<div class="bg-white/5 p-4 rounded-lg mb-4">' +
+                        '<div class="flex justify-between items-center mb-2">' +
+                            '<span class="text-xs font-bold text-gray-400 uppercase">Output</span>' +
+                            '<span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Target Index: k=2</span>' +
+                        '</div>' +
+                        '<p class="font-mono text-lg tracking-wide text-center">[ 3, 4, 7, 10, 15, 20 ]</p>' +
+                        '<p class="text-center text-xs opacity-60 mt-1">Hence the 3rd smallest number (Index 2) is 7</p>' +
+                    '</div>' +
+
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                
+                // --- CONCRETE TRACE ---
+                '<div>' +
+                    '<div class="code-section-title">STEP-BY-STEP TRACE</div>' +
+                    '<div class="code-box text-sm font-mono leading-relaxed">' +
+                        '<span class="text-gray-400">// Problem: Find 3rd smallest (k=2)</span>\n' +
+                        '<span class="text-gray-400">// Array: [10, 4, 5, 8, 6, 11, 26]</span>\n\n' +
+                        
+                        '<strong class="text-accent">STEP 1:</strong> Partition whole array (l=0, r=6)\n' +
+                        'Pivot = 10 (first element)\n' +
+                        'Partition Result: [4, 5, 8, 6] <span class="text-yellow-400">10</span> [11, 26]\n' +
+                        'Pivot Index (s) = 4\n' +
+                        'Compare s vs k: (4 > 2). Target is in Left.\n' +
+                        '<span class="text-blue-400">--> Recurse Left (ignore 10, 11, 26)</span>\n\n' +
+
+                        '<strong class="text-accent">STEP 2:</strong> Partition subarray [4, 5, 8, 6]\n' +
+                        'Pivot = 4\n' +
+                        'Partition Result: <span class="text-yellow-400">4</span> [5, 8, 6]\n' +
+                        'Pivot Index (s) = 0\n' +
+                        'Compare s vs k: (0 < 2). Target is in Right.\n' +
+                        '<span class="text-red-400">--> Recurse Right (ignore 4)</span>\n\n' +
+
+                        '<strong class="text-accent">STEP 3:</strong> Partition subarray [5, 8, 6]\n' +
+                        'Pivot = 5\n' +
+                        'Partition Result: <span class="text-yellow-400">5</span> [8, 6]\n' +
+                        'Pivot Index (s) = 1\n' +
+                        'Compare s vs k: (1 < 2). Target is in Right.\n' +
+                        '<span class="text-red-400">--> Recurse Right (ignore 5)</span>\n\n' +
+
+                        '<strong class="text-accent">STEP 4:</strong> Partition subarray [8, 6]\n' +
+                        'Pivot = 8\n' +
+                        'Result: [6] <span class="text-yellow-400">8</span> []\n' +
+                        'Pivot Index (s) = 2\n' +
+                        'Compare s vs k: (2 == 2). MATCH!\n' +
+                        '<strong class="text-green-400">--> Return 8.</strong>' +
+                    '</div>' +
+                '</div>' +
+
+                // --- CODE ---
+                '<div>' +
+                    '<div class="code-section-title">JAVA IMPLEMENTATION</div>' +
+                    '<span class="code-label">QuickSelect Function</span>' +
+                    '<div class="code-box">' +
+                        'public int quickSelect(int[] arr, int k) {\n' +
+                        '    return select(arr, 0, arr.length - 1, k);\n' +
+                        '}\n\n' +
+                        'private int select(int[] arr, int l, int r, int k) {\n' +
+                        '    // 1. Partition the array\n' +
+                        '    int s = partition(arr, l, r);\n' +
+                        '    \n' +
+                        '    // 2. Check the position\n' +
+                        '    if (s == k) {\n' +
+                        '        return arr[s]; // Found it\n' +
+                        '    } \n' +
+                        '    else if (s > k) {\n' +
+                        '        // Target is to the left\n' +
+                        '        return select(arr, l, s - 1, k);\n' +
+                        '    } \n' +
+                        '    else {\n' +
+                        '        // Target is to the right\n' +
+                        '        return select(arr, s + 1, r, k);\n' +
+                        '    }\n' +
+                        '}' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+    // ============================================
     // TOPIC: DIVIDE & CONQUER INTRO (MERGE SORT)
     // ============================================
     'div_intro': {
         title: "Divide & Conquer: Merge Sort",
         notes: 
             '<div class="space-y-6">' +
+                // --- STRATEGY ---
                 '<div>' +
                     '<h3 class="text-xl font-bold text-accent mb-2">The Strategy</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
-                        'Divide and Conquer involves three steps: <strong>Divide</strong> the problem into smaller sub-problems, <strong>Conquer</strong> them recursively, and <strong>Combine</strong> the results to solve the original problem.' +
+                        'Divide and Conquer involves three steps: <strong>Divide</strong> the problem into smaller sub-problems, <strong>Conquer</strong> them recursively, and <strong>Combine</strong> the results.' +
                     '</p>' +
                 '</div>' +
+
+                // --- RECURRENCE ANALYSIS (FROM NOTES) ---
                 '<div class="step-card">' +
-                    '<span class="step-title">Merge Sort Logic</span>' +
-                    '<ul class="list-disc pl-5 mt-2 space-y-2 text-sm">' +
-                        '<li><strong>Divide:</strong> Split array $A[0..n-1]$ in half into $B$ and $C$.</li>' +
-                        '<li><strong>Conquer:</strong> Recursively sort $B$ and $C$.</li>' +
-                        '<li><strong>Combine:</strong> Merge sorted arrays $B$ and $C$ back into $A$.</li>' +
+                    '<span class="step-title">Recurrence Analysis</span>' +
+                    '<p class="text-sm mb-2">The running time satisfies the recurrence:</p>' +
+                    '<div class="latex-output text-center">$$C(n) = 2C(n/2) + C_{merge}(n)$$</div>' +
+                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm font-mono opacity-80">' +
+                        '<li><strong>2C(n/2):</strong> Cost of sorting two halves.</li>' +
+                        '<li><strong>C_merge(n):</strong> Cost of merging ($n-1$ comparisons).</li>' +
                     '</ul>' +
+                    
+                    '<div class="bg-black/30 p-3 rounded mt-3 text-sm">' +
+                        '<p class="font-bold text-accent mb-1">Applying Master Theorem:</p>' +
+                        '<ul class="list-none space-y-1">' +
+                            '<li>$a = 2$ (2 subproblems)</li>' +
+                            '<li>$b = 2$ (Split size by 2)</li>' +
+                            '<li>$d = 1$ (Merge is linear $n^1$)</li>' +
+                            '<li class="mt-2 border-t border-white/10 pt-2">Check: $a$ vs $b^d \\implies 2 = 2^1$</li>' +
+                            '<li>Conclusion: Case 2 ($a = b^d$)</li>' +
+                            '<li class="text-green-400 font-bold mt-1">Efficiency: $\\Theta(n \\log n)$</li>' +
+                        '</ul>' +
+                    '</div>' +
+                    '<p class="text-xs text-red-300 mt-2"><strong>Note:</strong> Requires $\\Theta(n)$ extra space (not in-place).</p>' +
                 '</div>' +
-                '<div class="glass p-4 rounded-lg">' +
-                    '<h4 class="font-bold text-sm mb-2 text-accent">Efficiency</h4>' +
-                    '<p class="text-sm">Recurrence: $T(n) = 2T(n/2) + c \\cdot n$</p>' +
-                    '<p class="text-sm mt-1"><strong>Complexity:</strong> $\\Theta(n \\log n)$ in all cases (Best, Average, Worst).</p>' +
+
+                // --- VISUAL TRACE ---
+                '<div class="glass p-4 rounded-lg border border-white/10">' +
+                    '<h4 class="font-bold text-sm mb-4 text-center text-accent">Visual Trace: [7, 2, 1, 6, 4]</h4>' +
+                    
+                    // LEVEL 1: SPLIT
+                    '<div class="mb-4 text-center">' +
+                        '<p class="text-xs text-blue-300 uppercase font-bold mb-1">1. Divide (Odd length)</p>' +
+                        '<div class="flex justify-center gap-4">' +
+                            '<div class="p-2 bg-blue-500/20 border border-blue-500 rounded">[7, 2]</div>' +
+                            '<div class="p-2 bg-red-500/20 border border-red-500 rounded">[1, 6, 4]</div>' +
+                        '</div>' +
+                    '</div>' +
+
+                    // LEVEL 2: RECURSIVE SORTS
+                    '<div class="mb-4">' +
+                        '<p class="text-xs text-yellow-300 uppercase font-bold mb-1 text-center">2. Conquer (Sort Halves)</p>' +
+                        '<div class="grid grid-cols-2 gap-4 text-sm">' +
+                            // Left Logic
+                            '<div class="bg-black/20 p-2 rounded">' +
+                                '<p class="text-xs opacity-50 mb-1">Left Side:</p>' +
+                                '<p>Split [7], [2]</p>' +
+                                '<p>Merge: 2 < 7</p>' +
+                                '<p class="text-blue-300 font-bold">Result: [2, 7]</p>' +
+                            '</div>' +
+                            // Right Logic
+                            '<div class="bg-black/20 p-2 rounded">' +
+                                '<p class="text-xs opacity-50 mb-1">Right Side:</p>' +
+                                '<p>Split [1], [6, 4]</p>' +
+                                '<p>Sort [6, 4] -> [4, 6]</p>' +
+                                '<p>Merge [1] & [4, 6]</p>' +
+                                '<p class="text-red-300 font-bold">Result: [1, 4, 6]</p>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+
+                    // LEVEL 3: FINAL MERGE
+                    '<div class="text-center">' +
+                        '<p class="text-xs text-green-300 uppercase font-bold mb-1">3. Final Merge</p>' +
+                        '<div class="flex flex-col items-center gap-2">' +
+                            '<div class="flex gap-2 text-xs opacity-70">' +
+                                '<span>L: [2, 7]</span>' +
+                                '<span>vs</span>' +
+                                '<span>R: [1, 4, 6]</span>' +
+                            '</div>' +
+                            '<div class="w-full bg-green-500/10 p-3 rounded border border-green-500 font-mono">' +
+                                '[ 1, 2, 4, 6, 7 ]' +
+                            '</div>' +
+                            '<p class="text-xs opacity-60">1<2, then 2<4, then 4<7, then 6<7, then 7 left</p>' +
+                        '</div>' +
+                    '</div>' +
+
                 '</div>' +
             '</div>',
+       
         code: 
             '<div class="space-y-8">' +
                 '<div>' +
@@ -1382,67 +1809,322 @@ function fibIterative(n) {
             '</div>'
     },
 
-    // ============================================
+   // ============================================
     // TOPIC: QUICKSORT
     // ============================================
     'div_quick': {
         title: "QuickSort",
         notes: 
-            '<div class="space-y-6">' +
-                '<div>' +
-                    '<h3 class="text-xl font-bold text-accent mb-2">Partitioning Strategy</h3>' +
-                    '<p class="leading-relaxed text-sm md:text-base">' +
-                        'Unlike MergeSort which divides by position (index), QuickSort divides by <strong>value</strong> using a pivot.' +
-                    '</p>' +
-                '</div>' +
-                '<div class="step-card">' +
-                    '<span class="step-title">Algorithm Steps</span>' +
-                    '<ol class="list-decimal pl-5 mt-2 space-y-2 text-sm">' +
-                        '<li>Select a <strong>Pivot</strong> (e.g., first element, or median).</li>' +
-                        '<li><strong>Partition:</strong> Rearrange list so elements < pivot are on left, elements > pivot are on right.</li>' +
-                        '<li>Exchange pivot with last element of first sublist.</li>' +
-                        '<li>Recursively QuickSort the two sublists.</li>' +
-                    '</ol>' +
-                '</div>' +
+        '<div class="space-y-6">' +
+            // --- INTRO ---
+            '<div>' +
+                '<h3 class="text-xl font-bold text-accent mb-2">Partitioning Strategy</h3>' +
+                '<p class="leading-relaxed text-sm md:text-base">' +
+                    'Unlike MergeSort which divides by position (index), QuickSort divides by <strong>value</strong> using a Pivot. It partitions the array so that everything smaller than the pivot is on the left, and everything larger is on the right.' +
+                '</p>' +
+            '</div>' +
+
+            // --- ALGORITHM STEPS ---
+            '<div class="step-card">' +
+                '<span class="step-title">The Algorithm</span>' +
+                '<ol class="list-decimal pl-5 mt-2 space-y-2 text-sm">' +
+                    '<li><strong>Select Pivot:</strong> Choose an element (commonly first or last).</li>' +
+                    '<li><strong>Partition:</strong> Reorder array so $Elements &lt; Pivot$ are Left, $Elements &gt; Pivot$ are Right.</li>' +
+                    '<li><strong>Place Pivot:</strong> Move pivot to its final sorted position.</li>' +
+                    '<li><strong>Recurse:</strong> Apply QuickSort to left and right subarrays.</li>' +
+                '</ol>' +
+            '</div>' +
+            // --- EFFICIENCY ---
                 '<div class="glass p-4 rounded-lg">' +
                     '<h4 class="font-bold text-sm mb-2 text-accent">Efficiency Analysis</h4>' +
-                    '<ul class="space-y-1 text-sm font-mono">' +
-                        '<li>Best/Avg: $\\Theta(n \\log n)$ (Split in middle)</li>' +
-                        '<li>Worst: $\\Theta(n^2)$ (Sorted array, bad pivot)</li>' +
-                        '<li>Space: In-place (unlike MergeSort).</li>' +
+                    '<ul class="space-y-2 text-sm font-mono">' +
+                        '<li><strong>Best Case:</strong> $\\Theta(n \\log n)$ <span class="opacity-60">(Pivot splits array in half)</span></li>' +
+                        '<li><strong>Worst Case:</strong> $\\Theta(n^2)$ <span class="opacity-60">(Sorted array, Pivot is Min/Max)</span></li>' +
+                        '<li><strong>Average Case:</strong> $\\Theta(n \\log n)$</li>' +
                     '</ul>' +
                 '</div>' +
+
+            // --- VISUAL TRACE ---
+            '<div class="glass p-4 rounded-lg border border-white/10">' +
+                '<h4 class="font-bold text-sm mb-4 text-center text-accent">Visual Trace: QuickSort Tree & Swaps</h4>' +
+                '<p class="text-xs text-center mb-4 opacity-70">Array: [5, 3, 8, 4, 2, 7, 1, 6]</p>' +
+
+                // ROOT LEVEL
+                '<div class="mb-4">' +
+                    '<p class="text-xs text-center font-bold">Root Pivot: 6</p>' +
+                    '<div class="flex justify-center gap-1 font-mono text-sm mb-1">' +
+                        '<div class="p-2 border border-white/20">5</div>' +
+                        '<div class="p-2 border border-white/20">3</div>' +
+                        '<div class="p-2 border border-white/20">8</div>' +
+                        '<div class="p-2 border border-white/20">4</div>' +
+                        '<div class="p-2 border border-white/20">2</div>' +
+                        '<div class="p-2 border border-white/20">7</div>' +
+                        '<div class="p-2 border border-white/20">1</div>' +
+                        '<div class="p-2 border border-yellow-500 text-yellow-300 font-bold bg-yellow-500/10">6</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-center opacity-70 mt-1">Partition left &lt;6, right &gt;6 → Left: [5,3,4,2,1] | Pivot:6 | Right: [8,7]</p>' +
+                '</div>' +
+
+                // LEFT SUBARRAY
+                '<div class="mb-4">' +
+                    '<p class="text-xs text-center font-bold">Left Subarray Pivot: 1</p>' +
+                    '<div class="flex justify-center gap-1 font-mono text-sm mb-1">' +
+                        '<div class="p-2 border border-yellow-500 text-yellow-300 font-bold bg-yellow-500/10">1</div>' +
+                        '<div class="p-2 border border-white/20">5</div>' +
+                        '<div class="p-2 border border-white/20">3</div>' +
+                        '<div class="p-2 border border-white/20">4</div>' +
+                        '<div class="p-2 border border-white/20">2</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-center opacity-70 mt-1">Partition → Left: [] | Pivot:1 | Right:[5,3,4,2]</p>' +
+                '</div>' +
+
+                // RIGHT OF 1
+                '<div class="mb-4">' +
+                    '<p class="text-xs text-center font-bold">Right of 1 Pivot: 2</p>' +
+                    '<div class="flex justify-center gap-1 font-mono text-sm mb-1">' +
+                        '<div class="p-2 border border-white/20">5</div>' +
+                        '<div class="p-2 border border-white/20">3</div>' +
+                        '<div class="p-2 border border-yellow-500 text-yellow-300 font-bold bg-yellow-500/10">2</div>' +
+                        '<div class="p-2 border border-white/20">4</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-center opacity-70 mt-1">Partition → Left: [] | Pivot:2 | Right:[5,3,4]</p>' +
+                '</div>' +
+
+                // RIGHT OF 2
+                '<div class="mb-4">' +
+                    '<p class="text-xs text-center font-bold">Right of 2 Pivot: 4</p>' +
+                    '<div class="flex justify-center gap-1 font-mono text-sm mb-1">' +
+                        '<div class="p-2 border border-blue-500 text-blue-300 bg-blue-500/10">3</div>' +
+                        '<div class="p-2 border border-yellow-500 text-yellow-300 font-bold bg-yellow-500/10">4</div>' +
+                        '<div class="p-2 border border-red-500 text-red-300 bg-red-500/10">5</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-center opacity-70 mt-1">Partition → Left:[3] | Pivot:4 | Right:[5]</p>' +
+                '</div>' +
+
+                // RIGHT SUBARRAY OF ROOT
+                '<div class="mb-4">' +
+                    '<p class="text-xs text-center font-bold">Right Subarray Pivot: 7</p>' +
+                    '<div class="flex justify-center gap-1 font-mono text-sm mb-1">' +
+                        '<div class="p-2 border border-yellow-500 text-yellow-300 font-bold bg-yellow-500/10">7</div>' +
+                        '<div class="p-2 border border-white/20">8</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-center opacity-70 mt-1">Partition → Left: [] | Pivot:7 | Right:[8]</p>' +
+                '</div>' +
+
+                // ... inside your ALGO_CONTENT object ...
+
+// RECURSION TREE VISUALIZATION
+'<div class="mb-4 glass p-4 rounded-lg">' +
+    '<h4 class="font-bold text-sm text-center text-accent mb-2">Recursive Structure (Tree)</h4>' +
+    
+    '<div class="tree">' +
+        '<ul>' +
+            '<li>' +
+                '<span class="tree-node pivot">6</span>' + // Root
+                '<ul>' +
+                    // LEFT BRANCH (1)
+                    '<li>' +
+                        '<span class="tree-node">1</span>' +
+                        '<ul>' +
+                            '<li><span class="tree-node null">[]</span></li>' + // Left of 1
+                            '<li>' +
+                                '<span class="tree-node">2</span>' + // Right of 1
+                                '<ul>' +
+                                    '<li><span class="tree-node null">[]</span></li>' + // Left of 2
+                                    '<li>' +
+                                        '<span class="tree-node">4</span>' + // Right of 2
+                                        '<ul>' +
+                                            '<li><span class="tree-node leaf">3</span></li>' + // Left of 4
+                                            '<li><span class="tree-node leaf">5</span></li>' + // Right of 4
+                                        '</ul>' +
+                                    '</li>' +
+                                '</ul>' +
+                            '</li>' +
+                        '</ul>' +
+                    '</li>' +
+                    
+                    // RIGHT BRANCH (7)
+                    '<li>' +
+                        '<span class="tree-node">7</span>' +
+                        '<ul>' +
+                            '<li><span class="tree-node null">[]</span></li>' + // Left of 7
+                            '<li><span class="tree-node leaf">8</span></li>' + // Right of 7
+                        '</ul>' +
+                    '</li>' +
+                '</ul>' +
+            '</li>' +
+        '</ul>' +
+    '</div>' +
+    
+    '<p class="text-xs text-center opacity-70 mt-4 bg-black/20 p-2 rounded inline-block w-full">' +
+        '<span class="text-yellow-400 font-bold">Traversal Order:</span> 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8' +
+    '</p>' +
+'</div>' +
+
+                // INTERACTIVE SWAP DYNAMICS
+                '<div class="glass p-4 rounded-lg border border-white/10">' +
+                    '<h4 class="font-bold text-sm mb-4 text-center text-accent">Pivot Swap Dynamics</h4>' +
+
+                    '<div class="mb-4">' +
+                        '<div class="flex justify-center gap-1 font-mono text-sm mb-1">' +
+                            '<div class="p-2 border border-yellow-500 text-yellow-300 font-bold bg-yellow-500/10">Pivot 6</div>' +
+                            '<div class="p-2 border border-red-500 text-red-300 bg-red-500/10">8</div>' +
+                            '<div class="p-2 border border-blue-500 text-blue-300 bg-blue-500/10">1</div>' +
+                        '</div>' +
+                        '<p class="text-xs text-center mt-1 opacity-70">During partition, 8 (> pivot) and 1 (&lt; pivot) swap.</p>' +
+                    '</div>' +
+
+                    '<div class="mb-4">' +
+                        '<div class="flex justify-center gap-1 font-mono text-sm mb-1">' +
+                            '<div class="p-2 border border-green-500 text-green-300 font-bold bg-green-500/20">Pivot placed</div>' +
+                            '<div class="p-2 border border-white/20">All left smaller</div>' +
+                            '<div class="p-2 border border-white/20">All right larger</div>' +
+                        '</div>' +
+                        '<p class="text-xs text-center mt-1 opacity-70">Pivot is now in its correct position; recursion continues on left & right subarrays.</p>' +
+                    '</div>' +
+                '</div>' +
+                 
+
             '</div>',
         code: 
             '<div class="space-y-8">' +
                 '<div>' +
-                    '<div class="code-section-title">QUICKSORT</div>' +
+                    '<div class="code-section-title">QUICKSORT IMPLEMENTATION</div>' +
                     
-                    '<span class="code-label">Pseudocode</span>' +
-                    '<div class="code-box">' +
-                        'Algorithm QuickSort(A[l..r])\n' +
-                        '  if l < r\n' +
-                        '    s <- Partition(A, l, r) // s is split position\n' +
-                        '    QuickSort(A, l, s - 1)\n' +
-                        '    QuickSort(A, s + 1, r)' +
-                    '</div>' +
-
-                    '<span class="code-label">Java Implementation</span>' +
+                    '<span class="code-label">1. Recursive Structure</span>' +
                     '<div class="code-box">' +
                         'void quickSort(int[] arr, int low, int high) {\n' +
                         '    if (low < high) {\n' +
+                        '        // 1. Place pivot in correct spot\n' +
                         '        int pi = partition(arr, low, high);\n' +
+                        '\n' +
+                        '        // 2. Sort Left of pivot\n' +
                         '        quickSort(arr, low, pi - 1);\n' +
+                        '\n' +
+                        '        // 3. Sort Right of pivot\n' +
                         '        quickSort(arr, pi + 1, high);\n' +
                         '    }\n' +
                         '}' +
                     '</div>' +
 
-                    '<span class="code-label">Partition Logic (Hoare/Lomuto)</span>' +
+                    '<span class="code-label">2. Partitioning (Hoare Logic)</span>' +
                     '<div class="code-box">' +
-                        '// Scans from left (i) finding > pivot\n' +
-                        '// Scans from right (j) finding < pivot\n' +
-                        '// Swaps them until i and j cross.' +
+                        'int partition(int[] arr, int low, int high) {\n' +
+                        '    int pivot = arr[low]; // Pivot at start\n' +
+                        '    int i = low + 1; \n' +
+                        '    int j = high;\n' +
+                        '\n' +
+                        '    while (i <= j) {\n' +
+                        '        // Find element on left > pivot\n' +
+                        '        while (i <= high && arr[i] <= pivot) i++;\n' +
+                        '        \n' +
+                        '        // Find element on right < pivot\n' +
+                        '        while (j >= low && arr[j] > pivot) j--;\n' +
+                        '        \n' +
+                        '        // Swap if pointers haven\'t crossed\n' +
+                        '        if (i < j) swap(arr, i, j);\n' +
+                        '    }\n' +
+                        '    \n' +
+                        '    // Place pivot in correct position (j)\n' +
+                        '    swap(arr, low, j);\n' +
+                        '    return j;\n' +
+                        '}' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+    },
+
+    // ============================================
+    // TOPIC: STRASSEN'S ALGORITHM
+    // ============================================
+    'div_strassen': {
+        title: "Strassen's Matrix Multiplication",
+        notes: 
+            '<div class="space-y-6">' +
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Problem</h3>' +
+                    '<p class="leading-relaxed text-sm md:text-base">' +
+                        'Multiplying two $n \\times n$ matrices traditionally requires 3 nested loops (row, column, sum). This results in a cubic complexity of $\\Theta(n^3)$.' +
+                    '</p>' +
+                '</div>' +
+
+                // --- NAIVE D&C ---
+                '<div class="step-card">' +
+                    '<span class="step-title">Naive Divide & Conquer</span>' +
+                    '<p class="text-sm">We can divide each matrix into 4 sub-matrices of size $n/2$.</p>' +
+                    '<div class="latex-output text-center">$$C = \\begin{pmatrix} A_{11}B_{11} + A_{12}B_{21} & A_{11}B_{12} + A_{12}B_{22} \\\\ A_{21}B_{11} + A_{22}B_{21} & A_{21}B_{12} + A_{22}B_{22} \\end{pmatrix}$$</div>' +
+                    '<p class="text-sm mt-2">This requires <strong>8 multiplications</strong> of size $n/2$.</p>' +
+                    '<p class="text-sm font-mono opacity-80">Recurrence: $T(n) = 8T(n/2) + n^2 \\implies \\Theta(n^3)$ (No improvement).</p>' +
+                '</div>' +
+
+                // --- STRASSEN'S IMPROVEMENT ---
+                '<div class="glass p-4 rounded-lg border-l-4 border-green-500">' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Strassen\'s Insight</h4>' +
+                    '<p class="text-sm">Volker Strassen (1969) discovered a way to compute the product using only <strong>7 recursive multiplications</strong> (instead of 8) by using clever algebraic combinations (additions/subtractions).</p>' +
+                '</div>' +
+
+                // --- MASTER THEOREM DERIVATION ---
+                '<div>' +
+                    '<h4 class="font-bold text-sm mb-2 text-accent">Deriving Complexity (Master Theorem)</h4>' +
+                    '<p class="text-sm mb-2">The recurrence relation for Strassen is:</p>' +
+                    '<div class="latex-output text-center">$$T(n) = 7T(n/2) + \\Theta(n^2)$$</div>' +
+                    
+                    '<div class="bg-black/30 p-4 rounded-lg mt-3 font-mono text-sm space-y-2">' +
+                        '<p>1. Identify parameters:</p>' +
+                        '<ul class="list-disc pl-5 opacity-80">' +
+                            '<li>$a = 7$ (7 recursive calls)</li>' +
+                            '<li>$b = 2$ (Split size by 2)</li>' +
+                            '<li>$f(n) = n^2 \\implies d = 2$ (Matrix addition is quadratic)</li>' +
+                        '</ul>' +
+                        '<p class="mt-2">2. Compare $a$ vs $b^d$:</p>' +
+                        '<p class="text-center">$7 \\quad \\text{vs} \\quad 2^2 (=4)$</p>' +
+                        '<p class="text-center text-red-300 font-bold">$7 > 4$</p>' +
+                        '<p class="mt-2">3. Case 3 Applies (Roots dominate):</p>' +
+                        '<p>$$T(n) = \\Theta(n^{\\log_b a}) = \\Theta(n^{\\log_2 7})$$</p>' +
+                        '<p>$$\\log_2 7 \\approx 2.807$$</p>' +
+                    '</div>' +
+                    '<p class="text-sm mt-2 text-center font-bold text-green-400">Final Complexity: $\\Theta(n^{2.81})$</p>' +
+                '</div>' +
+            '</div>',
+        code: 
+            '<div class="space-y-8">' +
+                '<div>' +
+                    '<div class="code-section-title">STRASSEN ALGORITHM</div>' +
+                    
+                    '<span class="code-label">Pseudocode Logic</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm Strassen(A, B)\n' +
+                        '  If n is small, use standard O(n^3) multiplication\n' +
+                        '  \n' +
+                        '  // 1. Calculate 10 helper matrices (Add/Sub)\n' +
+                        '  S1 = B12 - B22\n' +
+                        '  S2 = A11 + A12\n' +
+                        '  ... (up to S10)\n' +
+                        '  \n' +
+                        '  // 2. Recursive Multiplications (Only 7 calls!)\n' +
+                        '  P1 = Strassen(A11, S1)\n' +
+                        '  P2 = Strassen(S2, B22)\n' +
+                        '  ... (up to P7)\n' +
+                        '  \n' +
+                        '  // 3. Combine P1..P7 to get C quadrants\n' +
+                        '  C11 = P5 + P4 - P2 + P6\n' +
+                        '  C12 = P1 + P2\n' +
+                        '  C21 = P3 + P4\n' +
+                        '  C22 = P5 + P1 - P3 - P7\n' +
+                        '  \n' +
+                        '  return C' +
+                    '</div>' +
+
+                    '<span class="code-label">Analysis Comparison</span>' +
+                    '<div class="code-box">' +
+                        '// Standard Algo:\n' +
+                        '// T(n) = 8T(n/2) + O(n^2) => O(n^3) = O(n^3.00)\n' +
+                        '\n' +
+                        '// Strassen Algo:\n' +
+                        '// T(n) = 7T(n/2) + O(n^2) => O(n^2.81)\n' +
+                        '\n' +
+                        '// Note: Strassen has a large hidden constant due to \n' +
+                        '// the 18 matrix additions. It is only faster for n > ~100.' +
                     '</div>' +
                 '</div>' +
             '</div>'

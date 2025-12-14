@@ -17,12 +17,14 @@ const CURRICULUM = {
         { id: 'dec_topo', title: 'Topological Sort', type: 'standard' },
         { id: 'dec_perm', title: 'Generating Permutations', type: 'standard' },
         { id: 'dec_factor', title: 'Decrease by Factor', type: 'standard' },
-        { id: 'dec_var', title: 'Variable Size Decrease', type: 'standard' }
+        { id: 'dec_var', title: 'Variable Size Decrease', type: 'standard' },
+         { id: 'dec_kth', title: 'k-th Order Statistic (QuickSelect)', type: 'standard' }
     ],
     div: [
         { id: 'div_intro', title: 'Intro & Merge Sort', type: 'standard' },
         { id: 'div_quick', title: 'QuickSort', type: 'standard' },
-        { id: 'div_geom', title: 'Geometric D&C', type: 'standard' }
+        { id: 'div_geom', title: 'Geometric D&C', type: 'standard' },
+         { id: 'div_strassen', title: 'Strassen\'s Matrix Multiplication', type: 'standard' }
     ],
    tra: [
         { id: 'trans_presort', title: 'Instance Simplification (Pre-sorting)', type: 'standard' },
