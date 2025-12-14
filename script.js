@@ -33,6 +33,7 @@ const CURRICULUM = {
          { id: 'div_strassen', title: 'Strassen\'s Matrix Multiplication', type: 'standard' }
     ],
    tra: [
+        { id: 'trans_intro', title: 'Intro', type: 'standard' },
         { id: 'trans_presort', title: 'Instance Simplification (Pre-sorting)', type: 'standard' },
         { id: 'trans_horner', title: 'Horner\'s Rule (Polynomials)', type: 'standard' },
         { id: 'trans_expo', title: 'Binary Exponentiation', type: 'standard' },
@@ -53,17 +54,14 @@ const CURRICULUM = {
         { id: 'gre_intro', title: 'Intro & Change Making', type: 'standard' },
         { id: 'gre_huff', title: 'Huffman Coding', type: 'standard' }
     ],
-    qna: [
-        { id: 'brute', title: 'Brute Force', type: 'standard' },
-        { id: 'decrease', title: 'Decrese and Conquer', type: 'standard' },
-        { id: 'divide', title: 'Divide and Conquer', type: 'standard' },
-        { id: 'trans', title: 'Transformation', type: 'standard' },
-        { id: 'space', title: 'Spacetime/Tradeoff', type: 'standard' },
-        { id: 'greed', title: 'Greedy', type: 'standard' }
-       
+   dyn: [
+        { id: 'dyn_intro', title: 'Intro: Principle & Fibonacci', type: 'standard' },
+        { id: 'dyn_change', title: 'Change Making (DP)', type: 'standard' },
+        { id: 'dyn_warshall', title: 'Warshall\'s Algorithm (Closure)', type: 'standard' },
+        { id: 'dyn_floyd', title: 'Floyd\'s Algorithm (Shortest Path)', type: 'standard' },
+        { id: 'dyn_knap', title: 'Knapsack Problem (DP)', type: 'standard' }
     ]
 };
-
 
 document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
