@@ -455,57 +455,191 @@ export const divide = {
     },
 
     // ============================================
-    // TOPIC: GEOMETRIC D&C
+    // TOPIC: GEOMETRIC D&C (CLOSEST PAIR & QUICKHULL)
     // ============================================
     'div_geom': {
         title: "Geometric D&C: Closest Pair & QuickHull",
         notes: 
-            '<div class="space-y-6">' +
+            '<div class="space-y-8">' +
+                
+                // --- 1. CLOSEST PAIR COMPARISON ---
                 '<div>' +
-                    '<h3 class="text-xl font-bold text-accent mb-2">Closest Pair (D&C)</h3>' +
-                    '<p class="leading-relaxed text-sm md:text-base">' +
-                        'Beats Brute Force ($O(n^2)$) by sorting points by X-coordinate and dividing the plane in half.' +
-                    '</p>' +
-                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">' +
-                        '<li>Divide points into Left and Right sets by vertical line.</li>' +
-                        '<li>Solve recursively: $d = \\min(d_{left}, d_{right})$.</li>' +
-                        '<li><strong>Straddle Zone:</strong> Check points within distance $d$ of the line. (Only need to check next 5-7 points sorted by Y).</li>' +
-                        '<li><strong>Efficiency:</strong> $\\Theta(n \\log n)$.</li>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">1. Closest Pair: The D&C Improvement</h3>' +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
+                        '<div class="bg-red-900/20 p-3 rounded border border-red-500/30">' +
+                            '<h4 class="font-bold text-red-300 text-sm">Brute Force</h4>' +
+                            '<p class="text-xs mt-1">Calculates distance between <strong>EVERY</strong> pair of points.</p>' +
+                            '<p class="font-mono text-xs mt-2">Checks: $n(n-1)/2$<br>Complexity: $\\Theta(n^2)$</p>' +
+                        '</div>' +
+                        '<div class="bg-green-900/20 p-3 rounded border border-green-500/30">' +
+                            '<h4 class="font-bold text-green-300 text-sm">Divide & Conquer</h4>' +
+                            '<p class="text-xs mt-1">Splits space in half. Only checks points in a narrow <strong>"Straddle Zone"</strong>.</p>' +
+                            '<p class="font-mono text-xs mt-2">Recurrence: $2T(n/2) + O(n)$<br>Complexity: $\\Theta(n \\log n)$</p>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+
+                // --- CLOSEST PAIR VISUAL ---
+                '<div class="step-card">' +
+                    '<span class="step-title">Visual Trace: D&C Closest Pair</span>' +
+                    '<p class="text-sm mb-4">Input: A set of points sorted by X-coordinate.</p>' +
+                    
+                    // GRAPH CONTAINER
+                    '<div class="relative h-48 w-full bg-black/40 rounded-lg border border-white/10 mb-4 overflow-hidden">' +
+                        // Left Section
+                        '<div class="absolute left-0 top-0 h-full w-1/2 border-r border-dashed border-white/30 flex items-center justify-center">' +
+                            '<span class="text-xs text-blue-300 opacity-50 font-bold">Left (dL)</span>' +
+                        '</div>' +
+                        // Right Section
+                        '<div class="absolute right-0 top-0 h-full w-1/2 flex items-center justify-center">' +
+                            '<span class="text-xs text-red-300 opacity-50 font-bold">Right (dR)</span>' +
+                        '</div>' +
+                        // The Strip
+                        '<div class="absolute left-1/2 top-0 h-full w-1/6 -translate-x-1/2 bg-yellow-500/10 border-x border-yellow-500/30"></div>' +
+                        '<div class="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] text-yellow-200">Straddle Zone<br>(Width 2d)</div>' +
+                        // Points (Simulated)
+                        '<div class="absolute left-[20%] top-[40%] w-2 h-2 bg-blue-400 rounded-full"></div>' +
+                        '<div class="absolute left-[35%] top-[70%] w-2 h-2 bg-blue-400 rounded-full"></div>' +
+                        '<div class="absolute right-[20%] top-[30%] w-2 h-2 bg-red-400 rounded-full"></div>' +
+                        '<div class="absolute right-[30%] top-[60%] w-2 h-2 bg-red-400 rounded-full"></div>' +
+                        // The Problematic Pair (In Strip)
+                        '<div class="absolute left-[48%] top-[50%] w-2 h-2 bg-green-400 rounded-full shadow-[0_0_5px_#4ade80]"></div>' +
+                        '<div class="absolute left-[54%] top-[52%] w-2 h-2 bg-green-400 rounded-full shadow-[0_0_5px_#4ade80]"></div>' +
+                        '<div class="absolute left-[49%] top-[51%] w-8 h-8 border border-green-500/50 rounded-full"></div>' +
+                    '</div>' +
+
+                    '<ul class="list-decimal pl-5 mt-2 space-y-2 text-sm">' +
+                        '<li>Find min distance in Left ($d_L$) and Right ($d_R$). Let $d = \\min(d_L, d_R)$.</li>' +
+                        '<li><strong>The Trick:</strong> We only need to check points within distance $d$ of the dividing line.</li>' +
+                        '<li><strong>The Optimization:</strong> Sort strip points by Y. For each point, we only check the next <strong>7 points</strong>. This keeps the merge step Linear $O(n)$.</li>' +
                     '</ul>' +
                 '</div>' +
+
+                // --- 2. CONVEX HULL COMPARISON ---
+                '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">2. Convex Hull: The Improvement</h3>' +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
+                        '<div class="bg-red-900/20 p-3 rounded border border-red-500/30">' +
+                            '<h4 class="font-bold text-red-300 text-sm">Brute Force</h4>' +
+                            '<p class="text-xs mt-1">For <strong>EVERY</strong> pair, draw a line. Check if all other points lie on one side.</p>' +
+                            '<p class="font-mono text-xs mt-2">Pairs: $n^2$<br>Check each: $n$<br>Total: $O(n^3)$</p>' +
+                        '</div>' +
+                        '<div class="bg-green-900/20 p-3 rounded border border-green-500/30">' +
+                            '<h4 class="font-bold text-green-300 text-sm">QuickHull (D&C)</h4>' +
+                            '<p class="text-xs mt-1">Finds extreme points and <strong>discards</strong> internal points (inside triangles).</p>' +
+                            '<p class="font-mono text-xs mt-2">Avg: $\\Theta(n \\log n)$<br>Worst: $\\Theta(n^2)$</p>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+
+                // --- QUICKHULL VISUAL ---
                 '<div class="step-card">' +
-                    '<span class="step-title">QuickHull</span>' +
-                    '<p class="text-sm">Finds Convex Hull using strategy similar to QuickSort.</p>' +
-                    '<ol class="list-decimal pl-5 mt-2 space-y-1 text-sm">' +
-                        '<li>Find left-most ($P_1$) and right-most ($P_2$) points. Draw line $P_1P_2$.</li>' +
-                        '<li>Find point $P_{max}$ furthest from line.</li>' +
-                        '<li>Points inside triangle $P_1 P_{max} P_2$ are ignored.</li>' +
-                        '<li>Recursively process regions to the left/right of the new lines.</li>' +
-                    '</ol>' +
+                    '<span class="step-title">Visual Trace: QuickHull</span>' +
+                    '<p class="text-sm mb-4">Works like QuickSort: Pick "pivots" (extreme points) and partition.</p>' +
+                    
+                    '<div class="glass p-4 rounded-lg border border-white/10 text-center">' +
+                        '<h4 class="font-bold text-xs text-accent mb-2">The Partitioning</h4>' +
+                        '<svg viewBox="0 0 200 120" class="w-full h-40">' +
+                            // Triangle
+                            '<polygon points="20,80 180,80 100,20" fill="rgba(34, 197, 94, 0.1)" stroke="none" />' +
+                            // Base Line
+                            '<line x1="20" y1="80" x2="180" y2="80" stroke="#fff" stroke-width="2" />' +
+                            '<text x="20" y="95" fill="white" font-size="10">P1 (Min X)</text>' +
+                            '<text x="180" y="95" fill="white" font-size="10">P2 (Max X)</text>' +
+                            // Height Line
+                            '<line x1="100" y1="20" x2="100" y2="80" stroke="#facc15" stroke-dasharray="4" />' +
+                            // Pmax
+                            '<circle cx="100" cy="20" r="3" fill="#facc15" />' +
+                            '<text x="100" y="15" fill="#facc15" font-size="10" text-anchor="middle">Pmax (Furthest)</text>' +
+                            // Sides
+                            '<line x1="20" y1="80" x2="100" y2="20" stroke="#22c55e" stroke-width="2" />' +
+                            '<line x1="180" y1="80" x2="100" y2="20" stroke="#22c55e" stroke-width="2" />' +
+                            // Points Inside (Eliminated)
+                            '<circle cx="80" cy="70" r="2" fill="#555" />' +
+                            '<circle cx="120" cy="60" r="2" fill="#555" />' +
+                            '<circle cx="100" cy="50" r="2" fill="#555" />' +
+                            '<text x="100" y="60" fill="#777" font-size="8" text-anchor="middle">Ignored</text>' +
+                        '</svg>' +
+                        '<div class="text-left mt-3 text-sm font-mono space-y-1">' +
+                            '<p>1. Find P1 (Min X) and P2 (Max X).</p>' +
+                            '<p>2. Find Pmax (furthest from line P1-P2).</p>' +
+                            '<p>3. <span class="text-gray-400">Ignore points inside triangle.</span></p>' +
+                            '<p>4. Recurse on left of Green Lines.</p>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
             '</div>',
         code: 
             '<div class="space-y-8">' +
+                // --- 1. CLOSEST PAIR CODE ---
                 '<div>' +
-                    '<div class="code-section-title">QUICKHULL ALGORITHM</div>' +
+                    '<div class="code-section-title">1. CLOSEST PAIR (Divide & Conquer)</div>' +
                     
                     '<span class="code-label">Pseudocode Logic</span>' +
                     '<div class="code-box">' +
+                        'Algorithm ClosestPair(P)\n' +
+                        '  if |P| <= 3 return BruteForce(P)\n' +
+                        '  \n' +
+                        '  Sort P by X-coordinate\n' +
+                        '  Mid <- P[n/2]\n' +
+                        '  PL <- Points left of Mid\n' +
+                        '  PR <- Points right of Mid\n' +
+                        '  \n' +
+                        '  dL <- ClosestPair(PL)\n' +
+                        '  dR <- ClosestPair(PR)\n' +
+                        '  d <- min(dL, dR)\n' +
+                        '  \n' +
+                        '  // The critical linear merge step\n' +
+                        '  Strip <- Points within d of Mid\n' +
+                        '  Sort Strip by Y-coordinate\n' +
+                        '  \n' +
+                        '  for i <- 0 to |Strip|-1\n' +
+                        '    // Only check next 7 points!\n' +
+                        '    for k <- i+1 to i+7\n' +
+                        '      d <- min(d, distance(Strip[i], Strip[k]))\n' +
+                        '      \n' +
+                        '  return d' +
+                    '</div>' +
+                '</div>' +
+
+                // --- 2. QUICKHULL CODE ---
+                '<div>' +
+                    '<div class="code-section-title">2. QUICKHULL ALGORITHM</div>' +
+                    
+                    '<span class="code-label">Brute Force Logic (The Slow Way)</span>' +
+                    '<div class="code-box">' +
+                        '// Inefficient O(n^3)\n' +
+                        'for i <- 0 to n-1\n' +
+                        '  for j <- i+1 to n-1\n' +
+                        '    Draw Line (Pi, Pj)\n' +
+                        '    Check if all other points are on one side\n' +
+                        '    If yes -> Add to Hull' +
+                    '</div>' +
+
+                    '<span class="code-label">QuickHull Logic (The Fast Way)</span>' +
+                    '<div class="code-box">' +
                         'Algorithm QuickHull(S, P1, P2)\n' +
+                        '  // S is set of points to the "left" of line P1->P2\n' +
                         '  if S is empty return\n' +
-                        '  Find Pmax in S furthest from line P1-P2\n' +
+                        '  \n' +
+                        '  // 1. Find Furthest Point (O(n))\n' +
+                        '  Pmax <- Point in S with max distance to line P1-P2\n' +
                         '  Add Pmax to Hull\n' +
-                        '  S1 = points to left of P1-Pmax\n' +
-                        '  S2 = points to left of Pmax-P2\n' +
+                        '  \n' +
+                        '  // 2. Filter Points (Discard internal ones)\n' +
+                        '  S1 <- Points left of line P1->Pmax\n' +
+                        '  S2 <- Points left of line Pmax->P2\n' +
+                        '  \n' +
+                        '  // 3. Recurse\n' +
                         '  QuickHull(S1, P1, Pmax)\n' +
                         '  QuickHull(S2, Pmax, P2)' +
                     '</div>' +
 
-                    '<span class="code-label">Analysis</span>' +
+                    '<span class="code-label">Complexity Analysis</span>' +
                     '<div class="code-box">' +
-                        '// Average Case: Theta(n log n)\n' +
-                        '// Worst Case: Theta(n^2) (if points form a circle)\n' +
-                        '// Much faster than Brute Force O(n^3).' +
+                        '// Average Case: T(n) = 2T(n/2) + O(n) => Theta(n log n)\n' +
+                        '// Worst Case: T(n) = T(n-1) + O(n) => Theta(n^2)\n' +
+                        '// Worst case happens if points form a circle (all are on hull).' +
                     '</div>' +
                 '</div>' +
             '</div>'

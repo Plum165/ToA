@@ -384,39 +384,127 @@ export const decrease = {
                 '</div>' +
             '</div>'
     },
-    // ============================================
+   // ============================================
     // TOPIC: DECREASE BY FACTOR
     // ============================================
     'dec_factor': {
         title: "Decrease by Constant Factor",
         notes: 
-            '<div class="space-y-6">' +
+            '<div class="space-y-8">' +
+                // --- INTRO ---
                 '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">The Strategy</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
                         'In these algorithms, the size of the instance is reduced by a constant factor (usually divided by 2) at each step. This typically results in logarithmic complexity $\\Theta(\\log n)$.' +
                     '</p>' +
                 '</div>' +
+
+                // --- 1. FAKE COIN VISUAL ---
                 '<div class="step-card">' +
-                    '<span class="step-title">Fake Coin Problem</span>' +
-                    '<p class="text-sm">Identify one lighter fake coin among $n$ coins using a balance scale.</p>' +
-                    '<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">' +
-                        '<li>Divide coins into two piles of size $\\lfloor n/2 \\rfloor$.</li>' +
-                        '<li>Weigh the piles. If equal, the extra coin (if $n$ odd) is fake.</li>' +
-                        '<li>If unequal, repeat with the lighter pile.</li>' +
-                        '<li><strong>Complexity:</strong> $\\Theta(\\log_2 n)$.</li>' +
-                    '</ul>' +
+                    '<span class="step-title">1. Fake Coin Problem</span>' +
+                    '<p class="text-sm mb-4">Identify one lighter fake coin among $n$ coins using a balance scale.</p>' +
+                    
+                    '<div class="glass p-4 rounded-lg border border-white/10">' +
+                        '<h4 class="font-bold text-xs text-center text-accent mb-2">Visual Trace: 8 Coins</h4>' +
+                        '<div class="flex flex-col gap-3 font-mono text-xs">' +
+                            // Step 1
+                            '<div class="flex items-center gap-2">' +
+                                '<span class="text-blue-300 w-12">Step 1</span>' +
+                                '<div class="flex-1 text-center border-b border-white/10 pb-1">' +
+                                    'Scale: [10,10,10,9] vs [10,10,10,10]<br>' +
+                                    '<span class="text-red-400">Left is Lighter!</span> Discard Right.' +
+                                '</div>' +
+                            '</div>' +
+                            // Step 2
+                            '<div class="flex items-center gap-2">' +
+                                '<span class="text-blue-300 w-12">Step 2</span>' +
+                                '<div class="flex-1 text-center border-b border-white/10 pb-1">' +
+                                    'Scale: [10,10] vs [10,9]<br>' +
+                                    '<span class="text-red-400">Right is Lighter!</span> Discard Left.' +
+                                '</div>' +
+                            '</div>' +
+                            // Step 3
+                            '<div class="flex items-center gap-2">' +
+                                '<span class="text-blue-300 w-12">Step 3</span>' +
+                                '<div class="flex-1 text-center">' +
+                                    'Scale: [10] vs [9]<br>' +
+                                    '<span class="text-green-400 font-bold">Found Fake: 9g</span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-right mt-1 opacity-70">Complexity: $\\Theta(\\log_2 n)$</p>' +
                 '</div>' +
+
+                // --- 2. RUSSE VISUAL ---
                 '<div class="step-card">' +
-                    '<span class="step-title">Multiplication à la Russe</span>' +
-                    '<p class="text-sm">Russian Peasant Multiplication reduces $n \\times m$ to addition and shifting.</p>' +
-                    '<p class="text-sm opacity-80 mt-1">If $n$ is even: $n \\cdot m = (n/2) \\cdot (2m)$</p>' +
-                    '<p class="text-sm opacity-80">If $n$ is odd: $n \\cdot m = ((n-1)/2) \\cdot (2m) + m$</p>' +
+                    '<span class="step-title">2. Multiplication à la Russe</span>' +
+                    '<p class="text-sm mb-4">Russian Peasant Multiplication reduces $n \\times m$ to addition and shifting.</p>' +
+                    
+                    '<div class="glass p-4 rounded-lg border border-white/10">' +
+                        '<h4 class="font-bold text-xs text-center text-accent mb-2">Trace: 50 * 20</h4>' +
+                        '<table class="w-full text-xs text-center font-mono">' +
+                            '<tr class="border-b border-white/20 text-gray-400"><th>n (Halve)</th><th>m (Double)</th><th>Action</th></tr>' +
+                            '<tr><td>50</td><td>20</td><td class="opacity-50">Ignore (Even)</td></tr>' +
+                            '<tr><td>25</td><td>40</td><td class="text-green-400">Add 40</td></tr>' +
+                            '<tr><td>12</td><td>80</td><td class="opacity-50">Ignore (Even)</td></tr>' +
+                            '<tr><td>6</td><td>160</td><td class="opacity-50">Ignore (Even)</td></tr>' +
+                            '<tr><td>3</td><td>320</td><td class="text-green-400">Add 320</td></tr>' +
+                            '<tr><td>1</td><td>640</td><td class="text-green-400">Add 640</td></tr>' +
+                            '<tr class="border-t border-white/20 font-bold text-accent"><td>0</td><td></td><td>Sum = 1000</td></tr>' +
+                        '</table>' +
+                    '</div>' +
                 '</div>' +
             '</div>',
         code: 
             '<div class="space-y-8">' +
+                // --- FAKE COIN CODE ---
                 '<div>' +
-                    '<div class="code-section-title">RUSSIAN PEASANT MULTIPLICATION</div>' +
+                    '<div class="code-section-title">1. FAKE COIN ALGORITHM</div>' +
+                    
+                    '<span class="code-label">Pseudocode</span>' +
+                    '<div class="code-box">' +
+                        'Algorithm FindFake(Coins[0..n-1])\n' +
+                        '  if n == 1 return Coins[0]\n' +
+                        '  \n' +
+                        '  // Split into 3 parts: Left, Right, Extra (if odd)\n' +
+                        '  PileA <- Coins[0 .. n/2 - 1]\n' +
+                        '  PileB <- Coins[n/2 .. 2*(n/2) - 1]\n' +
+                        '  \n' +
+                        '  if Weight(PileA) < Weight(PileB)\n' +
+                        '    return FindFake(PileA)\n' +
+                        '  else if Weight(PileA) > Weight(PileB)\n' +
+                        '    return FindFake(PileB)\n' +
+                        '  else\n' +
+                        '    return Coins[n-1] // The left over coin is fake' +
+                    '</div>' +
+
+                    '<span class="code-label">Java Implementation</span>' +
+                    '<div class="code-box">' +
+                        'int findFake(int[] coins, int start, int end) {\n' +
+                        '    int n = end - start + 1;\n' +
+                        '    if (n == 1) return start; // Found index\n' +
+                        '    \n' +
+                        '    int half = n / 2;\n' +
+                        '    // Calculate weights of two halves\n' +
+                        '    int w1 = getWeight(coins, start, start + half - 1);\n' +
+                        '    int w2 = getWeight(coins, start + half, start + 2*half - 1);\n' +
+                        '    \n' +
+                        '    if (w1 < w2) {\n' +
+                        '        return findFake(coins, start, start + half - 1);\n' +
+                        '    } else if (w1 > w2) {\n' +
+                        '        return findFake(coins, start + half, start + 2*half - 1);\n' +
+                        '    } else {\n' +
+                        '        // Leftover coin (n was odd)\n' +
+                        '        return end;\n' +
+                        '    }\n' +
+                        '}' +
+                    '</div>' +
+                '</div>' +
+
+                // --- RUSSE CODE ---
+                '<div>' +
+                    '<div class="code-section-title">2. RUSSIAN PEASANT MULTIPLICATION</div>' +
                     
                     '<span class="code-label">Pseudocode</span>' +
                     '<div class="code-box">' +
@@ -430,87 +518,161 @@ export const decrease = {
                         '  return res' +
                     '</div>' +
 
-                    '<span class="code-label">Java Implementation</span>' +
+                    '<span class="code-label">Java Implementation (Bitwise)</span>' +
                     '<div class="code-box">' +
                         'int russianMult(int n, int m) {\n' +
                         '    int res = 0;\n' +
                         '    while (n > 0) {\n' +
-                        '        if ((n & 1) == 1) { // is odd\n' +
+                        '        if ((n & 1) == 1) { // Check if odd\n' +
                         '            res += m;\n' +
                         '        }\n' +
-                        '        n = n >> 1; // divide by 2\n' +
-                        '        m = m << 1; // multiply by 2\n' +
+                        '        n = n >> 1; // Halve (Bit shift right)\n' +
+                        '        m = m << 1; // Double (Bit shift left)\n' +
                         '    }\n' +
                         '    return res;\n' +
                         '}' +
-                    '</div>' +
-
-                    '<span class="code-label">Analysis</span>' +
-                    '<div class="code-box">' +
-                        '// The loop runs log2(n) times.\n' +
-                        '// Only uses addition and bit-shifting (very fast in hardware).\n' +
-                        '// Complexity: Theta(log n)' +
                     '</div>' +
                 '</div>' +
             '</div>'
     },
 
-    // ============================================
+   // ============================================
     // TOPIC: VARIABLE SIZE DECREASE
     // ============================================
     'dec_var': {
         title: "Variable Size Decrease",
         notes: 
-            '<div class="space-y-6">' +
+            '<div class="space-y-8">' +
                 '<div>' +
+                    '<h3 class="text-xl font-bold text-accent mb-2">Concept</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
-                        'Here the size reduction pattern varies at each step. It is not always 1, and not always half.' +
+                        'In these algorithms, the size reduction pattern <strong>varies</strong> at each step. It depends on the specific values of the data, not just the number of elements.' +
                     '</p>' +
                 '</div>' +
+
+                // --- 1. EUCLID VISUAL ---
                 '<div class="step-card">' +
-                    '<span class="step-title">Euclid\'s Algorithm (GCD)</span>' +
-                    '<p class="text-sm mb-2">Finds Greatest Common Divisor of $m$ and $n$.</p>' +
-                    '<p class="text-sm font-mono bg-black/20 p-2 rounded">gcd(m, n) = gcd(n, m mod n)</p>' +
-                    '<p class="text-sm mt-2">The size reduces by the result of the modulo, which varies.</p>' +
+                    '<span class="step-title">1. Euclid\'s Algorithm (GCD)</span>' +
+                    '<p class="text-sm mb-4">Finds Greatest Common Divisor by repeatedly applying $gcd(m, n) = gcd(n, m \\% n)$.</p>' +
+                    
+                    '<div class="glass p-4 rounded-lg border border-white/10">' +
+                        '<h4 class="font-bold text-xs text-center text-accent mb-3">Trace: GCD(60, 24)</h4>' +
+                        '<div class="flex flex-col gap-2 font-mono text-sm">' +
+                            // Row 1
+                            '<div class="flex items-center justify-between bg-black/20 p-2 rounded">' +
+                                '<span>Step 1</span>' +
+                                '<span class="text-blue-300">60 % 24 = 12</span>' +
+                                '<span class="opacity-50">New pair: (24, 12)</span>' +
+                            '</div>' +
+                            // Row 2
+                            '<div class="flex items-center justify-between bg-black/20 p-2 rounded">' +
+                                '<span>Step 2</span>' +
+                                '<span class="text-blue-300">24 % 12 = 0</span>' +
+                                '<span class="opacity-50">New pair: (12, 0)</span>' +
+                            '</div>' +
+                            // Result
+                            '<div class="bg-green-500/20 border border-green-500 p-2 rounded text-center font-bold text-green-400">' +
+                                'n is 0. Result is m: 12' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<p class="text-xs text-right mt-1 opacity-70">Complexity: $\\Theta(\\log n)$</p>' +
                 '</div>' +
+
+                // --- 2. INTERPOLATION SEARCH VISUAL ---
                 '<div class="step-card">' +
-                    '<span class="step-title">Interpolation Search</span>' +
-                    '<p class="text-sm">Like finding a name in a phonebook. Estimate position based on value distribution, rather than just middle.</p>' +
-                    '<p class="text-sm mt-1">Average Case: $\\Theta(\\log \\log n)$ (Very fast). Worst Case: $\\Theta(n)$.</p>' +
+                    '<span class="step-title">2. Interpolation Search</span>' +
+                    '<p class="text-sm mb-4">Unlike Binary Search (which checks the middle), Interpolation Search "guesses" the position based on the value, like finding a name in a phonebook.</p>' +
+
+                    // --- THE GRAPH VISUALIZATION ---
+                    '<div class="glass p-5 rounded-lg border border-white/10 mb-4">' +
+                        '<h4 class="font-bold text-xs text-center text-accent mb-4">Visual: Probing for Value "30"</h4>' +
+                        
+                        // Array Bar
+                        '<div class="relative h-12 w-full bg-white/5 rounded-lg border border-white/20 mb-2">' +
+                            // Low Marker
+                            '<div class="absolute left-0 -top-6 text-xs text-gray-400 text-center"><span class="font-bold text-white">0</span><br>↓</div>' +
+                            // High Marker
+                            '<div class="absolute right-0 -top-6 text-xs text-gray-400 text-center"><span class="font-bold text-white">100</span><br>↓</div>' +
+                            
+                            // The Probe Bar (30%)
+                            '<div class="absolute left-[30%] h-full w-1 bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.8)]"></div>' +
+                            
+                            // Probe Label
+                            '<div class="absolute left-[30%] -bottom-8 -translate-x-1/2 text-center">' +
+                                '<div class="text-yellow-400 text-lg font-bold">↑</div>' +
+                                '<div class="text-xs text-yellow-300 font-bold whitespace-nowrap">Probe (30)</div>' +
+                            '</div>' +
+                        '</div>' +
+                        
+                        '<div class="mt-10 text-xs font-mono text-center opacity-80">' +
+                            'Range: 0 to 100. Target: 30.<br>' +
+                            'Probe = 0 + (30-0)/(100-0) * Length ≈ 30%' +
+                        '</div>' +
+                    '</div>' +
+
+                    // --- STEP BY STEP MATH ---
+                    '<div class="bg-black/20 p-3 rounded-lg text-sm">' +
+                        '<p class="font-bold text-gray-400 mb-2">Example Trace:</p>' +
+                        '<p class="font-mono mb-1">Array: [0, 10, 20, 30, 40, ..., 100]</p>' +
+                        '<p class="font-mono mb-1">Target: 30</p>' +
+                        '<div class="pl-3 border-l-2 border-yellow-500 mt-2">' +
+                            '<p class="text-xs text-gray-400">Formula:</p>' +
+                            '<p class="font-mono text-yellow-300 text-xs">pos = lo + ((target - A[lo]) * (hi - lo) / (A[hi] - A[lo]))</p>' +
+                            '<p class="font-mono text-xs mt-1">pos = 0 + ((30 - 0) * (10 - 0) / (100 - 0))</p>' +
+                            '<p class="font-mono text-xs">pos = 3</p>' +
+                        '</div>' +
+                        '<p class="mt-2 text-green-400 font-bold">Check A[3]... Found 30 in 1 step!</p>' +
+                    '</div>' +
+                    
+                    '<div class="grid grid-cols-2 gap-2 text-xs text-center mt-3">' +
+                        '<div class="p-2 border border-green-500/30 rounded bg-green-500/10 text-green-300"><strong>Avg Case:</strong><br>$\\Theta(\\log \\log n)$<br>(Extremely Fast)</div>' +
+                        '<div class="p-2 border border-red-500/30 rounded bg-red-500/10 text-red-300"><strong>Worst Case:</strong><br>$\\Theta(n)$<br>(Bad Distribution)</div>' +
+                    '</div>' +
                 '</div>' +
             '</div>',
         code: 
             '<div class="space-y-8">' +
+                // --- EUCLID CODE ---
                 '<div>' +
-                    '<div class="code-section-title">SELECTION PROBLEM (k-th Smallest)</div>' +
-                    
-                    '<span class="code-label">Pseudocode (Lomuto Partition)</span>' +
-                    '<div class="code-box">' +
-                        'Algorithm QuickSelect(A[l..r], k)\n' +
-                        '  s <- Partition(A, l, r) // places pivot at s\n' +
-                        '  if s == k return A[s]\n' +
-                        '  else if s > k\n' +
-                        '    QuickSelect(A[l..s-1], k)\n' +
-                        '  else\n' +
-                        '    QuickSelect(A[s+1..r], k)' +
-                    '</div>' +
-
+                    '<div class="code-section-title">1. EUCLID GCD</div>' +
                     '<span class="code-label">Java Implementation</span>' +
                     '<div class="code-box">' +
-                        'int quickSelect(int[] arr, int l, int r, int k) {\n' +
-                        '    int p = partition(arr, l, r);\n' +
-                        '    if (p == k) return arr[p];\n' +
-                        '    else if (p > k) return quickSelect(arr, l, p - 1, k);\n' +
-                        '    else return quickSelect(arr, p + 1, r, k);\n' +
+                        'int gcd(int m, int n) {\n' +
+                        '    while (n != 0) {\n' +
+                        '        int r = m % n;\n' +
+                        '        m = n;\n' +
+                        '        n = r;\n' +
+                        '    }\n' +
+                        '    return m;\n' +
                         '}' +
                     '</div>' +
+                '</div>' +
 
-                    '<span class="code-label">Analysis</span>' +
+                // --- INTERPOLATION CODE ---
+                '<div>' +
+                    '<div class="code-section-title">2. INTERPOLATION SEARCH</div>' +
+                    '<span class="code-label">Java Implementation</span>' +
                     '<div class="code-box">' +
-                        '// Unlike QuickSort, we only follow ONE side of the partition.\n' +
-                        '// Average Case: T(n) = T(n/2) + n => Theta(n)\n' +
-                        '// Worst Case: Theta(n^2) (if sorted)\n' +
-                        '// This is Variable Decrease because partition pivot varies.' +
+                        'int interpolationSearch(int[] arr, int target) {\n' +
+                        '    int lo = 0, hi = arr.length - 1;\n' +
+                        '\n' +
+                        '    while (lo <= hi && target >= arr[lo] && target <= arr[hi]) {\n' +
+                        '        if (lo == hi) {\n' +
+                        '            if (arr[lo] == target) return lo;\n' +
+                        '            return -1;\n' +
+                        '        }\n' +
+                        '\n' +
+                        '        // The Probe Formula\n' +
+                        '        int pos = lo + (((hi - lo) * \n' +
+                        '            (target - arr[lo])) / (arr[hi] - arr[lo]));\n' +
+                        '\n' +
+                        '        if (arr[pos] == target) return pos;\n' +
+                        '        if (arr[pos] < target) lo = pos + 1;\n' +
+                        '        else hi = pos - 1;\n' +
+                        '    }\n' +
+                        '    return -1;\n' +
+                        '}' +
                     '</div>' +
                 '</div>' +
             '</div>'
