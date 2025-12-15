@@ -825,12 +825,13 @@ export const dynamic = {
     '<span id="item-indicator" class="k-badge ml-4">Current Item = 0</span>' +
   '</div>' +
 
-  // ===== DP TABLE =====
-  '<div class="glass p-4 rounded-lg border border-white/10 overflow-x-auto">' +
-    '<h4 class="font-bold text-xs text-center text-accent mb-2">DP Table</h4>' +
-    '<div id="knapsack-matrix" class="grid grid-cols-8 gap-1 text-center font-mono text-xs min-w-[400px] w-full"></div>' +
-    '<p class="text-[11px] text-center mt-2 opacity-70">Highlighted cells indicate updates at current step.</p>' +
-  '</div>' +
+ // ===== DP TABLE =====
+'<div class="p-4 rounded-lg border border-white/10 overflow-x-auto">' +
+  '<h4 class="font-bold text-xs text-center text-accent mb-2">DP Table</h4>' +
+  '<div id="knapsack-matrix" class="grid grid-cols-8 gap-1 text-center font-mono text-xs min-w-[400px]"></div>' +
+  '<p class="text-[11px] text-center mt-2 opacity-70">Highlighted cells indicate updates at current step.</p>' +
+'</div>'+
+
 
   // ===== CONTROLS =====
   '<div class="warshall-controls flex justify-center gap-2 mt-2">' +
