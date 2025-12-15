@@ -228,6 +228,96 @@ export const dynamic = {
     'dyn_warshall': {
         title: "Warshall's Algorithm (Transitive Closure)",
       notes:
+      // --- WARSHALL PRINCIPLE & EXPLANATION (INSERT BEFORE TRACE) ---
+'<div class="space-y-6">' +
+
+  '<div>' +
+    '<h3 class="text-xl font-bold text-accent mb-2">Warshall’s Algorithm — Core Principle</h3>' +
+    '<p class="text-sm md:text-base leading-relaxed">' +
+      'Warshall’s Algorithm computes the <strong>transitive closure</strong> of a directed graph. ' +
+      'The transitive closure tells us <em>which vertices are reachable from which other vertices</em>, ' +
+      'possibly using intermediate vertices.' +
+    '</p>' +
+  '</div>' +
+
+  '<div class="glass p-4 rounded-lg border border-white/10">' +
+    '<p class="font-semibold mb-2 text-accent">Key Idea</p>' +
+    '<p class="text-sm leading-relaxed">' +
+      'If there is a way to go from <strong>A → B</strong>, and also from <strong>B → C</strong>, ' +
+      'then there must be a way to go from <strong>A → C</strong>. ' +
+      'Warshall’s Algorithm repeatedly applies this idea to all vertices.' +
+    '</p>' +
+  '</div>' +
+
+  '<div>' +
+    '<p class="font-semibold mb-1 text-accent">Adjacency Matrix Representation</p>' +
+    '<ul class="list-disc pl-5 text-sm space-y-1 opacity-90">' +
+      '<li>The graph is represented using an <strong>adjacency matrix</strong>.</li>' +
+      '<li>If there is a directed edge from vertex <code>i</code> to <code>j</code>, then the entry is <code>1</code>.</li>' +
+      '<li>If there is no direct edge, the entry is <code>0</code>.</li>' +
+    '</ul>' +
+  '</div>' +
+
+  '<div>' +
+    '<p class="font-semibold mb-1 text-accent">Building Partial Solutions</p>' +
+    '<p class="text-sm leading-relaxed">' +
+      'Rather than checking all possible paths at once, the algorithm <strong>builds up partial solutions</strong>. ' +
+      'It considers whether paths can be formed using only a limited set of intermediate vertices.' +
+    '</p>' +
+    '<ul class="list-disc pl-5 mt-2 text-sm space-y-1 opacity-90">' +
+      '<li>First, only direct edges are allowed.</li>' +
+      '<li>Then paths using vertex 1 as an intermediate.</li>' +
+      '<li>Then vertices 1 and 2.</li>' +
+      '<li>Then vertices 1, 2, and 3.</li>' +
+      '<li>Eventually, all vertices are allowed.</li>' +
+    '</ul>' +
+  '</div>' +
+
+  '<div class="glass p-4 rounded-lg border border-white/10">' +
+    '<p class="font-semibold mb-2 text-accent">Formal Path Definition</p>' +
+    '<p class="text-sm leading-relaxed">' +
+      'A path exists between vertices <code>i</code> and <code>j</code> if and only if:' +
+    '</p>' +
+    '<ul class="list-disc pl-5 mt-2 text-sm space-y-1 opacity-90">' +
+      '<li>There is a direct edge from <code>i</code> to <code>j</code>, or</li>' +
+      '<li>There exists an intermediate vertex <code>k</code> such that:' +
+        '<ul class="list-circle pl-5 mt-1">' +
+          '<li>There is a path from <code>i</code> to <code>k</code>, and</li>' +
+          '<li>There is a path from <code>k</code> to <code>j</code>.</li>' +
+        '</ul>' +
+      '</li>' +
+    '</ul>' +
+  '</div>' +
+
+  '<div>' +
+    '<p class="font-semibold mb-1 text-accent">Matrix Evolution</p>' +
+    '<p class="text-sm leading-relaxed">' +
+      'We define a sequence of matrices <strong>R(0), R(1), ..., R(n)</strong> where:' +
+    '</p>' +
+    '<ul class="list-disc pl-5 mt-2 text-sm space-y-1 opacity-90">' +
+      '<li><strong>R(0)</strong> is the adjacency matrix.</li>' +
+      '<li><strong>R(k)</strong> allows paths that use only vertices <code>1 … k</code> as intermediates.</li>' +
+      '<li><strong>R(n)</strong> is the transitive closure of the graph.</li>' +
+    '</ul>' +
+  '</div>' +
+
+  '<div class="glass p-4 rounded-lg border border-white/10">' +
+    '<p class="font-semibold mb-2 text-accent">Recurrence Relation (Core Logic)</p>' +
+    '<p class="text-sm leading-relaxed">' +
+      'At stage <code>k</code>, we decide whether to include vertex <code>k</code> in paths between <code>i</code> and <code>j</code>.' +
+    '</p>' +
+    '<ul class="list-disc pl-5 mt-2 text-sm space-y-1 opacity-90">' +
+      '<li>If a path already exists from <code>i</code> to <code>j</code>, nothing changes.</li>' +
+      '<li>Otherwise, check if there is a path from <code>i</code> to <code>k</code> and from <code>k</code> to <code>j</code>.</li>' +
+      '<li>If both exist, a new valid path <code>i → k → j</code> is formed.</li>' +
+    '</ul>' +
+    '<p class="mt-2 font-mono text-xs bg-black/30 p-2 rounded">' +
+      'R[i][j] = R[i][j] OR ( R[i][k] AND R[k][j] )' +
+    '</p>' +
+  '</div>' +
+
+'</div>' +
+
 '<div class="space-y-8" id="warshall-root">' +
 
   // ===== HEADER =====
