@@ -543,8 +543,9 @@ function renderTable() {
     glass.appendChild(title);
 
     // Grid div
-    const grid = document.createElement('div');
-    grid.className = `grid grid-cols-${W + 2} gap-1 text-center font-mono text-xs min-w-[400px] mx-auto`;
+   const grid = document.createElement('div');
+grid.className = `grid gap-1 text-center font-mono text-xs w-full`;
+grid.style.gridTemplateColumns = `repeat(${W + 2}, minmax(30px, 1fr))`;
 
     // Header row
     grid.innerHTML += `<div class="text-gray-500">i/j</div>`;
