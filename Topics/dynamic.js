@@ -570,39 +570,48 @@ export const dynamic = {
     '<span id="floyd-k-indicator" class="k-badge">Current k = 0</span>' +
   '</div>' +
 
-  // ===== GRAPH =====
-  '<div class="glass p-4 rounded-lg text-center">' +
-    '<svg id="floyd-graph" viewBox="0 0 300 120" class="w-full h-32">' +
+// ===== GRAPH =====
+'<div class="glass p-4 rounded-lg text-center">' +
+  '<svg id="floyd-graph" viewBox="0 0 300 120" class="w-full h-32">' +
 
-      '<defs><marker id="arrowF" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto">' +
-      '<path d="M0,0 L0,6 L9,3 z" fill="#fff"/></marker></defs>' +
+    '<defs>' +
+      '<marker id="arrowF" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto">' +
+        '<path d="M0,0 L0,6 L9,3 z" fill="#fff"/>' +
+      '</marker>' +
+    '</defs>' +
 
-      // Example weighted edges
-      '<line data-from="1" data-to="2" x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
-      '<text x="200" y="40" fill="#aaa" font-size="10">3</text>' +
+    // Edges with proper alignment
+    '<line data-from="1" data-to="2" x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+    '<text x="200" y="35" fill="#aaa" font-size="10" text-anchor="middle">3</text>' +
 
-      '<line data-from="2" data-to="3" x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
-      '<text x="200" y="80" fill="#aaa" font-size="10">2</text>' +
+    '<line data-from="2" data-to="3" x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+    '<text x="200" y="75" fill="#aaa" font-size="10" text-anchor="middle">2</text>' +
 
-      '<line data-from="3" data-to="1" x1="150" y1="90" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
-      '<text x="160" y="60" fill="#aaa" font-size="10">5</text>' +
+    '<line data-from="3" data-to="1" x1="150" y1="90" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+    '<text x="155" y="60" fill="#aaa" font-size="10" text-anchor="start">5</text>' +
 
-      // Nodes
-      '<circle data-node="1" cx="150" cy="30" r="15" fill="#1e293b"/>' +
-      '<text x="150" y="35" text-anchor="middle" fill="#fff" font-weight="bold">1</text>' +
+    '<line data-from="4" data-to="1" x1="50" y1="60" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+    '<text x="100" y="40" fill="#aaa" font-size="10" text-anchor="middle">1</text>' +
 
-      '<circle data-node="2" cx="250" cy="60" r="15" fill="#1e293b"/>' +
-      '<text x="250" y="65" text-anchor="middle" fill="#fff" font-weight="bold">2</text>' +
+    '<line data-from="4" data-to="2" x1="50" y1="60" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+    '<text x="150" y="55" fill="#aaa" font-size="10" text-anchor="middle">4</text>' +
 
-      '<circle data-node="3" cx="150" cy="90" r="15" fill="#1e293b"/>' +
-      '<text x="150" y="95" text-anchor="middle" fill="#fff" font-weight="bold">3</text>' +
+    // Nodes
+    '<circle data-node="1" cx="150" cy="30" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>' +
+    '<text x="150" y="35" text-anchor="middle" fill="#fff" font-weight="bold">1</text>' +
 
-      '<circle data-node="4" cx="50" cy="60" r="15" fill="#1e293b"/>' +
-      '<text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold">4</text>' +
+    '<circle data-node="2" cx="250" cy="60" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>' +
+    '<text x="250" y="65" text-anchor="middle" fill="#fff" font-weight="bold">2</text>' +
 
-    '</svg>' +
-    '<p class="text-xs opacity-70 mt-2">Highlighted node = current k</p>' +
-  '</div>' +
+    '<circle data-node="3" cx="150" cy="90" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>' +
+    '<text x="150" y="95" text-anchor="middle" fill="#fff" font-weight="bold">3</text>' +
+
+    '<circle data-node="4" cx="50" cy="60" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>' +
+    '<text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold">4</text>' +
+
+  '</svg>' +
+  '<p class="text-xs opacity-70 mt-2">Highlighted node = current k</p>' +
+'</div>' +
 
   // ===== MATRIX =====
   '<div class="glass p-4 rounded-lg">' +
