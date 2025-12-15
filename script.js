@@ -494,13 +494,12 @@ let V = [];
 let maxItems = items.length;
 
 function initDP() {
-    W = parseInt(document.getElementById('knapsack-capacity').value) || 5;
     V = Array.from({ length: maxItems + 1 }, () => Array(W + 1).fill(0));
     currentItem = 0;
     renderTable();
-    renderBacktrack();
     document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
 }
+
 
 function nextItem() {
     if (currentItem >= maxItems) return;
