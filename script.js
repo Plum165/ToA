@@ -488,7 +488,7 @@ const items = [
   { w: 2, v: 15 }
 ];
 
-let W = 5; // set default knapsack capacity if needed
+let W = 5;
 let currentItem = 0;
 let V = [];
 let maxItems = items.length;
@@ -497,9 +497,9 @@ function initDP() {
     V = Array.from({ length: maxItems + 1 }, () => Array(W + 1).fill(0));
     currentItem = 0;
     renderTable();
-    document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
+    updateIndicator();
+    attachKnapsackListeners(); // attach buttons after DOM exists
 }
-
 
 function nextItem() {
     if (currentItem >= maxItems) return;
@@ -510,47 +510,73 @@ function nextItem() {
         V[currentItem][j] = Math.max(excl, incl);
     }
     renderTable();
-    renderBacktrack();
-    document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
+    updateIndicator();
 }
 
 function prevItem() {
     if (currentItem <= 0) return;
     currentItem--;
     renderTable();
-    renderBacktrack();
-    document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
+    updateIndicator();
 }
+
+function updateIndicator() {
+    const indicator = document.getElementById('item-indicator');
+    if (indicator) indicator.innerText = `Current Item = ${currentItem}`;
+}
+
 function renderTable() {
     const container = document.getElementById('knapsack-matrix');
+    if (!container) return;
+
+    // Clear previous
     container.innerHTML = '';
 
-    if (!V || V.length === 0) return;
+    // Create table element
+    const table = document.createElement('table');
+    table.className = 'w-full text-center border-collapse font-mono text-sm';
 
-    // Create header row (0..W)
-    container.innerHTML += `<div class="font-bold text-gray-400">i/j</div>`;
+    // Header row
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headerRow.innerHTML = `<th class="border px-2 py-1 bg-gray-700 text-gray-300">i\\j</th>`;
     for (let j = 0; j <= W; j++) {
-        container.innerHTML += `<div class="font-bold text-gray-400">${j}</div>`;
+        headerRow.innerHTML += `<th class="border px-2 py-1 bg-gray-700 text-gray-300">${j}</th>`;
     }
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
 
-    // Create rows for items
+    // Body rows
+    const tbody = document.createElement('tbody');
     for (let i = 0; i <= maxItems; i++) {
-        container.innerHTML += `<div class="font-bold text-blue-300">${i}</div>`;
+        const row = document.createElement('tr');
+        row.innerHTML = `<th class="border px-2 py-1 bg-gray-800 text-blue-300 font-bold">${i}</th>`;
         for (let j = 0; j <= W; j++) {
-            let cell = V[i][j];
-            let cls = 'bg-black/30';
-            // Highlight the current item row and updated cells
-            if (i === currentItem && cell !== V[i - 1]?.[j]) {
-                cls += ' text-yellow-300 font-bold border border-yellow-500';
-            } 
-            container.innerHTML += `<div class="${cls}">${cell}</div>`;
+            let cls = 'border px-2 py-1 bg-gray-900 text-white';
+            // Highlight updates in current row
+            if (i === currentItem && V[i][j] !== V[i - 1]?.[j]) {
+                cls = 'border px-2 py-1 bg-green-500 text-yellow-900 font-bold';
+            }
+            row.innerHTML += `<td class="${cls}">${V[i][j]}</td>`;
         }
+        tbody.appendChild(row);
+    }
+    table.appendChild(tbody);
+    container.appendChild(table);
+}
+
+function attachKnapsackListeners() {
+    const nextBtn = document.getElementById('next-item');
+    const prevBtn = document.getElementById('prev-item');
+    if (nextBtn && !nextBtn.dataset.attached) {
+        nextBtn.addEventListener('click', nextItem);
+        nextBtn.dataset.attached = 'true';
+    }
+    if (prevBtn && !prevBtn.dataset.attached) {
+        prevBtn.addEventListener('click', prevItem);
+        prevBtn.dataset.attached = 'true';
     }
 }
 
-// Initialize on load
-document.getElementById('next-item').addEventListener('click', nextItem);
-document.getElementById('prev-item').addEventListener('click', prevItem);
-document.getElementById('knapsack-capacity').addEventListener('change', initDP);
-
+// Initialize
 initDP();
