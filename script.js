@@ -533,6 +533,11 @@ function renderTable() {
 
     container.innerHTML = ''; // clear previous content
 
+    // Set columns: 1 for i + W+1 for capacities
+    container.style.display = 'grid';
+    container.style.gridTemplateColumns = `repeat(${W + 2}, minmax(30px, 1fr))`;
+    container.className = 'gap-1 text-center font-mono text-xs w-full';
+
     // Header row
     container.innerHTML += `<div class="text-gray-500">i/j</div>`;
     for (let j = 0; j <= W; j++) {
@@ -554,10 +559,8 @@ function renderTable() {
             container.innerHTML += `<div class="${bg} ${text} ${border}">${V[i][j]}</div>`;
         }
     }
-
-    // Make sure container stretches
-    container.className = 'grid gap-1 text-center font-mono text-xs w-full auto-cols-fr';
 }
+
 
 // Ensure buttons work
 function attachListeners() {
