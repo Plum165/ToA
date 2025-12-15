@@ -143,14 +143,18 @@ function renderStandardTopic(id, container) {
     window.exerciseEngine = new NotationExercise('exercise-container');
     window.exerciseEngine.init();
 
-    // Determine which exercise engine to use
-    if (id === 'sums' || id === 'recurrence') {
+    // Init the correct exercise engine
+    if (id === 'dyn_knap') {
+        initDP(); // initialize knapsack DP and attach event listeners
+    } else if (id === 'sums' || id === 'recurrence') {
+        if (window.exerciseEngine) window.exerciseEngine = null;
         window.exerciseEngine = new EfficiencyExercise('exercise-container');
+        window.exerciseEngine.init();
     } else {
-        // Default for notations (big, omega, etc)
+        if (window.exerciseEngine) window.exerciseEngine = null;
         window.exerciseEngine = new NotationExercise('exercise-container');
+        window.exerciseEngine.init();
     }
-    
     window.exerciseEngine.init();
     if (window.MathJax) MathJax.typesetPromise();
 
