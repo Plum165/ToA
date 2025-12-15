@@ -522,19 +522,30 @@ function prevItem() {
     renderBacktrack();
     document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
 }
+function renderTable() {
+    const container = document.getElementById('knapsack-matrix');
+    container.innerHTML = '';
 
-// Backtracking logic
-function renderBacktrack() {
-    const ul = document.getElementById('knapsack-selection');
-    ul.innerHTML = '';
-    let i = currentItem;
-    let j = W;
-    while (i > 0 && j > 0) {
-        if (V[i][j] !== V[i - 1][j]) {
-            ul.innerHTML += `<li>Item ${i} (w=${items[i - 1].w}, v=${items[i - 1].v}) included</li>`;
-            j -= items[i - 1].w;
+    if (!V || V.length === 0) return;
+
+    // Create header row (0..W)
+    container.innerHTML += `<div class="font-bold text-gray-400">i/j</div>`;
+    for (let j = 0; j <= W; j++) {
+        container.innerHTML += `<div class="font-bold text-gray-400">${j}</div>`;
+    }
+
+    // Create rows for items
+    for (let i = 0; i <= maxItems; i++) {
+        container.innerHTML += `<div class="font-bold text-blue-300">${i}</div>`;
+        for (let j = 0; j <= W; j++) {
+            let cell = V[i][j];
+            let cls = 'bg-black/30';
+            // Highlight the current item row and updated cells
+            if (i === currentItem && cell !== V[i - 1]?.[j]) {
+                cls += ' text-yellow-300 font-bold border border-yellow-500';
+            } 
+            container.innerHTML += `<div class="${cls}">${cell}</div>`;
         }
-        i--;
     }
 }
 
