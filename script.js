@@ -531,47 +531,32 @@ function renderTable() {
     const container = document.getElementById('knapsack-matrix');
     if (!container) return;
 
-    container.innerHTML = '';
-
-    // Outer glass div
-    const glass = document.createElement('div');
-    glass.className = 'glass p-4 rounded-lg border border-white/10 w-full max-w-[800px] mx-auto overflow-x-auto';
-
-    const title = document.createElement('h4');
-    title.className = 'font-bold text-xs text-center text-accent mb-4';
-    title.innerText = `Exam Table: Capacity W=${W}`;
-    glass.appendChild(title);
-
-    // Grid div
-   const grid = document.createElement('div');
-grid.className = `grid gap-1 text-center font-mono text-xs w-full`;
-grid.style.gridTemplateColumns = `repeat(${W + 2}, minmax(30px, 1fr))`;
+    container.innerHTML = ''; // clear previous content
 
     // Header row
-    grid.innerHTML += `<div class="text-gray-500">i/j</div>`;
+    container.innerHTML += `<div class="text-gray-500">i/j</div>`;
     for (let j = 0; j <= W; j++) {
-        grid.innerHTML += `<div class="text-gray-500">${j}</div>`;
+        container.innerHTML += `<div class="text-gray-500">${j}</div>`;
     }
 
     // Rows
     for (let i = 0; i <= maxItems; i++) {
-        grid.innerHTML += `<div class="font-bold text-blue-300">${i}</div>`;
+        container.innerHTML += `<div class="font-bold text-blue-300">${i}</div>`;
         for (let j = 0; j <= W; j++) {
             let bg = 'bg-black/30';
             let text = 'text-white';
             let border = '';
-            // Highlight current row cells that were updated
             if (i === currentItem && V[i][j] !== V[i - 1]?.[j]) {
                 bg = 'bg-green-500/20';
                 text = 'text-yellow-300 font-bold';
                 border = 'border border-yellow-500';
             }
-            grid.innerHTML += `<div class="${bg} ${text} ${border}">${V[i][j]}</div>`;
+            container.innerHTML += `<div class="${bg} ${text} ${border}">${V[i][j]}</div>`;
         }
     }
 
-    glass.appendChild(grid);
-    container.appendChild(glass);
+    // Make sure container stretches
+    container.className = 'grid gap-1 text-center font-mono text-xs w-full auto-cols-fr';
 }
 
 // Ensure buttons work
