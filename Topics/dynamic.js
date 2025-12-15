@@ -404,95 +404,107 @@ export const dynamic = {
     // ============================================
     'dyn_floyd': {
         title: "Floyd's Algorithm (All-Pairs Shortest Path)",
-        notes: 
-            '<div class="space-y-8">' +
-                // --- 1. CORE CONCEPT ---
-                '<div>' +
-                    '<h3 class="text-xl font-bold text-accent mb-2">Shortest Paths</h3>' +
-                    '<p class="leading-relaxed text-sm md:text-base mb-2">' +
-                        'Finds the shortest distance between <strong>every pair</strong> of vertices. It works like Warshall\'s but uses <strong>Weights</strong> (Distances) instead of Booleans (Reachability).' +
-                    '</p>' +
-                    '<div class="bg-black/30 p-3 rounded text-sm border border-white/10">' +
-                        '<strong class="text-yellow-300">The Question:</strong> "Is it cheaper to go from $i$ to $j$ directly, or by taking a detour through node $k$?"' +
-                    '</div>' +
-                '</div>' +
+       notes:
+'<div class="space-y-8">' +
 
-                // --- 2. INITIAL GRAPH VISUAL ---
-                '<div class="step-card border-l-4 border-blue-500">' +
-                    '<span class="step-title">Initial Weighted Graph</span>' +
-                    '<div class="glass p-4 rounded-lg border border-white/10 text-center">' +
-                        '<svg viewBox="0 0 300 130" class="w-full h-32">' +
-                            '<defs><marker id="arrowF" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#fff" /></marker></defs>' +
-                            
-                            // Edges
-                            '<line x1="250" y1="90" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' + // 2->1
-                            '<text x="210" y="50" fill="#aaa" font-size="12">4</text>' +
+    // ============================================
+    // 1. CORE IDEA (INTUITION)
+    // ============================================
+    '<div>' +
+        '<h3 class="text-xl font-bold text-accent mb-2">Floyd’s Algorithm – Core Principle</h3>' +
+        '<p class="leading-relaxed text-sm md:text-base">' +
+            'Floyd’s Algorithm computes the <strong>shortest path between every pair of vertices</strong> in a weighted graph. ' +
+            'It is the weighted version of <strong>Warshall’s Algorithm</strong>.' +
+        '</p>' +
+        '<div class="bg-black/30 p-3 rounded text-sm border border-white/10 mt-3">' +
+            '<strong class="text-yellow-300">Key Question:</strong> ' +
+            '"Is the direct path from <em>i</em> to <em>j</em> cheaper, or is it cheaper to go via vertex <em>k</em>?"' +
+        '</div>' +
+    '</div>' +
 
-                            '<line x1="150" y1="30" x2="50" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' + // 1->3
-                            '<text x="90" y="50" fill="#aaa" font-size="12">2</text>' +
+    // ============================================
+    // 2. RELATION TO WARSHALL
+    // ============================================
+    '<div class="step-card border-l-4 border-purple-500">' +
+        '<span class="step-title">Relation to Warshall’s Algorithm</span>' +
+        '<ul class="list-disc pl-6 text-sm space-y-2">' +
+            '<li>Warshall answers: <em>"Is there a path?"</em> (Boolean)</li>' +
+            '<li>Floyd answers: <em>"What is the cheapest path?"</em> (Numeric weights)</li>' +
+            '<li>Both algorithms build solutions incrementally using intermediate vertices</li>' +
+            '<li>The only difference is the update rule</li>' +
+        '</ul>' +
+    '</div>' +
 
-                            '<line x1="250" y1="90" x2="50" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' + // 2->3
-                            '<text x="150" y="110" fill="#aaa" font-size="12">9</text>' +
-                            
-                            // Nodes
-                            '<circle cx="150" cy="30" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2" /><text x="150" y="35" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">1</text>' +
-                            '<circle cx="250" cy="90" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2" /><text x="250" y="95" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">2</text>' +
-                            '<circle cx="50" cy="90" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2" /><text x="50" y="95" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">3</text>' +
-                        '</svg>' +
-                        '<div class="text-xs mt-2 opacity-70 flex justify-center gap-4">' +
-                            '<span>2&rarr;1: 4</span>' +
-                            '<span>1&rarr;3: 2</span>' +
-                            '<span>2&rarr;3: 9 (Direct)</span>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
+    // ============================================
+    // 3. MEANING OF D(k)
+    // ============================================
+    '<div class="step-card">' +
+        '<span class="step-title">Meaning of D(k)</span>' +
+        '<p class="text-sm mb-2">' +
+            '<strong>D(k)[i][j]</strong> represents the <strong>shortest distance</strong> from vertex <em>i</em> to <em>j</em> ' +
+            'using only intermediate vertices from the set <strong>{1, 2, ..., k}</strong>.' +
+        '</p>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1">' +
+            '<li>D(0): Only direct edges are allowed</li>' +
+            '<li>D(1): Paths may go through vertex 1</li>' +
+            '<li>D(2): Paths may go through vertices 1 or 2</li>' +
+            '<li>...</li>' +
+            '<li>D(n): Paths may go through any vertex → final result</li>' +
+        '</ul>' +
+    '</div>' +
 
-                // --- 3. MATRIX EVOLUTION ---
-                '<div class="step-card">' +
-                    '<span class="step-title">Matrix Evolution (Relaxation)</span>' +
-                    '<p class="text-sm mb-4">We compare $D[i,j]$ against $(D[i,k] + D[k,j])$.</p>' +
+    // ============================================
+    // 4. RELAXATION LOGIC
+    // ============================================
+    '<div class="step-card border-l-4 border-green-500">' +
+        '<span class="step-title">Relaxation Step (The Heart of Floyd)</span>' +
+        '<p class="text-sm mb-3">' +
+            'At each stage <strong>k</strong>, we decide whether vertex <em>k</em> helps improve the shortest path from <em>i</em> to <em>j</em>.' +
+        '</p>' +
+        '<div class="bg-black/30 p-3 rounded border border-white/10 text-sm">' +
+            '<p class="font-mono text-center">' +
+                'D[i][j] = min( D[i][j], D[i][k] + D[k][j] )' +
+            '</p>' +
+        '</div>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1 mt-3">' +
+            '<li>If the current path is already cheaper → no change</li>' +
+            '<li>If going via k is cheaper → update the matrix</li>' +
+            '<li>Each update improves future paths</li>' +
+        '</ul>' +
+    '</div>' +
 
-                    // ROW: D0 and D1
-                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">' +
-                        // D0
-                        '<div>' +
-                            '<p class="text-xs font-bold text-center mb-1 text-gray-400">D(0) - Initial Weights</p>' +
-                            '<div class="grid grid-cols-4 text-center font-mono text-xs gap-1">' +
-                                '<div></div><div>1</div><div>2</div><div>3</div>' + // Headers
-                                '<div>1</div><div class="bg-black/40">0</div><div class="bg-black/40">∞</div><div class="bg-black/40">2</div>' +
-                                '<div>2</div><div class="bg-black/40">4</div><div class="bg-black/40">0</div><div class="bg-blue-500/20 text-blue-300 border border-blue-500/50">9</div>' +
-                                '<div>3</div><div class="bg-black/40">∞</div><div class="bg-black/40">∞</div><div class="bg-black/40">0</div>' +
-                            '</div>' +
-                            '<p class="text-[10px] text-center mt-2 opacity-60">2&rarr;3 is currently 9.</p>' +
-                        '</div>' +
-                        
-                        // D1
-                        '<div>' +
-                            '<p class="text-xs font-bold text-center mb-1 text-accent">k=1 (Through Node 1)</p>' +
-                            '<div class="grid grid-cols-4 text-center font-mono text-xs gap-1">' +
-                                '<div></div><div>1</div><div>2</div><div>3</div>' +
-                                '<div>1</div><div class="bg-black/40">0</div><div class="bg-black/40">∞</div><div class="bg-black/40">2</div>' +
-                                '<div>2</div><div class="bg-black/40">4</div><div class="bg-black/40">0</div><div class="bg-green-500/20 text-green-400 font-bold border border-green-500">6</div>' +
-                                '<div>3</div><div class="bg-black/40">∞</div><div class="bg-black/40">∞</div><div class="bg-black/40">0</div>' +
-                            '</div>' +
-                            '<div class="text-[10px] text-center mt-2 text-green-300 font-bold">' +
-                                'Update 2&rarr;3: min(9, 4+2) = 6' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
+    // ============================================
+    // 5. WHY THE ALGORITHM WORKS
+    // ============================================
+    '<div class="step-card border-l-4 border-yellow-500">' +
+        '<span class="step-title">Why Floyd’s Algorithm Works</span>' +
+        '<p class="text-sm">' +
+            'Floyd’s Algorithm works because it systematically considers <strong>every possible intermediate vertex</strong> ' +
+            'and guarantees that once vertex <em>k</em> is processed, all shortest paths using vertices up to <em>k</em> ' +
+            'are correct and final.' +
+        '</p>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1 mt-2">' +
+            '<li>Earlier updates enable better later updates</li>' +
+            '<li>No path is missed</li>' +
+            '<li>Dynamic programming ensures optimal substructure</li>' +
+        '</ul>' +
+    '</div>' +
 
-                    // LOGIC BOX
-                    '<div class="bg-yellow-500/10 p-3 rounded border border-yellow-500/30 text-sm">' +
-                        '<p class="font-bold text-yellow-200 mb-1">The Logic ($k=1$):</p>' +
-                        '<p class="opacity-90">We check path $2 \\to 3$.</p>' +
-                        '<ul class="list-disc pl-5 mt-1 font-mono text-xs opacity-80">' +
-                            '<li>Direct Cost: 9</li>' +
-                            '<li>Detour via 1: D[2,1] + D[1,3] = 4 + 2 = 6</li>' +
-                            '<li>6 < 9, so we update the value.</li>' +
-                        '</ul>' +
-                    '</div>' +
-                '</div>' +
-            '</div>',
+    // ============================================
+    // 6. SUMMARY
+    // ============================================
+    '<div class="bg-blue-500/10 p-3 rounded border border-blue-500/30 text-sm">' +
+        '<p class="font-bold text-blue-200 mb-1">Summary</p>' +
+        '<ul class="list-disc pl-6 space-y-1">' +
+            '<li>Floyd computes all-pairs shortest paths</li>' +
+            '<li>Uses weighted adjacency matrix</li>' +
+            '<li>Builds solutions in k stages</li>' +
+            '<li>Each stage improves path quality</li>' +
+        '</ul>' +
+    '</div>' +
+
+'</div>',
+
         code: 
             '<div class="space-y-8">' +
                 '<div>' +
