@@ -559,8 +559,12 @@ export const dynamic = {
             '<li><strong>k = 4:</strong> Allow paths through vertices {1,2,3,4}</li>' +
         '</ul>' +
     '</div>' +
-
+    // =====================================================
+    // 4. CONTROLS
+    // =====================================================
    '<div class="space-y-4">' +
+   // Matrix container
+    '<div id="floyd-matrix" class="grid grid-cols-5 gap-1 font-mono text-sm mb-4"></div>' +
     // Buttons & indicator
     '<div class="flex items-center gap-4 mb-2">' +
         '<button id="floyd-prev-k" class="btn btn-primary btn-sm">Prev k</button>' +
@@ -568,8 +572,7 @@ export const dynamic = {
         '<span id="floyd-k-indicator" class="ml-4 font-bold">Current k = 0</span>' +
     '</div>' +
 
-    // Matrix container
-    '<div id="floyd-matrix" class="grid grid-cols-5 gap-1 font-mono text-sm mb-4"></div>' +
+    
 
     // Log container
     '<div id="floyd-log" class="space-y-3 text-sm"></div>' +
