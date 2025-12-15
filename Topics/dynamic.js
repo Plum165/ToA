@@ -227,7 +227,7 @@ export const dynamic = {
     // ============================================
     'dyn_warshall': {
         title: "Warshall's Algorithm (Transitive Closure)",
-        notes:
+      notes:
 '<div class="space-y-8" id="warshall-root">' +
 
   // ===== HEADER =====
@@ -240,7 +240,6 @@ export const dynamic = {
   '<div class="glass p-4 rounded-lg text-center">' +
     '<svg id="warshall-graph" viewBox="0 0 300 120" class="w-full h-32">' +
 
-      // arrows
       '<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto">' +
       '<path d="M0,0 L0,6 L9,3 z" fill="#fff"/></marker></defs>' +
 
@@ -248,7 +247,6 @@ export const dynamic = {
       '<line x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
       '<line x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
 
-      // nodes
       '<circle data-node="4" cx="50" cy="60" r="15" fill="#1e293b"/>' +
       '<text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold">4</text>' +
 
@@ -275,6 +273,7 @@ export const dynamic = {
 
   // ===== CONTROLS =====
   '<div class="warshall-controls">' +
+    '<button id="prev-k" class="warshall-btn">◀ Previous k</button>' +
     '<button id="next-k" class="warshall-btn">▶ Next k</button>' +
   '</div>' +
 

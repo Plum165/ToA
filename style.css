@@ -419,11 +419,24 @@ mjx-container[display="false"] {
 }
 
 .k-row {
-  background: color-mix(in srgb, var(--accent) 25%, transparent) !important;
+  background: color-mix(in srgb, var(--accent) 15%, transparent) !important;
 }
 
 .k-col {
   border: 2px solid var(--accent) !important;
+}
+
+.new-edge {
+  background-color: var(--accent) !important;
+  color: white;
+  font-weight: bold;
+  animation: pulse-new 1.2s ease-in-out;
+}
+
+@keyframes pulse-new {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 .warshall-controls {

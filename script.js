@@ -272,37 +272,62 @@ window.switchContentTab = function(tabName) {
     document.getElementById(`content-${tabName}`).classList.remove('hidden');
 }
 // ===============================
-// WARSHALL STEP CONTROLLER
+// WARSHALL INTERACTIVE CONTROLLER
 // ===============================
 
-let currentK = 1;
 const size = 4;
+let currentK = 1;
 
-// adjacency matrix
-const R = [
+// adjacency matrix (initial)
+const adjMatrix = [
   [0,1,0,0],
   [0,0,1,0],
   [0,0,0,0],
   [1,0,0,0]
 ];
 
-function renderMatrix() {
+// Keep step-by-step matrix copies
+const steps = [];
+let R = adjMatrix.map(r => [...r]);
+steps.push(R.map(r => [...r])); // step 0
+
+// Precompute all k steps
+for (let k = 0; k < size; k++) {
+  let newR = R.map(r => [...r]);
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      if (R[i][j] === 0 && (R[i][k] && R[k][j])) {
+        newR[i][j] = 1;
+      }
+    }
+  }
+  R = newR;
+  steps.push(R.map(r => [...r]));
+}
+
+function renderMatrix(stepIdx) {
   const container = document.getElementById("warshall-matrix");
   container.innerHTML = "";
 
-  // header row
+  const mat = steps[stepIdx];
+  // header
   container.innerHTML += "<div></div>";
-  for (let j = 1; j <= size; j++) {
-    container.innerHTML += `<div class="${j === currentK ? 'k-col font-bold' : ''}">${j}</div>`;
+  for (let j = 0; j < size; j++) {
+    container.innerHTML += `<div class="${j+1===currentK?'k-col font-bold':''}">${j+1}</div>`;
   }
 
-  for (let i = 1; i <= size; i++) {
-    container.innerHTML += `<div class="${i === currentK ? 'k-row font-bold' : ''}">${i}</div>`;
-    for (let j = 1; j <= size; j++) {
+  for (let i = 0; i < size; i++) {
+    container.innerHTML += `<div class="${i+1===currentK?'k-row font-bold':''}">${i+1}</div>`;
+    for (let j = 0; j < size; j++) {
       let cls = "bg-black/40";
-      if (i === currentK) cls += " k-row";
-      if (j === currentK) cls += " k-col";
-      container.innerHTML += `<div class="${cls}">${R[i-1][j-1]}</div>`;
+      if (i+1===currentK) cls += " k-row";
+      if (j+1===currentK) cls += " k-col";
+      if (steps[stepIdx][i][j] === 1 && steps[Math.max(stepIdx-1,0)][i][j] === 0) {
+        cls += " new-edge";
+      } else if (mat[i][j] === 1) {
+        cls += " text-blue-300";
+      }
+      container.innerHTML += `<div class="${cls}">${mat[i][j]}</div>`;
     }
   }
 }
@@ -316,19 +341,27 @@ function highlightNode() {
   });
 }
 
-function updateK() {
+function updateUI(stepIdx) {
   document.getElementById("k-indicator").innerText = `Current k = ${currentK}`;
-  renderMatrix();
+  renderMatrix(stepIdx);
   highlightNode();
 }
 
-document.addEventListener("click", e => {
-  if (e.target.id === "next-k") {
-    currentK++;
-    if (currentK > size) currentK = 1;
-    updateK();
-  }
+// Control buttons
+let stepIndex = 1;
+document.getElementById("next-k").addEventListener("click", () => {
+  stepIndex++;
+  if (stepIndex >= steps.length) stepIndex = steps.length - 1;
+  currentK = Math.min(stepIndex, size);
+  updateUI(stepIndex);
+});
+
+document.getElementById("prev-k").addEventListener("click", () => {
+  stepIndex--;
+  if (stepIndex < 0) stepIndex = 0;
+  currentK = Math.min(stepIndex, size);
+  updateUI(stepIndex);
 });
 
 // initial render
-setTimeout(updateK, 50);
+updateUI(1);
