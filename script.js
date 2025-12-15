@@ -535,7 +535,7 @@ function renderTable() {
 
     // Outer glass div
     const glass = document.createElement('div');
-    glass.className = 'glass p-4 rounded-lg border border-white/10 overflow-x-auto mx-auto max-w-[90%]';
+    glass.className = 'glass p-4 rounded-lg border border-white/10 w-full max-w-[800px] mx-auto overflow-x-auto';
 
     const title = document.createElement('h4');
     title.className = 'font-bold text-xs text-center text-accent mb-4';
