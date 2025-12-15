@@ -162,6 +162,9 @@ function renderStandardTopic(id, container) {
 if (id === 'dyn_warshall') {
     setTimeout(initWarshall, 0);
 }
+if (id === 'dyn_floyd') {
+    setTimeout(initFloyd, 0);
+}
 
 }
 
@@ -377,4 +380,99 @@ function initWarshall() {
 }
 
 
+// ===============================
+// FLOYD ANIMATED CONTROLLER
+// ===============================
+function initFloyd() {
+    const size = 4;
+    let currentK = 1;
+    let stepIndex = 0;
 
+    // Weighted adjacency matrix (∞ = no edge)
+    const INF = 9999;
+    const adjMatrix = [
+        [0, 3, INF, 7],
+        [8, 0, 2, INF],
+        [5, INF, 0, 1],
+        [2, INF, INF, 0]
+    ];
+
+    // Keep snapshots of D matrices
+    const steps = [];
+    const R = adjMatrix.map(r => [...r]);
+    steps.push(R.map(r => [...r])); // step 0 (D0)
+
+    // Precompute all k stages
+    for (let k = 0; k < size; k++) {
+        let newD = R.map(r => [...r]);
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const old = newD[i][j];
+                const viaK = R[i][k] + R[k][j];
+                if (viaK < old) {
+                    newD[i][j] = viaK;
+                }
+            }
+        }
+        R.forEach((r,i)=>R[i]=newD[i].slice());
+        steps.push(R.map(r => [...r]));
+    }
+
+    // RENDER MATRIX
+    function renderMatrix(stepIdx) {
+        const container = document.getElementById("floyd-matrix");
+        container.innerHTML = "";
+
+        const mat = steps[stepIdx];
+        const prevMat = steps[Math.max(stepIdx-1,0)];
+
+        // Header
+        container.innerHTML += "<div></div>";
+        for (let j=0;j<size;j++){
+            container.innerHTML += `<div class="${j+1===currentK?'k-col font-bold':''}">${j+1}</div>`;
+        }
+
+        for (let i=0;i<size;i++){
+            container.innerHTML += `<div class="${i+1===currentK?'k-row font-bold':''}">${i+1}</div>`;
+            for (let j=0;j<size;j++){
+                let cls = "bg-black/40";
+                if (i+1===currentK) cls += " k-row";
+                if (j+1===currentK) cls += " k-col";
+
+                if(mat[i][j] !== prevMat[i][j]){
+                    cls += " bg-green-500/20 text-green-300 font-bold border border-green-500/50";
+                } else {
+                    cls += mat[i][j]===INF ? " text-gray-400" : " text-blue-300";
+                }
+
+                container.innerHTML += `<div class="${cls}">${mat[i][j]===INF?'∞':mat[i][j]}</div>`;
+            }
+        }
+    }
+
+    function updateUI(stepIdx){
+        document.getElementById("floyd-k-indicator").innerText = `Current k = ${currentK}`;
+        renderMatrix(stepIdx);
+    }
+
+    // BUTTON CONTROL
+    const nextBtn = document.getElementById("floyd-next-k");
+    const prevBtn = document.getElementById("floyd-prev-k");
+
+    nextBtn.addEventListener("click",()=>{
+        stepIndex++;
+        if(stepIndex>=steps.length) stepIndex = steps.length-1;
+        currentK = Math.min(stepIndex,size);
+        updateUI(stepIndex);
+    });
+
+    prevBtn.addEventListener("click",()=>{
+        stepIndex--;
+        if(stepIndex<0) stepIndex = 0;
+        currentK = Math.min(stepIndex,size);
+        updateUI(stepIndex);
+    });
+
+    // INITIAL RENDER
+    updateUI(0);
+}

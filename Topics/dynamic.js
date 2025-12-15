@@ -560,67 +560,20 @@ export const dynamic = {
         '</ul>' +
     '</div>' +
 
-    // =====================================================
-    // 4. D(1) EXAMPLE
-    // =====================================================
-    '<div class="step-card">' +
-        '<span class="step-title">D(1) — Including Vertex 1</span>' +
-        '<p class="text-sm">' +
-            'For each pair (i, j), either keep the existing value or try going via vertex 1.' +
-        '</p>' +
-        '<ul class="list-disc pl-6 text-sm space-y-1 mt-2">' +
-            '<li>Example: Path 2 → 3</li>' +
-            '<li>Direct cost: 6</li>' +
-            '<li>Via 1: 4 + 1 = 5</li>' +
-            '<li>5 < 6 → Update to 5</li>' +
-        '</ul>' +
-        '<div class="bg-green-500/10 p-3 rounded border border-green-500/30 text-sm mt-3">' +
-            '<strong>Conclusion:</strong> Shortest path from 2 to 3 must pass through vertex 1.' +
-        '</div>' +
+   '<div class="space-y-4">' +
+    // Buttons & indicator
+    '<div class="flex items-center gap-4 mb-2">' +
+        '<button id="floyd-prev-k" class="btn btn-primary btn-sm">Prev k</button>' +
+        '<button id="floyd-next-k" class="btn btn-primary btn-sm">Next k</button>' +
+        '<span id="floyd-k-indicator" class="ml-4 font-bold">Current k = 0</span>' +
     '</div>' +
 
-    // =====================================================
-    // 5. D(2) EXAMPLE
-    // =====================================================
-    '<div class="step-card">' +
-        '<span class="step-title">D(2) — Including Vertex 2</span>' +
-        '<p class="text-sm">' +
-            'Now we attempt to include vertex 2 in our paths.' +
-        '</p>' +
-        '<ul class="list-disc pl-6 text-sm space-y-1 mt-2">' +
-            '<li>Example: Path 4 → 1</li>' +
-            '<li>Via 2: 5 + 1 = 6</li>' +
-            '<li>6 < ∞ → Update</li>' +
-        '</ul>' +
-        '<div class="bg-green-500/10 p-3 rounded border border-green-500/30 text-sm mt-3">' +
-            '<strong>Interpretation:</strong> Using D(2) means vertex 2 is now allowed as an intermediate.' +
-        '</div>' +
-    '</div>' +
+    // Matrix container
+    '<div id="floyd-matrix" class="grid grid-cols-5 gap-1 font-mono text-sm mb-4"></div>' +
 
-    // =====================================================
-    // 6. D(3): SINK CASE
-    // =====================================================
-    '<div class="step-card">' +
-        '<span class="step-title">D(3) — Including Vertex 3</span>' +
-        '<p class="text-sm">' +
-            'Vertex 3 is a sink (no outgoing edges), so no intersections improve any paths.' +
-        '</p>' +
-        '<div class="bg-black/30 p-3 rounded border border-white/10 text-sm mt-2">' +
-            '<strong>No updates occur at this stage.</strong>' +
-        '</div>' +
-    '</div>' +
-
-    // =====================================================
-    // 7. D(4): FINAL MATRIX
-    // =====================================================
-    '<div class="step-card border-l-4 border-green-500">' +
-        '<span class="step-title">D(4) — Final Shortest Path Matrix</span>' +
-        '<ul class="list-disc pl-6 text-sm space-y-1">' +
-            '<li>All vertices are now allowed as intermediates</li>' +
-            '<li>No further improvements are possible</li>' +
-            '<li>This matrix contains all-pairs shortest paths</li>' +
-        '</ul>' +
-    '</div>' +
+    // Log container
+    '<div id="floyd-log" class="space-y-3 text-sm"></div>' +
+'</div>'+
 
     // =====================================================
     // 8. EXTRACTING SHORTEST PATHS
