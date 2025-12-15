@@ -503,6 +503,176 @@ export const dynamic = {
         '</ul>' +
     '</div>' +
 
+'</div>'+
+'<div class="space-y-10">' +
+
+    // =====================================================
+    // 1. HOW FLOYD EVOLVES FROM WARSHALL
+    // =====================================================
+    '<div>' +
+        '<h3 class="text-xl font-bold text-accent mb-3">From Warshall to Floyd</h3>' +
+        '<p class="text-sm md:text-base leading-relaxed">' +
+            'Floyd’s Algorithm is a <strong>direct extension of Warshall’s Algorithm</strong>. ' +
+            'Warshall tells us whether a path exists. Floyd tells us the <strong>shortest distance</strong>.' +
+        '</p>' +
+        '<div class="bg-black/30 p-4 rounded border border-white/10 mt-3 text-sm">' +
+            '<p><strong>Warshall update:</strong></p>' +
+            '<p class="font-mono text-center">R[i][j] = R[i][j] OR (R[i][k] AND R[k][j])</p>' +
+            '<p class="mt-2"><strong>Floyd update:</strong></p>' +
+            '<p class="font-mono text-center">D[i][j] = min(D[i][j], D[i][k] + D[k][j])</p>' +
+        '</div>' +
+        '<p class="text-sm mt-3 opacity-90">' +
+            'Same structure. Same k-stages. Different values.' +
+        '</p>' +
+    '</div>' +
+
+    // =====================================================
+    // 2. D(0): INITIAL MATRIX
+    // =====================================================
+    '<div class="step-card border-l-4 border-blue-500">' +
+        '<span class="step-title">D(0) — Initial Distance Matrix</span>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1">' +
+            '<li>Copy the weighted adjacency matrix</li>' +
+            '<li>∞ if no directed edge exists</li>' +
+            '<li>0 on the diagonal (distance to itself)</li>' +
+        '</ul>' +
+        '<div class="bg-black/30 p-3 rounded border border-white/10 mt-3 text-sm">' +
+            '<strong>Interpretation:</strong> Only direct edges are allowed. No intermediate vertices yet.' +
+        '</div>' +
+    '</div>' +
+
+    // =====================================================
+    // 3. ANIMATED K-PROGRESSION EXPLANATION
+    // =====================================================
+    '<div class="step-card border-l-4 border-purple-500">' +
+        '<span class="step-title">Animated k-Progression (What Changes Each Step)</span>' +
+        '<p class="text-sm mb-3">' +
+            'Each step k asks the same question:' +
+        '</p>' +
+        '<div class="bg-black/30 p-3 rounded border border-white/10 text-sm font-mono text-center">' +
+            'Is going i → k → j cheaper than going i → j directly?' +
+        '</div>' +
+        '<ul class="list-disc pl-6 text-sm space-y-2 mt-3">' +
+            '<li><strong>k = 1:</strong> Allow paths through vertex 1</li>' +
+            '<li><strong>k = 2:</strong> Allow paths through vertices {1,2}</li>' +
+            '<li><strong>k = 3:</strong> Allow paths through vertices {1,2,3}</li>' +
+            '<li><strong>k = 4:</strong> Allow paths through vertices {1,2,3,4}</li>' +
+        '</ul>' +
+    '</div>' +
+
+    // =====================================================
+    // 4. D(1) EXAMPLE
+    // =====================================================
+    '<div class="step-card">' +
+        '<span class="step-title">D(1) — Including Vertex 1</span>' +
+        '<p class="text-sm">' +
+            'For each pair (i, j), either keep the existing value or try going via vertex 1.' +
+        '</p>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1 mt-2">' +
+            '<li>Example: Path 2 → 3</li>' +
+            '<li>Direct cost: 6</li>' +
+            '<li>Via 1: 4 + 1 = 5</li>' +
+            '<li>5 < 6 → Update to 5</li>' +
+        '</ul>' +
+        '<div class="bg-green-500/10 p-3 rounded border border-green-500/30 text-sm mt-3">' +
+            '<strong>Conclusion:</strong> Shortest path from 2 to 3 must pass through vertex 1.' +
+        '</div>' +
+    '</div>' +
+
+    // =====================================================
+    // 5. D(2) EXAMPLE
+    // =====================================================
+    '<div class="step-card">' +
+        '<span class="step-title">D(2) — Including Vertex 2</span>' +
+        '<p class="text-sm">' +
+            'Now we attempt to include vertex 2 in our paths.' +
+        '</p>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1 mt-2">' +
+            '<li>Example: Path 4 → 1</li>' +
+            '<li>Via 2: 5 + 1 = 6</li>' +
+            '<li>6 < ∞ → Update</li>' +
+        '</ul>' +
+        '<div class="bg-green-500/10 p-3 rounded border border-green-500/30 text-sm mt-3">' +
+            '<strong>Interpretation:</strong> Using D(2) means vertex 2 is now allowed as an intermediate.' +
+        '</div>' +
+    '</div>' +
+
+    // =====================================================
+    // 6. D(3): SINK CASE
+    // =====================================================
+    '<div class="step-card">' +
+        '<span class="step-title">D(3) — Including Vertex 3</span>' +
+        '<p class="text-sm">' +
+            'Vertex 3 is a sink (no outgoing edges), so no intersections improve any paths.' +
+        '</p>' +
+        '<div class="bg-black/30 p-3 rounded border border-white/10 text-sm mt-2">' +
+            '<strong>No updates occur at this stage.</strong>' +
+        '</div>' +
+    '</div>' +
+
+    // =====================================================
+    // 7. D(4): FINAL MATRIX
+    // =====================================================
+    '<div class="step-card border-l-4 border-green-500">' +
+        '<span class="step-title">D(4) — Final Shortest Path Matrix</span>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1">' +
+            '<li>All vertices are now allowed as intermediates</li>' +
+            '<li>No further improvements are possible</li>' +
+            '<li>This matrix contains all-pairs shortest paths</li>' +
+        '</ul>' +
+    '</div>' +
+
+    // =====================================================
+    // 8. EXTRACTING SHORTEST PATHS
+    // =====================================================
+    '<div class="step-card border-l-4 border-yellow-500">' +
+        '<span class="step-title">Extracting the Actual Paths</span>' +
+        '<p class="text-sm">' +
+            'Floyd computes distances, but paths must be extracted using a <strong>predecessor matrix</strong>.' +
+        '</p>' +
+        '<ul class="list-disc pl-6 text-sm space-y-1 mt-2">' +
+            '<li>If shortest path i → j goes via k, set pred[i][j] = k</li>' +
+            '<li>If no intermediate vertex is used, pred[i][j] = null</li>' +
+        '</ul>' +
+        '<div class="bg-black/30 p-3 rounded border border-white/10 text-sm mt-3">' +
+            '<p class="font-mono">Path(i, j):</p>' +
+            '<ul class="list-disc pl-6 font-mono text-xs">' +
+                '<li>If pred[i][j] = null → edge (i, j)</li>' +
+                '<li>Else → Path(i, k) + Path(k, j)</li>' +
+            '</ul>' +
+        '</div>' +
+    '</div>' +
+
+    // =====================================================
+    // 9. FLOYD VS DIJKSTRA
+    // =====================================================
+    '<div class="step-card border-l-4 border-red-500">' +
+        '<span class="step-title">Floyd vs Dijkstra</span>' +
+        '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">' +
+
+            '<div class="bg-black/30 p-3 rounded border border-white/10">' +
+                '<strong>Floyd</strong>' +
+                '<ul class="list-disc pl-5 mt-2">' +
+                    '<li>All-pairs shortest paths</li>' +
+                    '<li>Dynamic Programming</li>' +
+                    '<li>Handles negative edges</li>' +
+                    '<li>O(n³)</li>' +
+                '</ul>' +
+            '</div>' +
+
+            '<div class="bg-black/30 p-3 rounded border border-white/10">' +
+                '<strong>Dijkstra</strong>' +
+                '<ul class="list-disc pl-5 mt-2">' +
+                    '<li>Single-source shortest paths</li>' +
+                    '<li>Greedy algorithm</li>' +
+                    '<li>No negative edges</li>' +
+                    '<li>O((V+E) log V)</li>' +
+                '</ul>' +
+            '</div>' +
+
+        '</div>' +
+    '</div>' +
+
 '</div>',
 
         code: 
