@@ -571,7 +571,19 @@ export const dynamic = {
         '<button id="floyd-next-k" class="btn btn-primary btn-sm">Next k</button>' +
         '<span id="floyd-k-indicator" class="ml-4 font-bold">Current k = 0</span>' +
     '</div>' +
+        // ===== MATRIX =====
+  '<div class="glass p-4 rounded-lg">' +
+    '<div id="floyd-matrix" class="grid grid-cols-5 text-center font-mono text-xs gap-1"></div>' +
+    '<p class="text-[11px] text-center mt-3 opacity-80">' +
+      'Row <strong>k</strong> and Column <strong>k</strong> are highlighted because we are testing paths through node k.' +
+    '</p>' +
+  '</div>' +
 
+  // ===== CONTROLS =====
+  '<div class="warshall-controls">' +
+    '<button id="floyd-prev-k" class="btn btn-primary btn-sm">◀ Previous k</button>' +
+    '<button id="floyd-next-k" class="btn btn-primary btn-sm">▶ Next k</button>' +
+  '</div>' +
     
 
     // Log container
