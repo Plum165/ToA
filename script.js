@@ -482,23 +482,25 @@ function initFloyd() {
 }
 // ===== KNAPSACK LOGIC =====
 const items = [
-  { w: 2, v: 12 },
-  { w: 1, v: 10 },
-  { w: 3, v: 20 },
-  { w: 2, v: 15 }
+    { w: 2, v: 12 },
+    { w: 1, v: 10 },
+    { w: 3, v: 20 },
+    { w: 2, v: 15 }
 ];
 
-let W = 5;
+let W = 5; // default capacity
 let currentItem = 0;
 let V = [];
 let maxItems = items.length;
 
 function initDP() {
+    const input = document.getElementById('knapsack-capacity');
+    W = parseInt(input?.value) || 5;
     V = Array.from({ length: maxItems + 1 }, () => Array(W + 1).fill(0));
     currentItem = 0;
     renderTable();
     updateIndicator();
-    attachKnapsackListeners(); // attach buttons after DOM exists
+    attachListeners();
 }
 
 function nextItem() {
@@ -507,7 +509,7 @@ function nextItem() {
     for (let j = 0; j <= W; j++) {
         const incl = j >= items[currentItem - 1].w ? items[currentItem - 1].v + V[currentItem - 1][j - items[currentItem - 1].w] : 0;
         const excl = V[currentItem - 1][j];
-        V[currentItem][j] = Math.max(excl, incl);
+        V[currentItem][j] = Math.max(incl, excl);
     }
     renderTable();
     updateIndicator();
@@ -529,45 +531,53 @@ function renderTable() {
     const container = document.getElementById('knapsack-matrix');
     if (!container) return;
 
-    // Clear previous
     container.innerHTML = '';
 
-    // Create table element
-    const table = document.createElement('table');
-    table.className = 'w-full text-center border-collapse font-mono text-sm';
+    // Outer glass div
+    const glass = document.createElement('div');
+    glass.className = 'glass p-4 rounded-lg border border-white/10 overflow-x-auto mx-auto max-w-[90%]';
+
+    const title = document.createElement('h4');
+    title.className = 'font-bold text-xs text-center text-accent mb-4';
+    title.innerText = `Exam Table: Capacity W=${W}`;
+    glass.appendChild(title);
+
+    // Grid div
+    const grid = document.createElement('div');
+    grid.className = `grid grid-cols-${W + 2} gap-1 text-center font-mono text-xs min-w-[400px] mx-auto`;
 
     // Header row
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    headerRow.innerHTML = `<th class="border px-2 py-1 bg-gray-700 text-gray-300">i\\j</th>`;
+    grid.innerHTML += `<div class="text-gray-500">i/j</div>`;
     for (let j = 0; j <= W; j++) {
-        headerRow.innerHTML += `<th class="border px-2 py-1 bg-gray-700 text-gray-300">${j}</th>`;
+        grid.innerHTML += `<div class="text-gray-500">${j}</div>`;
     }
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
 
-    // Body rows
-    const tbody = document.createElement('tbody');
+    // Rows
     for (let i = 0; i <= maxItems; i++) {
-        const row = document.createElement('tr');
-        row.innerHTML = `<th class="border px-2 py-1 bg-gray-800 text-blue-300 font-bold">${i}</th>`;
+        grid.innerHTML += `<div class="font-bold text-blue-300">${i}</div>`;
         for (let j = 0; j <= W; j++) {
-            let cls = 'border px-2 py-1 bg-gray-900 text-white';
-            // Highlight updates in current row
+            let bg = 'bg-black/30';
+            let text = 'text-white';
+            let border = '';
+            // Highlight current row cells that were updated
             if (i === currentItem && V[i][j] !== V[i - 1]?.[j]) {
-                cls = 'border px-2 py-1 bg-green-500 text-yellow-900 font-bold';
+                bg = 'bg-green-500/20';
+                text = 'text-yellow-300 font-bold';
+                border = 'border border-yellow-500';
             }
-            row.innerHTML += `<td class="${cls}">${V[i][j]}</td>`;
+            grid.innerHTML += `<div class="${bg} ${text} ${border}">${V[i][j]}</div>`;
         }
-        tbody.appendChild(row);
     }
-    table.appendChild(tbody);
-    container.appendChild(table);
+
+    glass.appendChild(grid);
+    container.appendChild(glass);
 }
 
-function attachKnapsackListeners() {
+// Ensure buttons work
+function attachListeners() {
     const nextBtn = document.getElementById('next-item');
     const prevBtn = document.getElementById('prev-item');
+
     if (nextBtn && !nextBtn.dataset.attached) {
         nextBtn.addEventListener('click', nextItem);
         nextBtn.dataset.attached = 'true';
