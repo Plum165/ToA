@@ -821,10 +821,22 @@ export const dynamic = {
 
   // ===== HEADER =====
   '<div class="text-center">' +
-    '<h3 class="text-xl font-bold text-accent mb-2">0/1 Knapsack — Step Trace</h3>' +
+    '<h3 class="text-xl font-bold text-accent mb-2">Knapsack Example — Step Trace</h3>' +
     '<span id="item-indicator" class="k-badge ml-4">Current Item = 0</span>' +
   '</div>' +
-
+// ===== ITEMS DISPLAY =====
+'<div class="p-4 rounded-lg border border-white/10 flex justify-center mb-4">' +
+  '<div>' +
+    '<h4 class="font-bold text-xs text-center text-accent mb-2">Items for Example</h4>' +
+    '<div class="grid grid-cols-3 gap-2 text-center font-mono text-xs min-w-[300px]">' +
+      '<div class="font-bold">Item</div><div class="font-bold">Weight (w)</div><div class="font-bold">Value (v)</div>' +
+      '<div>1</div><div>2</div><div>12</div>' +
+      '<div>2</div><div>1</div><div>10</div>' +
+      '<div>3</div><div>3</div><div>20</div>' +
+      '<div>4</div><div>2</div><div>15</div>' +
+    '</div>' +
+  '</div>' +
+'</div>'+
 // ===== DP TABLE =====
 '<div class="p-4 rounded-lg border border-white/10 overflow-x-auto flex justify-center">' +
   '<div>' + // wrapper for centering
