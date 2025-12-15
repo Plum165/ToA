@@ -320,32 +320,26 @@ export const dynamic = {
 
 '<div class="space-y-8" id="warshall-root">' +
 
- '<div class="space-y-4">' +
-
   // ===== HEADER =====
   '<div class="text-center">' +
-    '<h3 class="text-xl font-bold text-accent mb-2">Floyd’s Algorithm — Step Trace</h3>' +
-    '<span id="floyd-k-indicator" class="k-badge">Current k = 0</span>' +
+    '<h3 class="text-xl font-bold text-accent mb-2">Warshall’s Algorithm — Step Trace</h3>' +
+    '<span id="k-indicator" class="k-badge">Current k = 1</span>' +
   '</div>' +
 
   // ===== GRAPH =====
   '<div class="glass p-4 rounded-lg text-center">' +
-    '<svg id="floyd-graph" viewBox="0 0 300 120" class="w-full h-32">' +
+    '<svg id="warshall-graph" viewBox="0 0 300 120" class="w-full h-32">' +
 
-      '<defs><marker id="arrowF" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto">' +
+      '<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto">' +
       '<path d="M0,0 L0,6 L9,3 z" fill="#fff"/></marker></defs>' +
 
-      // Example weighted edges
-      '<line data-from="1" data-to="2" x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
-      '<text x="200" y="40" fill="#aaa" font-size="10">3</text>' +
+      '<line x1="50" y1="60" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
+      '<line x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
+      '<line x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
 
-      '<line data-from="2" data-to="3" x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
-      '<text x="200" y="80" fill="#aaa" font-size="10">2</text>' +
+      '<circle data-node="4" cx="50" cy="60" r="15" fill="#1e293b"/>' +
+      '<text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold">4</text>' +
 
-      '<line data-from="3" data-to="1" x1="150" y1="90" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
-      '<text x="160" y="60" fill="#aaa" font-size="10">5</text>' +
-
-      // Nodes
       '<circle data-node="1" cx="150" cy="30" r="15" fill="#1e293b"/>' +
       '<text x="150" y="35" text-anchor="middle" fill="#fff" font-weight="bold">1</text>' +
 
@@ -355,29 +349,24 @@ export const dynamic = {
       '<circle data-node="3" cx="150" cy="90" r="15" fill="#1e293b"/>' +
       '<text x="150" y="95" text-anchor="middle" fill="#fff" font-weight="bold">3</text>' +
 
-      '<circle data-node="4" cx="50" cy="60" r="15" fill="#1e293b"/>' +
-      '<text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold">4</text>' +
-
     '</svg>' +
     '<p class="text-xs opacity-70 mt-2">Highlighted node = current k</p>' +
   '</div>' +
 
   // ===== MATRIX =====
   '<div class="glass p-4 rounded-lg">' +
-    '<div id="floyd-matrix" class="grid grid-cols-5 text-center font-mono text-xs gap-1"></div>' +
+    '<div id="warshall-matrix" class="grid grid-cols-5 text-center font-mono text-xs gap-1"></div>' +
     '<p class="text-[11px] text-center mt-3 opacity-80">' +
       'Row <strong>k</strong> and Column <strong>k</strong> are highlighted because we are testing paths through node k.' +
     '</p>' +
   '</div>' +
 
   // ===== CONTROLS =====
-  '<div class="warshall-controls flex justify-center gap-2 mt-2">' +
-    '<button id="floyd-prev-k" class="warshall-btn btn btn-sm btn-primary">◀ Previous k</button>' +
-    '<button id="floyd-next-k" class="warshall-btn btn btn-sm btn-primary">▶ Next k</button>' +
+  '<div class="warshall-controls">' +
+    '<button id="prev-k" class="warshall-btn">◀ Previous k</button>' +
+    '<button id="next-k" class="warshall-btn">▶ Next k</button>' +
   '</div>' +
 
-  // ===== LOG =====
-  '<div id="floyd-log" class="text-sm mt-2"></div>' +
 '</div>',
 
         code: 
@@ -574,6 +563,47 @@ export const dynamic = {
     // 4. CONTROLS
     // =====================================================
    '<div class="space-y-4">' +
+
+  // ===== HEADER =====
+  '<div class="text-center">' +
+    '<h3 class="text-xl font-bold text-accent mb-2">Floyd’s Algorithm — Step Trace</h3>' +
+    '<span id="floyd-k-indicator" class="k-badge">Current k = 0</span>' +
+  '</div>' +
+
+  // ===== GRAPH =====
+  '<div class="glass p-4 rounded-lg text-center">' +
+    '<svg id="floyd-graph" viewBox="0 0 300 120" class="w-full h-32">' +
+
+      '<defs><marker id="arrowF" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto">' +
+      '<path d="M0,0 L0,6 L9,3 z" fill="#fff"/></marker></defs>' +
+
+      // Example weighted edges
+      '<line data-from="1" data-to="2" x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+      '<text x="200" y="40" fill="#aaa" font-size="10">3</text>' +
+
+      '<line data-from="2" data-to="3" x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+      '<text x="200" y="80" fill="#aaa" font-size="10">2</text>' +
+
+      '<line data-from="3" data-to="1" x1="150" y1="90" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrowF)" />' +
+      '<text x="160" y="60" fill="#aaa" font-size="10">5</text>' +
+
+      // Nodes
+      '<circle data-node="1" cx="150" cy="30" r="15" fill="#1e293b"/>' +
+      '<text x="150" y="35" text-anchor="middle" fill="#fff" font-weight="bold">1</text>' +
+
+      '<circle data-node="2" cx="250" cy="60" r="15" fill="#1e293b"/>' +
+      '<text x="250" y="65" text-anchor="middle" fill="#fff" font-weight="bold">2</text>' +
+
+      '<circle data-node="3" cx="150" cy="90" r="15" fill="#1e293b"/>' +
+      '<text x="150" y="95" text-anchor="middle" fill="#fff" font-weight="bold">3</text>' +
+
+      '<circle data-node="4" cx="50" cy="60" r="15" fill="#1e293b"/>' +
+      '<text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold">4</text>' +
+
+    '</svg>' +
+    '<p class="text-xs opacity-70 mt-2">Highlighted node = current k</p>' +
+  '</div>' +
+
   // ===== MATRIX =====
   '<div class="glass p-4 rounded-lg">' +
     '<div id="floyd-matrix" class="grid grid-cols-5 text-center font-mono text-xs gap-1"></div>' +
@@ -586,15 +616,11 @@ export const dynamic = {
   '<div class="warshall-controls flex justify-center gap-2 mt-2">' +
     '<button id="floyd-prev-k" class="warshall-btn btn btn-sm btn-primary">◀ Previous k</button>' +
     '<button id="floyd-next-k" class="warshall-btn btn btn-sm btn-primary">▶ Next k</button>' +
-    '<span id="floyd-k-indicator" class="ml-4 font-bold">Current k = 0</span>' +
   '</div>' +
 
   // ===== LOG =====
   '<div id="floyd-log" class="text-sm mt-2"></div>' +
 '</div>'+
-    
-
-  
 
     // =====================================================
     // 8. EXTRACTING SHORTEST PATHS
