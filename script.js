@@ -158,6 +158,11 @@ function renderStandardTopic(id, container) {
     if (id === 'big') drawNotationChart('big', 'chart-big');
     if (id === 'omega') drawNotationChart('omega', 'chart-omega');
     if (id === 'theta') drawNotationChart('theta', 'chart-theta');
+    // Initialize Warshall ONLY when its topic is loaded
+if (id === 'dyn_warshall') {
+    setTimeout(initWarshall, 0);
+}
+
 }
 
 
@@ -371,8 +376,5 @@ function initWarshall() {
   updateUI(1);
 }
 
-// Wait until the DOM is fully ready
-window.addEventListener("DOMContentLoaded", () => {
-  initWarshall();
-});
+
 
