@@ -563,15 +563,7 @@ export const dynamic = {
     // 4. CONTROLS
     // =====================================================
    '<div class="space-y-4">' +
-   // Matrix container
-    '<div id="floyd-matrix" class="grid grid-cols-5 gap-1 font-mono text-sm mb-4"></div>' +
-    // Buttons & indicator
-    '<div class="flex items-center gap-4 mb-2">' +
-        '<button id="floyd-prev-k" class="btn btn-primary btn-sm">Prev k</button>' +
-        '<button id="floyd-next-k" class="btn btn-primary btn-sm">Next k</button>' +
-        '<span id="floyd-k-indicator" class="ml-4 font-bold">Current k = 0</span>' +
-    '</div>' +
-        // ===== MATRIX =====
+  // ===== MATRIX =====
   '<div class="glass p-4 rounded-lg">' +
     '<div id="floyd-matrix" class="grid grid-cols-5 text-center font-mono text-xs gap-1"></div>' +
     '<p class="text-[11px] text-center mt-3 opacity-80">' +
@@ -580,15 +572,18 @@ export const dynamic = {
   '</div>' +
 
   // ===== CONTROLS =====
-  '<div class="warshall-controls">' +
-    '<button id="floyd-prev-k" class="btn btn-primary btn-sm">◀ Previous k</button>' +
-    '<button id="floyd-next-k" class="btn btn-primary btn-sm">▶ Next k</button>' +
+  '<div class="warshall-controls flex justify-center gap-2 mt-2">' +
+    '<button id="floyd-prev-k" class="warshall-btn btn btn-sm btn-primary">◀ Previous k</button>' +
+    '<button id="floyd-next-k" class="warshall-btn btn btn-sm btn-primary">▶ Next k</button>' +
+    '<span id="floyd-k-indicator" class="ml-4 font-bold">Current k = 0</span>' +
   '</div>' +
+
+  // ===== LOG =====
+  '<div id="floyd-log" class="text-sm mt-2"></div>' +
+'</div>'+
     
 
-    // Log container
-    '<div id="floyd-log" class="space-y-3 text-sm"></div>' +
-'</div>'+
+  
 
     // =====================================================
     // 8. EXTRACTING SHORTEST PATHS
