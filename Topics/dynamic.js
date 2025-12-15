@@ -729,6 +729,27 @@ export const dynamic = {
                         'Given $n$ items with Weights ($w$) and Values ($v$), and a knapsack of capacity $W$, find the most valuable subset that fits.' +
                     '</p>' +
                 '</div>' +
+                // ===== PRINCIPLES DISPLAY =====
+'<div class="p-4 rounded-lg border border-white/10 flex justify-center mb-4">' +
+  '<div class="max-w-xl">' +
+    '<h4 class="font-bold text-xs text-center text-accent mb-2">Knapsack Principles</h4>' +
+    '<ul class="list-disc list-inside text-[11px] space-y-1 font-mono">' +
+      '<li>Construct table of all subproblem results</li>' +
+      '<ul class="list-disc list-inside ml-4 text-[11px]">' +
+        '<li>Initialized entries of smallest subproblems</li>' +
+        '<li>Remainder filled in following a precise order</li>' +
+        '<ul class="list-disc list-inside ml-4 text-[11px]">' +
+          '<li>Corresponding to increasing subproblem size</li>' +
+          '<li>Use only entries that have already been computed</li>' +
+        '</ul>' +
+      '</ul>' +
+      '<li>Each entry is calculated exactly once</li>' +
+      '<li>Final value computed is solution to the initial problem</li>' +
+      '<li>Use iteration (and extra space for saved results), never recursion</li>' +
+    '</ul>' +
+  '</div>' +
+'</div>'+
+
 
                 // --- RECURRENCE ---
                 '<div class="step-card border-l-4 border-green-500">' +
