@@ -816,38 +816,41 @@ export const dynamic = {
                         '</div>' +
                     '</div>' +
                 '</div>' +
-            // ===== KNAPSACK INTERACTIVE =====
+           // ===== KNAPSACK INTERACTIVE =====
 '<div class="space-y-6">' +
 
-  // HEADER
+  // ===== HEADER =====
   '<div class="text-center">' +
     '<h3 class="text-xl font-bold text-accent mb-2">0/1 Knapsack — Step Trace</h3>' +
     '<label class="text-sm mr-2">Enter Capacity W:</label>' +
     '<input id="knapsack-capacity" type="number" min="1" value="6" class="input input-sm rounded px-2 py-1"/>' +
     '<span id="item-indicator" class="k-badge ml-4">Current Item = 0</span>' +
   '</div>' +
-  // MATRIX
+
+  // ===== DP TABLE =====
   '<div class="glass p-4 rounded-lg border border-white/10 overflow-x-auto">' +
     '<h4 class="font-bold text-xs text-center text-accent mb-2">DP Table</h4>' +
     '<div id="knapsack-matrix" class="grid grid-cols-8 gap-1 text-center font-mono text-xs min-w-[400px]"></div>' +
     '<p class="text-[11px] text-center mt-2 opacity-70">Highlighted cells indicate updates at current step.</p>' +
   '</div>' +
-  // CONTROLS
-  '<div class="flex justify-center gap-2">' +
-    '<button id="prev-item" class="warshall-btn">◀ Previous Item</button>' +
-    '<button id="next-item" class="warshall-btn">Next Item ▶</button>' +
+
+  // ===== CONTROLS =====
+  '<div class="warshall-controls flex justify-center gap-2 mt-2">' +
+    '<button id="prev-item" class="warshall-btn btn btn-sm btn-primary">◀ Previous Item</button>' +
+    '<button id="next-item" class="warshall-btn btn btn-sm btn-primary">Next Item ▶</button>' +
   '</div>' +
-  // BACKTRACKING
-  '<div class="step-card mt-4">' +
-    '<span class="step-title">Backtracking — Selected Items</span>' +
-    '<div id="knapsack-backtrack" class="font-mono text-xs md:text-sm space-y-2 bg-black/30 p-4 rounded border border-white/10">' +
+
+  // ===== BACKTRACKING / LOG =====
+  '<div class="glass p-4 rounded-lg border border-white/10 mt-4">' +
+    '<h4 class="font-bold text-xs text-center text-accent mb-2">Backtracking — Selected Items</h4>' +
+    '<div id="knapsack-backtrack" class="font-mono text-xs md:text-sm space-y-2 bg-black/30 p-4 rounded">' +
       '<p class="opacity-60">Follow the DP table to find which items contribute to optimal value.</p>' +
       '<ul id="knapsack-selection" class="list-disc pl-6 text-sm"></ul>' +
     '</div>' +
   '</div>' +
-'</div>'+
 
-                '</div>',
+'</div>',
+
         code: 
             '<div class="space-y-8">' +
                 '<div>' +
