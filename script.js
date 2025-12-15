@@ -476,3 +476,100 @@ function initFloyd() {
     // INITIAL RENDER
     updateUI(0);
 }
+// ===== KNAPSACK LOGIC =====
+const items = [
+  { w: 3, v: 25 },
+  { w: 2, v: 20 },
+  { w: 1, v: 15 },
+  { w: 4, v: 40 },
+  { w: 5, v: 50 }
+];
+
+let W = 6; // default capacity
+let currentItem = 0;
+
+let V = []; // DP table
+let maxItems = items.length;
+
+// Initialize DP table
+function initDP() {
+  W = parseInt(document.getElementById('knapsack-capacity').value);
+  V = Array.from({ length: maxItems + 1 }, () => Array(W + 1).fill(0));
+  currentItem = 0;
+  renderTable();
+  renderBacktrack();
+  document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
+}
+
+// Render DP table
+function renderTable() {
+  const matrixDiv = document.getElementById('knapsack-matrix');
+  matrixDiv.innerHTML = '';
+
+  // Header
+  matrixDiv.innerHTML += '<div class="text-gray-500">i/j</div>';
+  for (let j = 0; j <= W; j++) matrixDiv.innerHTML += `<div class="text-gray-500">${j}</div>`;
+
+  // Rows
+  for (let i = 0; i <= maxItems; i++) {
+    matrixDiv.innerHTML += `<div class="font-bold text-blue-300">${i}</div>`;
+    for (let j = 0; j <= W; j++) {
+      let val = V[i][j];
+      let cellClass = '';
+
+      // Highlight current item's row updates
+      if (i === currentItem && i > 0) {
+        const incl = j >= items[i - 1].w ? items[i - 1].v + V[i - 1][j - items[i - 1].w] : 0;
+        if (incl > V[i - 1][j]) cellClass = 'bg-green-500/20 font-bold border border-green-500 text-yellow-300';
+      }
+
+      matrixDiv.innerHTML += `<div class="bg-black/30 ${cellClass}">${val}</div>`;
+    }
+  }
+}
+
+// Step forward
+function nextItem() {
+  if (currentItem >= maxItems) return;
+  currentItem++;
+  for (let j = 0; j <= W; j++) {
+    const incl = j >= items[currentItem - 1].w ? items[currentItem - 1].v + V[currentItem - 1][j - items[currentItem - 1].w] : 0;
+    const excl = V[currentItem - 1][j];
+    V[currentItem][j] = Math.max(excl, incl);
+  }
+  renderTable();
+  renderBacktrack();
+  document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
+}
+
+// Step backward
+function prevItem() {
+  if (currentItem <= 0) return;
+  currentItem--;
+  renderTable();
+  renderBacktrack();
+  document.getElementById('item-indicator').innerText = `Current Item = ${currentItem}`;
+}
+
+// Backtracking to find selected items
+function renderBacktrack() {
+  const ul = document.getElementById('knapsack-selection');
+  ul.innerHTML = '';
+  let i = currentItem;
+  let j = W;
+  while (i > 0 && j > 0) {
+    if (V[i][j] !== V[i - 1][j]) {
+      ul.innerHTML += `<li>Item ${i} (w=${items[i - 1].w}, v=${items[i - 1].v}) included</li>`;
+      j -= items[i - 1].w;
+    }
+    i--;
+  }
+}
+
+// ===== EVENT LISTENERS =====
+document.getElementById('next-item').addEventListener('click', nextItem);
+document.getElementById('prev-item').addEventListener('click', prevItem);
+document.getElementById('knapsack-capacity').addEventListener('change', initDP);
+
+// ===== INIT =====
+initDP();
