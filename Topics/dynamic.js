@@ -227,105 +227,59 @@ export const dynamic = {
     // ============================================
     'dyn_warshall': {
         title: "Warshall's Algorithm (Transitive Closure)",
-        notes: 
-            '<div class="space-y-8">' +
-                // --- 1. CORE CONCEPTS (USER NOTES) ---
-                '<div>' +
-                    '<h3 class="text-xl font-bold text-accent mb-2">The Core Idea</h3>' +
-                    '<p class="leading-relaxed text-sm md:text-base mb-2">' +
-                        'If there is a way to go from <strong>A to B</strong>, and also from <strong>B to C</strong>, then there is a way to get from <strong>A to C</strong>.' +
-                    '</p>' +
-                    '<ul class="list-disc pl-5 space-y-1 text-sm opacity-90">' +
-                        '<li><strong>Goal:</strong> Build up partial solutions to create a Transitive Closure.</li>' +
-                        '<li><strong>Adjacency Matrix:</strong> If there is a directed edge between two vertices, they are directly reachable ($1$), otherwise ($0$).</li>' +
-                        '<li><strong>Process:</strong> Check each vertex in turn ($k$) and see if it can act as a bridge to connect other vertices.</li>' +
-                    '</ul>' +
-                '</div>' +
+        notes:
+'<div class="space-y-8" id="warshall-root">' +
 
-                // --- 2. INITIAL GRAPH VISUAL ---
-                '<div class="step-card border-l-4 border-blue-500">' +
-                    '<span class="step-title">Initial Directed Graph</span>' +
-                    '<div class="glass p-4 rounded-lg border border-white/10 text-center">' +
-                        '<svg viewBox="0 0 300 120" class="w-full h-32">' +
-                            '<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#fff" /></marker></defs>' +
-                            
-                            // Edges
-                            '<line x1="50" y1="60" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' + // 4->1
-                            '<line x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' + // 1->2
-                            '<line x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' + // 2->3
-                            
-                            // Nodes
-                            '<circle cx="50" cy="60" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2" /><text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">4</text>' +
-                            '<circle cx="150" cy="30" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2" /><text x="150" y="35" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">1</text>' +
-                            '<circle cx="250" cy="60" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2" /><text x="250" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">2</text>' +
-                            '<circle cx="150" cy="90" r="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2" /><text x="150" y="95" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">3</text>' +
-                        '</svg>' +
-                        '<p class="text-xs mt-2 opacity-70">Direct Edges: 4→1, 1→2, 2→3</p>' +
-                    '</div>' +
-                '</div>' +
+  // ===== HEADER =====
+  '<div class="text-center">' +
+    '<h3 class="text-xl font-bold text-accent mb-2">Warshall’s Algorithm — Step Trace</h3>' +
+    '<span id="k-indicator" class="k-badge">Current k = 1</span>' +
+  '</div>' +
 
-                // --- 3. MATRIX TRACE ---
-                '<div class="step-card">' +
-                    '<span class="step-title">Matrix Evolution (Full Example)</span>' +
-                    '<p class="text-sm mb-4">We update the matrix by iterating $k$ from 1 to 4. We ask: "Can we connect $i \\to j$ by going through $k$?"</p>' +
+  // ===== GRAPH =====
+  '<div class="glass p-4 rounded-lg text-center">' +
+    '<svg id="warshall-graph" viewBox="0 0 300 120" class="w-full h-32">' +
 
-                    // ROW 1: R0 and R1
-                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">' +
-                        // R0
-                        '<div>' +
-                            '<p class="text-xs font-bold text-center mb-1 text-gray-400">R(0) - Adjacency</p>' +
-                            '<div class="grid grid-cols-5 text-center font-mono text-xs gap-1">' +
-                                '<div></div><div>1</div><div>2</div><div>3</div><div>4</div>' + // Headers
-                                '<div>1</div><div class="bg-black/40">0</div><div class="bg-blue-500/20 text-blue-300">1</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div>' +
-                                '<div>2</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-blue-500/20 text-blue-300">1</div><div class="bg-black/40">0</div>' +
-                                '<div>3</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div>' +
-                                '<div>4</div><div class="bg-blue-500/20 text-blue-300">1</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div>' +
-                            '</div>' +
-                        '</div>' +
-                        
-                        // R1
-                        '<div>' +
-                            '<p class="text-xs font-bold text-center mb-1 text-accent">k=1 (Through Node 1)</p>' +
-                            '<div class="grid grid-cols-5 text-center font-mono text-xs gap-1">' +
-                                '<div></div><div>1</div><div>2</div><div>3</div><div>4</div>' +
-                                '<div>1</div><div class="bg-black/40">0</div><div class="bg-blue-500/20">1</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div>' +
-                                '<div>2</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-blue-500/20">1</div><div class="bg-black/40">0</div>' +
-                                '<div>3</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div>' +
-                                '<div>4</div><div class="bg-blue-500/20">1</div><div class="bg-green-500/20 text-green-400 font-bold border border-green-500">1</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div>' +
-                            '</div>' +
-                            '<p class="text-[10px] text-center mt-1 text-green-300">New: 4->1->2 implies 4->2</p>' +
-                        '</div>' +
-                    '</div>' +
+      // arrows
+      '<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="18" refY="3" orient="auto">' +
+      '<path d="M0,0 L0,6 L9,3 z" fill="#fff"/></marker></defs>' +
 
-                    // ROW 2: R2
-                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">' +
-                        // R2
-                        '<div>' +
-                            '<p class="text-xs font-bold text-center mb-1 text-accent">k=2 (Through Node 2)</p>' +
-                            '<div class="grid grid-cols-5 text-center font-mono text-xs gap-1">' +
-                                '<div></div><div>1</div><div>2</div><div>3</div><div>4</div>' +
-                                '<div>1</div><div class="bg-black/40">0</div><div class="bg-blue-500/20">1</div><div class="bg-green-500/20 text-green-400 font-bold border border-green-500">1</div><div class="bg-black/40">0</div>' +
-                                '<div>2</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-blue-500/20">1</div><div class="bg-black/40">0</div>' +
-                                '<div>3</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div><div class="bg-black/40">0</div>' +
-                                '<div>4</div><div class="bg-blue-500/20">1</div><div class="bg-blue-500/20">1</div><div class="bg-green-500/20 text-green-400 font-bold border border-green-500">1</div><div class="bg-black/40">0</div>' +
-                            '</div>' +
-                            '<p class="text-[10px] text-center mt-1 text-green-300">New: 1->2->3 & 4->2->3</p>' +
-                        '</div>' +
-                        
-                        // LOGIC BOX
-                        '<div class="flex flex-col justify-center text-sm">' +
-                            '<p class="font-bold text-gray-400 mb-2">Algorithm Logic:</p>' +
-                            '<p class="font-mono text-xs bg-black/30 p-2 rounded">R[i,j] = R[i,j] OR (R[i,k] AND R[k,j])</p>' +
-                            '<p class="mt-2 text-xs opacity-80">We found that 4 connects to 3 because:</p>' +
-                            '<ul class="list-disc pl-5 mt-1 text-xs opacity-70">' +
-                                '<li>4 connects to 2 (from previous step)</li>' +
-                                '<li>2 connects to 3</li>' +
-                                '<li>Therefore 4 -> 3</li>' +
-                            '</ul>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
-            '</div>',
+      '<line x1="50" y1="60" x2="150" y2="30" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
+      '<line x1="150" y1="30" x2="250" y2="60" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
+      '<line x1="250" y1="60" x2="150" y2="90" stroke="#fff" stroke-width="2" marker-end="url(#arrow)" />' +
+
+      // nodes
+      '<circle data-node="4" cx="50" cy="60" r="15" fill="#1e293b"/>' +
+      '<text x="50" y="65" text-anchor="middle" fill="#fff" font-weight="bold">4</text>' +
+
+      '<circle data-node="1" cx="150" cy="30" r="15" fill="#1e293b"/>' +
+      '<text x="150" y="35" text-anchor="middle" fill="#fff" font-weight="bold">1</text>' +
+
+      '<circle data-node="2" cx="250" cy="60" r="15" fill="#1e293b"/>' +
+      '<text x="250" y="65" text-anchor="middle" fill="#fff" font-weight="bold">2</text>' +
+
+      '<circle data-node="3" cx="150" cy="90" r="15" fill="#1e293b"/>' +
+      '<text x="150" y="95" text-anchor="middle" fill="#fff" font-weight="bold">3</text>' +
+
+    '</svg>' +
+    '<p class="text-xs opacity-70 mt-2">Highlighted node = current k</p>' +
+  '</div>' +
+
+  // ===== MATRIX =====
+  '<div class="glass p-4 rounded-lg">' +
+    '<div id="warshall-matrix" class="grid grid-cols-5 text-center font-mono text-xs gap-1"></div>' +
+    '<p class="text-[11px] text-center mt-3 opacity-80">' +
+      'Row <strong>k</strong> and Column <strong>k</strong> are highlighted because we are testing paths through node k.' +
+    '</p>' +
+  '</div>' +
+
+  // ===== CONTROLS =====
+  '<div class="warshall-controls">' +
+    '<button id="next-k" class="warshall-btn">▶ Next k</button>' +
+  '</div>' +
+
+'</div>',
+
         code: 
             '<div class="space-y-8">' +
                 '<div>' +

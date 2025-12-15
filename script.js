@@ -271,3 +271,64 @@ window.switchContentTab = function(tabName) {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
     document.getElementById(`content-${tabName}`).classList.remove('hidden');
 }
+// ===============================
+// WARSHALL STEP CONTROLLER
+// ===============================
+
+let currentK = 1;
+const size = 4;
+
+// adjacency matrix
+const R = [
+  [0,1,0,0],
+  [0,0,1,0],
+  [0,0,0,0],
+  [1,0,0,0]
+];
+
+function renderMatrix() {
+  const container = document.getElementById("warshall-matrix");
+  container.innerHTML = "";
+
+  // header row
+  container.innerHTML += "<div></div>";
+  for (let j = 1; j <= size; j++) {
+    container.innerHTML += `<div class="${j === currentK ? 'k-col font-bold' : ''}">${j}</div>`;
+  }
+
+  for (let i = 1; i <= size; i++) {
+    container.innerHTML += `<div class="${i === currentK ? 'k-row font-bold' : ''}">${i}</div>`;
+    for (let j = 1; j <= size; j++) {
+      let cls = "bg-black/40";
+      if (i === currentK) cls += " k-row";
+      if (j === currentK) cls += " k-col";
+      container.innerHTML += `<div class="${cls}">${R[i-1][j-1]}</div>`;
+    }
+  }
+}
+
+function highlightNode() {
+  document.querySelectorAll("[data-node]").forEach(n => {
+    n.classList.remove("k-active-node");
+    if (parseInt(n.dataset.node) === currentK) {
+      n.classList.add("k-active-node");
+    }
+  });
+}
+
+function updateK() {
+  document.getElementById("k-indicator").innerText = `Current k = ${currentK}`;
+  renderMatrix();
+  highlightNode();
+}
+
+document.addEventListener("click", e => {
+  if (e.target.id === "next-k") {
+    currentK++;
+    if (currentK > size) currentK = 1;
+    updateK();
+  }
+});
+
+// initial render
+setTimeout(updateK, 50);
