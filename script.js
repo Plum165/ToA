@@ -482,14 +482,13 @@ function initFloyd() {
 }
 // ===== KNAPSACK LOGIC =====
 const items = [
-  { w: 3, v: 25 },
-  { w: 2, v: 20 },
-  { w: 1, v: 15 },
-  { w: 4, v: 40 },
-  { w: 5, v: 50 }
+  { w: 2, v: 12 },
+  { w: 1, v: 10 },
+  { w: 3, v: 20 },
+  { w: 2, v: 15 }
 ];
 
-let W = 6; // default capacity
+let W = 5;//Default
 let currentItem = 0;
 
 let V = []; // DP table
