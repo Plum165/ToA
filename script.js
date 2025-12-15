@@ -272,96 +272,106 @@ window.switchContentTab = function(tabName) {
     document.getElementById(`content-${tabName}`).classList.remove('hidden');
 }
 // ===============================
-// WARSHALL INTERACTIVE CONTROLLER
+// WARSHALL INTERACTIVE CONTROLLER (FIXED)
 // ===============================
 
-const size = 4;
-let currentK = 1;
+function initWarshall() {
+  const size = 4;
+  let currentK = 1;
+  let stepIndex = 1;
 
-// adjacency matrix (initial)
-const adjMatrix = [
-  [0,1,0,0],
-  [0,0,1,0],
-  [0,0,0,0],
-  [1,0,0,0]
-];
+  // adjacency matrix (initial)
+  const adjMatrix = [
+    [0,1,0,0],
+    [0,0,1,0],
+    [0,0,0,0],
+    [1,0,0,0]
+  ];
 
-// Keep step-by-step matrix copies
-const steps = [];
-let R = adjMatrix.map(r => [...r]);
-steps.push(R.map(r => [...r])); // step 0
+  // Keep step-by-step matrix copies
+  const steps = [];
+  let R = adjMatrix.map(r => [...r]);
+  steps.push(R.map(r => [...r])); // step 0
 
-// Precompute all k steps
-for (let k = 0; k < size; k++) {
-  let newR = R.map(r => [...r]);
-  for (let i = 0; i < size; i++) {
+  // Precompute all k steps
+  for (let k = 0; k < size; k++) {
+    let newR = R.map(r => [...r]);
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        if (R[i][j] === 0 && (R[i][k] && R[k][j])) {
+          newR[i][j] = 1;
+        }
+      }
+    }
+    R = newR;
+    steps.push(R.map(r => [...r]));
+  }
+
+  function renderMatrix(stepIdx) {
+    const container = document.getElementById("warshall-matrix");
+    container.innerHTML = "";
+
+    const mat = steps[stepIdx];
+    // header
+    container.innerHTML += "<div></div>";
     for (let j = 0; j < size; j++) {
-      if (R[i][j] === 0 && (R[i][k] && R[k][j])) {
-        newR[i][j] = 1;
+      container.innerHTML += `<div class="${j+1===currentK?'k-col font-bold':''}">${j+1}</div>`;
+    }
+
+    for (let i = 0; i < size; i++) {
+      container.innerHTML += `<div class="${i+1===currentK?'k-row font-bold':''}">${i+1}</div>`;
+      for (let j = 0; j < size; j++) {
+        let cls = "bg-black/40";
+        if (i+1===currentK) cls += " k-row";
+        if (j+1===currentK) cls += " k-col";
+        if (steps[stepIdx][i][j] === 1 && steps[Math.max(stepIdx-1,0)][i][j] === 0) {
+          cls += " new-edge";
+        } else if (mat[i][j] === 1) {
+          cls += " text-blue-300";
+        }
+        container.innerHTML += `<div class="${cls}">${mat[i][j]}</div>`;
       }
     }
   }
-  R = newR;
-  steps.push(R.map(r => [...r]));
-}
 
-function renderMatrix(stepIdx) {
-  const container = document.getElementById("warshall-matrix");
-  container.innerHTML = "";
-
-  const mat = steps[stepIdx];
-  // header
-  container.innerHTML += "<div></div>";
-  for (let j = 0; j < size; j++) {
-    container.innerHTML += `<div class="${j+1===currentK?'k-col font-bold':''}">${j+1}</div>`;
-  }
-
-  for (let i = 0; i < size; i++) {
-    container.innerHTML += `<div class="${i+1===currentK?'k-row font-bold':''}">${i+1}</div>`;
-    for (let j = 0; j < size; j++) {
-      let cls = "bg-black/40";
-      if (i+1===currentK) cls += " k-row";
-      if (j+1===currentK) cls += " k-col";
-      if (steps[stepIdx][i][j] === 1 && steps[Math.max(stepIdx-1,0)][i][j] === 0) {
-        cls += " new-edge";
-      } else if (mat[i][j] === 1) {
-        cls += " text-blue-300";
+  function highlightNode() {
+    document.querySelectorAll("#warshall-graph [data-node]").forEach(n => {
+      n.classList.remove("k-active-node");
+      if (parseInt(n.dataset.node) === currentK) {
+        n.classList.add("k-active-node");
       }
-      container.innerHTML += `<div class="${cls}">${mat[i][j]}</div>`;
-    }
+    });
   }
-}
 
-function highlightNode() {
-  document.querySelectorAll("[data-node]").forEach(n => {
-    n.classList.remove("k-active-node");
-    if (parseInt(n.dataset.node) === currentK) {
-      n.classList.add("k-active-node");
-    }
+  function updateUI(stepIdx) {
+    document.getElementById("k-indicator").innerText = `Current k = ${currentK}`;
+    renderMatrix(stepIdx);
+    highlightNode();
+  }
+
+  // Control buttons
+  const nextBtn = document.getElementById("next-k");
+  const prevBtn = document.getElementById("prev-k");
+
+  nextBtn.addEventListener("click", () => {
+    stepIndex++;
+    if (stepIndex >= steps.length) stepIndex = steps.length - 1;
+    currentK = Math.min(stepIndex, size);
+    updateUI(stepIndex);
   });
+
+  prevBtn.addEventListener("click", () => {
+    stepIndex--;
+    if (stepIndex < 0) stepIndex = 0;
+    currentK = Math.min(stepIndex, size);
+    updateUI(stepIndex);
+  });
+
+  // initial render
+  updateUI(1);
 }
 
-function updateUI(stepIdx) {
-  document.getElementById("k-indicator").innerText = `Current k = ${currentK}`;
-  renderMatrix(stepIdx);
-  highlightNode();
-}
-
-// Control buttons
-let stepIndex = 1;
-document.getElementById("next-k").addEventListener("click", () => {
-  stepIndex++;
-  if (stepIndex >= steps.length) stepIndex = steps.length - 1;
-  currentK = Math.min(stepIndex, size);
-  updateUI(stepIndex);
+// Wait until the DOM is fully ready
+window.addEventListener("DOMContentLoaded", () => {
+  initWarshall();
 });
-
-document.getElementById("prev-k").addEventListener("click", () => {
-  stepIndex--;
-  if (stepIndex < 0) stepIndex = 0;
-  currentK = Math.min(stepIndex, size);
-  updateUI(stepIndex);
-});
-
-// initial render
-updateUI(1);
