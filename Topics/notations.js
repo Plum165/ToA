@@ -190,6 +190,11 @@ function fibIterative(n) {
                         'This "sandwiches" the function. It means the algorithm behaves <strong>exactly</strong> proportional to $g(n)$ (asymptotically).' +
                     '</p>' +
                 '</div>' +
+                  // --- GRAPH ---
+            '<div class="glass p-4 rounded-lg">' +
+                '<h4 class="font-bold text-sm mb-2 text-center text-accent">Visualizing Theta</h4>' +
+                '<div class="h-64"><canvas id="chart-theta"></canvas></div>' +
+            '</div>' +
 
                 // --- KEY DIFFERENCE (FROM IMAGE) ---
                 '<div class="step-card">' +
