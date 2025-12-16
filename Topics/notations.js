@@ -179,7 +179,7 @@ function fibIterative(n) {
         title: "Theta Notation Θ (Tight Bound)",
         notes: 
             '<div class="space-y-6">' +
-                // --- DEFINITION ---
+                // --- DEFINITIONs ---
                 '<div>' +
                     '<h3 class="text-xl font-bold text-accent mb-2">Definition</h3>' +
                     '<p class="leading-relaxed text-sm md:text-base">' +
