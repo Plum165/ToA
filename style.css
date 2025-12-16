@@ -169,6 +169,66 @@
     --btn: linear-gradient(90deg, #b91c1c, #dc2626); /* Red buttons on Green bg */
     --btn-hover: linear-gradient(90deg, #dc2626, #ef4444); 
 }
+/* 1. Dark Blue & Cyan */
+[data-theme='dark-blue-cyan'] { 
+    --bg1: #0b1e3d; /* Deep Navy */
+    --bg2: #122a55; 
+    --bg3: #0d213f;
+    --text: #e0f2fe; 
+    --accent: #06b6d4; /* Cyan Accent */
+    --card: rgba(18, 42, 85, 0.3); 
+    --btn: linear-gradient(90deg, #0369a1, #0ea5e9);
+    --btn-hover: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+
+/* 2. Dark Blue & Electric Blue */
+[data-theme='dark-blue-electric'] { 
+    --bg1: #0a1c3a; 
+    --bg2: #102848;
+    --bg3: #0d2140;
+    --text: #dbeafe;
+    --accent: #3b82f6; /* Electric Blue Accent */
+    --card: rgba(16, 40, 72, 0.3); 
+    --btn: linear-gradient(90deg, #1d4ed8, #2563eb);
+    --btn-hover: linear-gradient(90deg, #2563eb, #3b82f6);
+}
+
+/* 3. Dark Blue & Teal */
+[data-theme='dark-blue-teal'] { 
+    --bg1: #0c1f3c; 
+    --bg2: #103049;
+    --bg3: #0b2640;
+    --text: #cffafe; 
+    --accent: #14b8a6; /* Teal Accent */
+    --card: rgba(16, 48, 73, 0.3); 
+    --btn: linear-gradient(90deg, #0d9488, #14b8a6);
+    --btn-hover: linear-gradient(90deg, #14b8a6, #2dd4bf);
+}
+
+/* 4. Dark Blue & Indigo */
+[data-theme='dark-blue-indigo'] { 
+    --bg1: #0a1a35; 
+    --bg2: #101f4a;
+    --bg3: #081c3e;
+    --text: #e0e7ff; 
+    --accent: #6366f1; /* Indigo Accent */
+    --card: rgba(16, 31, 74, 0.3); 
+    --btn: linear-gradient(90deg, #4f46e5, #6366f1);
+    --btn-hover: linear-gradient(90deg, #6366f1, #818cf8);
+}
+
+/* 5. Dark Emerald-Blue Hybrid */
+[data-theme='dark-emerald-blue'] { 
+    --bg1: #022c3c; /* Deep blue-green */
+    --bg2: #064e5b;
+    --bg3: #043147;
+    --text: #e0f2fe; 
+    --accent: #0ea5e9; /* Bright Blue Accent */
+    --card: rgba(6, 78, 91, 0.3); 
+    --btn: linear-gradient(90deg, #0369a1, #0ea5e9);
+    --btn-hover: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+
 
 /* --- BASE STYLES --- */
 body {
