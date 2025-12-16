@@ -185,7 +185,7 @@ function fibIterative(n) {
                     '<p class="leading-relaxed text-sm md:text-base">' +
                         'A function $t(n) \\in \\Theta(g(n))$ iff there are constants $c_1, c_2$ and $n_0$ such that:' +
                     '</p>' +
-                    '<div class="latex-output text-center">$$c_2 g(n) \\le t(n) \\le c_1 g(n) \\quad \\forall n \\ge n_0$$</div>' +
+                    '<div class="latex-output text-center">$c_2 g(n) \\le t(n) \\le c_1 g(n) \\quad \\forall n \\ge n_0$</div>' +
                     '<p class="text-sm opacity-80 mt-2">' +
                         'This "sandwiches" the function. It means the algorithm behaves <strong>exactly</strong> proportional to $g(n)$ (asymptotically).' +
                     '</p>' +
