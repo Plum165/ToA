@@ -112,7 +112,7 @@ function loadTopic(id, category) {
 }
 
 function renderStandardTopic(id, container) {
-   const content = getTopicContent(id); // <-- use lookup
+    const content = getTopicContent(id);
     if (!content) {
         container.innerHTML = `<div class="p-10 text-center opacity-50">Content not found.</div>`;
         return;
@@ -126,51 +126,54 @@ function renderStandardTopic(id, container) {
                 <button onclick="switchContentTab('code')" class="content-tab-btn btn btn-ghost text-xs" id="tab-code">Code</button>
                 <button onclick="switchContentTab('exercise')" class="content-tab-btn btn btn-ghost text-xs" id="tab-exercise">Exercise</button>
             </div>
+
             <div id="content-notes" class="tab-content block animate-fade-in">
-                <div class="text-sm md:text-base leading-relaxed">${content.notes}</div>
+                <div class="text-sm md:text-base leading-relaxed">
+                    ${content.notes}
+                </div>
             </div>
+
             <div id="content-code" class="tab-content hidden">
-                <pre class="bg-black/30 p-4 rounded-lg overflow-x-auto text-sm text-green-400 font-mono border border-white/10"><code>${content.code}</code></pre>
+                <pre class="bg-black/30 p-4 rounded-lg overflow-x-auto text-sm text-green-400 font-mono border border-white/10">
+<code>${content.code}</code>
+                </pre>
             </div>
+
             <div id="content-exercise" class="tab-content hidden">
                 <div id="exercise-container" class="glass p-6 rounded-lg min-h-[300px]"></div>
             </div>
         </div>
     `;
 
-    // Initialize logic
-    if (window.exerciseEngine) window.exerciseEngine = null; // Clear old instance
-    window.exerciseEngine = new NotationExercise('exercise-container');
-    window.exerciseEngine.init();
+    // ---- Exercise engine (init ONCE) ----
+    if (window.exerciseEngine) window.exerciseEngine = null;
 
-    // Init the correct exercise engine
     if (id === 'dyn_knap') {
-        initDP(); // initialize knapsack DP and attach event listeners
-    } else if (id === 'sums' || id === 'recurrence') {
-        if (window.exerciseEngine) window.exerciseEngine = null;
-        window.exerciseEngine = new EfficiencyExercise('exercise-container');
-        window.exerciseEngine.init();
-    } else {
-        if (window.exerciseEngine) window.exerciseEngine = null;
+        initDP();
         window.exerciseEngine = new NotationExercise('exercise-container');
-        window.exerciseEngine.init();
+    } else if (id === 'sums' || id === 'recurrence') {
+        window.exerciseEngine = new EfficiencyExercise('exercise-container');
+    } else {
+        window.exerciseEngine = new NotationExercise('exercise-container');
     }
-    window.exerciseEngine.init();
-    if (window.MathJax) MathJax.typesetPromise();
 
-    // DRAW THE CHARTS (New Logic)
+    window.exerciseEngine.init();
+
+    // ---- MathJax (CORRECT way) ----
+    if (window.MathJax) {
+        MathJax.typesetClear();
+        MathJax.typesetPromise();
+    }
+
+    // Charts
     if (id === 'big') drawNotationChart('big', 'chart-big');
     if (id === 'omega') drawNotationChart('omega', 'chart-omega');
     if (id === 'theta') drawNotationChart('theta', 'chart-theta');
-    // Initialize Warshall ONLY when its topic is loaded
-if (id === 'dyn_warshall') {
-    setTimeout(initWarshall, 0);
-}
-if (id === 'dyn_floyd') {
-    setTimeout(initFloyd, 0);
+
+    if (id === 'dyn_warshall') setTimeout(initWarshall, 0);
+    if (id === 'dyn_floyd') setTimeout(initFloyd, 0);
 }
 
-}
 
 
 // --- NEW CHART FUNCTION ---
