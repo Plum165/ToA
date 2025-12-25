@@ -359,41 +359,39 @@ export const transform = {
                         '13 = 8 + 4 + 1 = <strong class="text-yellow-400">1 1 0 1</strong>' +
                     '</div>' +
 
-                    // 2. THE TABLE
-                    '<div class="glass p-4 rounded-lg border border-white/10">' +
-                        '<h4 class="font-bold text-xs text-center text-accent mb-3">Horner\'s Trace Table</h4>' +
-                        
-                        '<div class="grid grid-cols-4 gap-2 text-center text-xs md:text-sm font-mono">' +
-                            // Headers
-                            '<div class="text-gray-400 border-b border-white/10 pb-1">Bit Sequence</div>' +
-                            '<div class="text-gray-400 border-b border-white/10 pb-1">1 (Start)</div>' +
-                            '<div class="text-gray-400 border-b border-white/10 pb-1">1</div>' +
-                            '<div class="text-gray-400 border-b border-white/10 pb-1">0</div>' +
-                            '<div class="text-gray-400 border-b border-white/10 pb-1">1</div>' +
+                   '<!-- HORNER TABLE -->' +
+'<div class="glass p-4 rounded-lg border border-white/10 overflow-x-auto">' +
+    '<h4 class="font-bold text-sm text-center text-accent mb-4">Horner\'s Table (1101$_2$)</h4>' +
+    
+    // Grid Setup: 6 Columns
+    '<div class="grid grid-cols-6 gap-2 text-center text-xs md:text-sm font-mono items-center min-w-[500px]">' +
+        
+        // --- ROW 1: BINARY ---
+        '<div class="text-left font-bold text-gray-300 p-2 bg-white/5 rounded">Binary</div>' +
+        '<div class="p-2 border-b border-white/10 font-bold">1</div>' +
+        '<div class="p-2 border-b border-white/10 font-bold">1</div>' +
+        '<div class="p-2 border-b border-white/10 font-bold">0</div>' +
+        '<div class="p-2 border-b border-white/10 font-bold">1</div>' +
+        '<div class="p-2 font-bold text-white bg-white/10 rounded">Total</div>' +
 
-                            // Row 2: Current P
-                            '<div class="text-left text-blue-300">Action</div>' +
-                            '<div>Init $p=a$</div>' +
-                            '<div>Square, Mult</div>' +
-                            '<div>Square</div>' +
-                            '<div>Square, Mult</div>' +
+        // --- ROW 2: ACTION ---
+        '<div class="text-left font-bold text-blue-300 p-2 bg-white/5 rounded">Action</div>' +
+        '<div class="p-2 text-[10px] md:text-xs">P = a</div>' +
+        '<div class="p-2 text-[10px] md:text-xs text-nowrap">P ← (P*P)*a</div>' +
+        '<div class="p-2 text-[10px] md:text-xs text-nowrap">P ← P*P</div>' +
+        '<div class="p-2 text-[10px] md:text-xs text-nowrap">P ← (P*P)*a</div>' +
+        '<div class="p-2 bg-white/5 rounded"></div>' + // Empty cell
 
-                            // Row 3: Calculation
-                            '<div class="text-left text-gray-400">Value</div>' +
-                            '<div>$a$</div>' +
-                            '<div>$(a)^2 \\cdot a = a^3$</div>' +
-                            '<div>$(a^3)^2 = a^6$</div>' +
-                            '<div>$(a^6)^2 \\cdot a = a^{13}$</div>' +
+        // --- ROW 3: MULTIPLY COUNT ---
+        '<div class="text-left font-bold text-green-400 p-2 bg-white/5 rounded">Multiply</div>' +
+        '<div class="p-2 opacity-50">0</div>' +
+        '<div class="p-2 bg-red-500/20 rounded font-bold text-white">2</div>' +
+        '<div class="p-2 bg-red-500/20 rounded font-bold text-white">1</div>' +
+        '<div class="p-2 bg-red-500/20 rounded font-bold text-white">2</div>' +
+        '<div class="p-2 font-bold text-accent bg-green-500/20 rounded border border-green-500">5</div>' +
 
-                            // Row 4: Counts
-                            '<div class="text-left text-green-400 font-bold">Mult Count</div>' +
-                            '<div class="opacity-50">-</div>' +
-                            '<div class="bg-red-500/20 rounded font-bold">2</div>' +
-                            '<div class="bg-red-500/20 rounded font-bold">1</div>' +
-                            '<div class="bg-red-500/20 rounded font-bold">2</div>' +
-                        '</div>' +
-                    '</div>' +
-
+    '</div>' +
+'</div>'+
                     // 3. FINAL TOTAL
                     '<div class="mt-4 bg-green-500/10 border border-green-500/30 p-3 rounded text-center">' +
                         '<p class="text-sm"><strong>Total Multiplications:</strong> 2 + 1 + 2 = <span class="text-xl font-bold text-green-400">5</span></p>' +
