@@ -21,7 +21,7 @@ export default function ExercisePanel({ topicId }: ExercisePanelProps) {
     // Question lists sorted by topic context
     const notationQuestions: QuizQuestion[] = [
       {
-        question: 'Determine the time complexity of the following code snippet:',
+        question: 'Determine the time complexity of the following code snippet (single linear loop):',
         options: ['O(1)', 'O(log n)', 'O(n)', 'O(n²)'],
         answer: 'O(n)',
         explanation: 'The function has a single linear loop executing arr.length times, making it strictly O(n) (Linear) time complexity.',
@@ -31,6 +31,36 @@ export default function ExercisePanel({ topicId }: ExercisePanelProps) {
         options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(2ⁿ)'],
         answer: 'O(n²)',
         explanation: 'There are two nested loops, each dependent on n. Since the inner loop executes up to n times for each of the outer loop’s n cycles, we perform n * n = n² operations.',
+      },
+      {
+        question: 'Determine the exact Big O complexity of the dependent nested loops shown below:',
+        options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(n³)'],
+        answer: 'O(n²)',
+        explanation: 'The outer loop runs n times. The inner loop runs i times, which averages to n/2 times. The constant work of 5 inside is ignored. Total operations: 5 * n * (n+1) / 2 = 2.5n² + 2.5n ∈ O(n²).',
+      },
+      {
+        question: 'Which of the following is a valid threshold pair (c, n₀) proving that 10n² + 50n + 100 ∈ O(n²)?',
+        options: ['c = 10, n₀ = 1', 'c = 15, n₀ = 10', 'c = 160, n₀ = 1', 'c = 50, n₀ = 1'],
+        answer: 'c = 160, n₀ = 1',
+        explanation: 'Set up the inequality: 10n² + 50n + 100 ≤ c * n². Divide by n²: 10 + 50/n + 100/n² ≤ c. At our chosen threshold n₀ = 1, this evaluates to 10 + 50 + 100 = 160. Hence, c = 160, n₀ = 1 is mathematically correct.',
+      },
+      {
+        question: 'An algorithm\'s runtime is given by t(n) = 3^{n+1}. What is its Big-O complexity class?',
+        options: ['O(3ⁿ)', 'O(2ⁿ)', 'O(3^{n+1})', 'O(n!)'],
+        answer: 'O(3ⁿ)',
+        explanation: 't(n) = 3^{n+1} = 3 * 3ⁿ. Since constant factors are omitted in asymptotic complexity notation, this simplifies strictly to O(3ⁿ).',
+      },
+      {
+        question: 'If t(n) = 2^{2n} and g(n) = 2ⁿ, which of the following asymptotic claims is correct?',
+        options: ['t(n) ∈ O(g(n))', 't(n) ∈ Θ(g(n))', 'g(n) ∈ O(t(n))', 't(n) ∈ o(g(n))'],
+        answer: 'g(n) ∈ O(t(n))',
+        explanation: 't(n) = 2^{2n} = 4ⁿ. Since 4ⁿ grows exponentially faster than 2ⁿ, g(n) grows strictly slower than t(n). Therefore, g(n) ∈ O(t(n)), whereas t(n) is not in O(g(n)).',
+      },
+      {
+        question: 'Evaluate the limit of the ratio of t(n) = n² log₂ n and g(n) = n³ as n approaches infinity. Which notation applies?',
+        options: ['t(n) ∈ Ω(g(n))', 't(n) ∈ O(g(n))', 't(n) ∈ Θ(g(n))', 't(n) ∈ o(1)'],
+        answer: 't(n) ∈ O(g(n))',
+        explanation: 'Taking the limit as n approaches infinity of t(n)/g(n) yields: lim_{n→∞} (n² log₂ n) / n³ = lim_{n→∞} (log₂ n) / n = 0. Since the limit is 0, t(n) grows strictly slower than g(n), meaning t(n) ∈ O(g(n)).',
       },
       {
         question: 'What is the Big O complexity of Brute Force String Matching in the worst case?',
@@ -76,6 +106,30 @@ export default function ExercisePanel({ topicId }: ExercisePanelProps) {
         options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(n³)'],
         answer: 'O(n²)',
         explanation: 'Here a=4, b=2, d=1. Compare a vs bᵈ: 4 > 2¹ = 2. Since a > bᵈ, Case 3 applies. The complexity is Θ(n^{log_b a}) = Θ(n^{log_2 4}) = Θ(n²).',
+      },
+      {
+        question: 'Solve the recurrence relation: T(n) = 8T(n/2) + n²',
+        options: ['O(n² log n)', 'O(n³)', 'O(n²/log n)', 'O(n log n)'],
+        answer: 'O(n³)',
+        explanation: 'Here a = 8, b = 2, d = 2. Compare a with bᵈ: 8 > 2² = 4. Since a > bᵈ (8 > 4), we are in Case 3 of the Master Theorem. The complexity is Θ(n^{log_b a}) = Θ(n^{log_2 8}) = Θ(n³).',
+      },
+      {
+        question: 'Determine the tight bound Θ of the summation representing this nested loop: ∑_{i=1}^{n} ∑_{j=1}^{i} j',
+        options: ['Θ(n)', 'Θ(n log n)', 'Θ(n²)', 'Θ(n³)'],
+        answer: 'Θ(n³)',
+        explanation: 'The inner summation ∑_{j=1}^{i} j evaluates to i(i+1)/2 ≈ 0.5i². Summing this from i=1 to n yields: 0.5 * ∑_{i=1}^{n} i² ≈ 0.5 * (n³/3) = n³/6, which is strictly Θ(n³).',
+      },
+      {
+        question: 'A divide-and-conquer algorithm divides a problem of size n into 4 subproblems of size n/2, and requires linear Θ(n) work to merge. What is its recurrence and Big O?',
+        options: ['T(n) = 2T(n/2) + n → O(n log n)', 'T(n) = 4T(n/2) + n → O(n²)', 'T(n) = 4T(n/2) + 1 → O(n)', 'T(n) = 2T(n/2) + n² → O(n²)'],
+        answer: 'T(n) = 4T(n/2) + n → O(n²)',
+        explanation: 'Dividing into 4 subproblems of size n/2 gives a=4 and b=2. Linear merge work gives f(n) = n. Thus, the recurrence is T(n) = 4T(n/2) + n. Since a > bᵈ (4 > 2¹), Case 3 applies: T(n) ∈ Θ(n^{log_2 4}) = Θ(n²).',
+      },
+      {
+        question: 'What is the Big O of the sum of the series ∑_{i=0}^{log₂ n} 2^i ?',
+        options: ['O(log n)', 'O(n)', 'O(n log n)', 'O(2ⁿ)'],
+        answer: 'O(n)',
+        explanation: 'This is a geometric progression with first term 1, ratio 2, and k = log₂ n terms. The sum is 2^{k+1} - 1 = 2 * 2^{log₂ n} - 1 = 2n - 1, which is strictly O(n) (Linear).',
       }
     ];
 
@@ -109,6 +163,24 @@ export default function ExercisePanel({ topicId }: ExercisePanelProps) {
         options: ['DP uses random coins', 'DP sorts denominations', 'DP solves and tables all sub-problems', 'DP uses fewer comparisons'],
         answer: 'DP solves and tables all sub-problems',
         explanation: 'Greedy makes irrevocable local choices, which fail for non-canonical coin sets. DP solves all sub-amounts bottom-up, proving and caching the absolute optimal path for any set.',
+      },
+      {
+        question: 'Which of the following is true regarding the Floyd-Warshall algorithm?',
+        options: ['It has a time complexity of Θ(V³)', 'It only works on trees', 'It uses a greedy approach', 'It solves single-source shortest path'],
+        answer: 'It has a time complexity of Θ(V³)',
+        explanation: 'The Floyd-Warshall algorithm computes all-pairs shortest paths on a graph with V vertices. It uses dynamic programming and 3 nested loops running from 1 to V, giving a strict tight bound of Θ(V³).',
+      },
+      {
+        question: 'In the Decrease-and-Conquer strategy, what is the size reduction factor of the problem at each step in Binary Search?',
+        options: ['Decreases by a constant factor of 1/2', 'Decreases by a constant amount of 1', 'Decreases by a constant amount of 2', 'Decreases by a variable factor'],
+        answer: 'Decreases by a constant factor of 1/2',
+        explanation: 'Binary Search is a classic example of Decrease-and-Conquer (specifically, decrease by a constant factor), reducing the size of the search array by half at each comparison step.',
+      },
+      {
+        question: 'What is the time complexity of Warshall\'s Transitive Closure algorithm on a graph with V vertices?',
+        options: ['O(V)', 'O(V log V)', 'O(V²)', 'O(V³)'],
+        answer: 'O(V³)',
+        explanation: 'Warshall\'s algorithm uses dynamic programming with three nested loops, each traversing from 1 to V, resulting in a time complexity of Θ(V³).',
       }
     ];
 
@@ -165,6 +237,20 @@ export default function ExercisePanel({ topicId }: ExercisePanelProps) {
         }
     }
     return false;
+}`}
+        </pre>
+      );
+    }
+    if (currentQuestion.question.includes('dependent nested loops')) {
+      return (
+        <pre className="bg-black/30 p-3 rounded font-mono text-xs text-green-400 border border-white/5 mb-3">
+{`for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= i; j++) {
+        for (let k = 1; k <= 5; k++) {
+            // Constant operations
+            console.log(i, j, k);
+        }
+    }
 }`}
         </pre>
       );

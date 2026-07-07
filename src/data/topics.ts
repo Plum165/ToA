@@ -9,47 +9,221 @@ export const TOPICS: Record<string, Topic> = {
     title: 'Big O Notation (Upper Bound)',
     notes: `
       <div class="space-y-6">
+        <!-- Definition -->
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Definition</h3>
-          <p class="leading-relaxed text-sm md:text-base">
-            A function $t(n) \\in O(g(n))$ if and only if there is a positive constant $c$ and an integer $n_0$ such that <span class="font-bold text-accent whitespace-nowrap">$t(n) \\le c \\cdot g(n)$</span> for all $n \\ge n_0$.
+          <h3 class="text-xl font-bold text-white mb-2">1. Mathematical Foundations of Big O</h3>
+          <p class="leading-relaxed text-sm md:text-base text-gray-300">
+            <strong>Big O Notation ($O$)</strong> provides an asymptotic upper bound on the growth rate of a function. It defines the worst-case scenario, guaranteeing that an algorithm's execution time or space requirement will not scale faster than a given envelope.
           </p>
-          <p class="mt-2 text-sm opacity-80">
-            This represents the <strong>Worst Case</strong> scenario. It guarantees that the algorithm will not take more time than this bound.
+          
+          <div class="glass p-4 rounded-xl mt-3 space-y-3 border border-white/10">
+            <p class="text-sm font-semibold text-accent">Definition (Threshold Method):</p>
+            <p class="text-sm text-gray-200">
+              Let $t(n)$ and $g(n)$ be non-negative functions over the set of natural numbers. We say that $t(n) \\in O(g(n))$ if and only if there exist a positive real constant $c > 0$ and a positive integer $n_0 \\ge 1$ such that:
+            </p>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5 font-mono text-center text-accent text-sm md:text-base">
+              $t(n) \\le c \\cdot g(n) \\quad \\text{for all} \\quad n \\ge n_0$
+            </div>
+            
+            <p class="text-sm font-semibold text-accent mt-4">Definition (Limit Method):</p>
+            <p class="text-sm text-gray-200">
+              Alternatively, using calculus, we can compare functions by taking the limit of their ratio as $n$ approaches infinity:
+            </p>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5 font-mono text-center text-accent text-sm md:text-base">
+              $\\lim_{n \\to \\infty} \\frac{t(n)}{g(n)} = L$
+            </div>
+            <p class="text-xs text-gray-400 mt-1">
+              If $0 \\le L < \\infty$ (i.e., the limit is a non-negative finite constant), then $t(n) \\in O(g(n))$. If $L = \\infty$, then $t(n) \\notin O(g(n))$.
+            </p>
+          </div>
+        </div>
+
+        <!-- Why It Matters -->
+        <div class="glass p-4 rounded-xl border-l-4 border-accent bg-accent/5">
+          <h4 class="font-bold text-sm text-white mb-1">Why It Matters</h4>
+          <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+            In software engineering, Big O represents a <strong>fail-safe contract</strong>. If a system handles mission-critical operations (e.g., flight controller telemetry, real-time banking transfers), you must guarantee that even the absolute worst-case configuration of inputs will not cause system timeout or stack overflows.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Worked Example Proof: $100n + 5 \\in O(n)$</span>
-          <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
-            <li><strong>Goal:</strong> Find $c$ such that $100n + 5 \\le c \\cdot n$.</li>
-            <li><strong>Divide by n:</strong> $100 + 5/n \\le c$.</li>
-            <li><strong>Pick $n_0 = 5$:</strong> Then $100 + 5/5 = 101$.</li>
-            <li><strong>Result:</strong> If we choose $c = 101$, the condition holds for all $n \\ge 5$. Hence proved.</li>
-          </ul>
+
+        <!-- Detailed Step-by-Step Proofs -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-white">2. Rigorous Worked Proofs</h3>
+          
+          <!-- Proof A -->
+          <div class="step-card p-4 rounded-xl border border-white/10 bg-black/25">
+            <span class="step-title text-accent font-bold text-sm">Worked Proof A: $100n + 5 \\in O(n)$</span>
+            <p class="text-xs md:text-sm text-gray-300 mt-2">
+              Show that there exist $c > 0$ and $n_0 \\ge 1$ such that $100n + 5 \\le c \\cdot n$.
+            </p>
+            <ol class="list-decimal pl-5 mt-2 space-y-2 text-xs md:text-sm text-gray-300">
+              <li>
+                <strong>Express the inequality:</strong> $100n + 5 \\le c \\cdot n$ for all $n \\ge n_0$.
+              </li>
+              <li>
+                <strong>Divide both sides by $n$:</strong> Since $n > 0$, this yields $100 + \\frac{5}{n} \\le c$.
+              </li>
+              <li>
+                <strong>Analyze the behavior of the fraction:</strong> The term $\\frac{5}{n}$ is a decreasing function of $n$. Its maximum value occurs at the smallest possible value of $n$ (our threshold $n_0$).
+              </li>
+              <li>
+                <strong>Select a threshold $n_0$:</strong> Let us pick $n_0 = 1$.
+              </li>
+              <li>
+                <strong>Calculate the constant $c$:</strong> Substituting $n = 1$ into the inequality gives $100 + \\frac{5}{1} = 105$.
+              </li>
+              <li>
+                <strong>Verify:</strong> For any $n \\ge 1$, we have $\\frac{5}{n} \\le 5$, which guarantees $100 + \\frac{5}{n} \\le 105$.
+              </li>
+            </ol>
+            <p class="text-xs font-mono text-green-400 mt-2">
+              ✔ Proof Complete: By choosing $c = 105$ and $n_0 = 1$, the threshold inequality is satisfied for all $n \\ge n_0$.
+            </p>
+          </div>
+
+          <!-- Proof B -->
+          <div class="step-card p-4 rounded-xl border border-white/10 bg-black/25">
+            <span class="step-title text-accent font-bold text-sm">Worked Proof B: $3n^2 + 10n \\log_2 n + 20 \\in O(n^2)$</span>
+            <p class="text-xs md:text-sm text-gray-300 mt-2">
+              Prove that $3n^2 + 10n \\log_2 n + 20 \\le c \\cdot n^2$ for $n \\ge n_0$.
+            </p>
+            <ol class="list-decimal pl-5 mt-2 space-y-2 text-xs md:text-sm text-gray-300">
+              <li>
+                <strong>Divide by the highest-order term ($n^2$):</strong> This yields $3 + \\frac{10 \\log_2 n}{n} + \\frac{20}{n^2} \\le c$.
+              </li>
+              <li>
+                <strong>Establish upper bounds:</strong>
+                <ul class="list-disc pl-5 mt-1 space-y-1">
+                  <li>For all $n \\ge 1$, we know that $\\log_2 n < n$. Therefore, $\\frac{\\log_2 n}{n} < 1$. This implies $\\frac{10 \\log_2 n}{n} \\le 10$.</li>
+                  <li>For all $n \\ge 1$, we know $\\frac{20}{n^2} \\le 20$.</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Select parameters:</strong> Pick $n_0 = 1$. Let us sum our individual upper bounds: $c = 3 + 10 + 20 = 33$.
+              </li>
+              <li>
+                <strong>Verification:</strong> For all $n \\ge 1$, $3n^2 + 10n \\log_2 n + 20 \\le 3n^2 + 10n^2 + 20n^2 = 33n^2$.
+              </li>
+            </ol>
+            <p class="text-xs font-mono text-green-400 mt-2">
+              ✔ Proof Complete: Choosing $c = 33$ and $n_0 = 1$ satisfies $t(n) \\le c \\cdot n^2$.
+            </p>
+          </div>
         </div>
-        <div class="warn-box">
-          <strong>Key Takeaway:</strong> We ignore constants and lower-order terms when evaluating asymptotic complexity. For example, $0.5n^2 + 100n$ simplifies to $O(n^2)$.
+
+        <!-- Interactive Practice Exercises -->
+        <div class="glass p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+          <h3 class="text-lg font-bold text-white">3. Self-Guided Learning Exercises</h3>
+          
+          <div class="space-y-4">
+            <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+              <p class="text-sm font-semibold text-gray-200">Exercise 1: Show that $5n^3 + 12n^2 \\log_2 n + 100 \\in O(n^3)$. Give a formal specification of $c$ and $n_0$.</p>
+              <details class="mt-2 text-xs md:text-sm">
+                <summary class="text-accent cursor-pointer select-none font-bold hover:underline">Show step-by-step mathematical proof</summary>
+                <div class="mt-2 text-gray-300 space-y-2 bg-black/40 p-3 rounded border border-white/5 font-sans">
+                  <p><strong>Step 1:</strong> Set up the inequality: $5n^3 + 12n^2 \\log_2 n + 100 \\le c \\cdot n^3$.</p>
+                  <p><strong>Step 2:</strong> Divide both sides by $n^3$: $5 + \\frac{12 \\log_2 n}{n} + \\frac{100}{n^3} \\le c$.</p>
+                  <p><strong>Step 3:</strong> Since $\\log_2 n \\le n$ for all $n \\ge 1$, we have $\\frac{12 \\log_2 n}{n} \\le 12$. Furthermore, $\\frac{100}{n^3} \\le 100$ for all $n \\ge 1$.</p>
+                  <p><strong>Step 4:</strong> Pick $n_0 = 1$. The maximum value of the left-hand side is $5 + 12 + 100 = 117$. Let $c = 117$.</p>
+                  <p><strong>Step 5:</strong> For any $n \\ge 1$, we observe that $5n^3 + 12n^2 \\log_2 n + 100 \\le 5n^3 + 12n^3 + 100n^3 = 117n^3$. Hence, $c=117$ and $n_0=1$ constitutes a mathematically rigorous choice.</p>
+                </div>
+              </details>
+            </div>
+
+            <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+              <p class="text-sm font-semibold text-gray-200">Exercise 2: Is it true that $n^2 \\in O(n)$? Disprove this claim rigorously using the definition of limits.</p>
+              <details class="mt-2 text-xs md:text-sm">
+                <summary class="text-accent cursor-pointer select-none font-bold hover:underline">Show mathematical disproof</summary>
+                <div class="mt-2 text-gray-300 space-y-2 bg-black/40 p-3 rounded border border-white/5 font-sans">
+                  <p><strong>Proof by contradiction (using Limit method):</strong></p>
+                  <p>Let $t(n) = n^2$ and $g(n) = n$. Take the limit of their ratio as $n \\to \\infty$:</p>
+                  <div class="font-mono text-center text-accent py-1">
+                    $\\lim_{n \\to \\infty} \\frac{n^2}{n} = \\lim_{n \\to \\infty} n = \\infty$
+                  </div>
+                  <p>According to the Limit Method, if the limit is $\\infty$, then $t(n) \\notin O(g(n))$. Therefore, $n^2 \\notin O(n)$.</p>
+                  <p><strong>Using the threshold definition:</strong> Suppose there exists some constant $c > 0$ such that $n^2 \\le c \\cdot n$ for all $n \\ge n_0$. Dividing by $n$ (since $n > 0$) yields $n \\le c$ for all $n \\ge n_0$. However, this is a clear contradiction since $n$ is unbounded and will eventually exceed any constant $c$ as $n \\to \\infty$. Thus, no such constant $c$ can exist.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-World Applications -->
+        <div>
+          <h3 class="text-xl font-bold text-white mb-2">4. Real-World Applications</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Database Queries & Scalability</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                Without indexing, searching a database table requires checking every row, which is a linear $O(n)$ scan. For a table of $10^9$ rows, this takes seconds. Creating a B-Tree index transforms searches to $O(\\log n)$ lookup, which completes in less than 30 index compares!
+              </p>
+            </div>
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Cryptographical Key Cracking</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                Security protocols like AES rely on the fact that cracking a key by brute force scales exponentially: $O(2^k)$, where $k$ is the key size in bits. Increasing the key size from 128 to 256 bits doubles the key length, but squares the cracking difficulty to $2^{256}$ operations (which would take longer than the age of the universe).
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     `,
-    code: `// Linear Search: Worst case is O(n) (item at the end or not present)
-function linearSearch(arr, target) {
+    code: `// =========================================================================
+// 1. LINEAR SEARCH - O(n) Time Complexity (Worst Case)
+// =========================================================================
+// If the target is at the very end of the array, or doesn't exist, we must
+// iterate through all 'n' elements of the list.
+function linearSearch(arr: number[], target: number): number {
     for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === target) return i;
+        if (arr[i] === target) return i; // Found target in 'i' steps
     }
-    return -1;
+    return -1; // Not found: n checks made
 }
 
-// Bubble Sort: Worst case is O(n^2) (nested loop comparisons)
-function bubbleSort(arr) {
+// =========================================================================
+// 2. BUBBLE SORT - O(n²) Time Complexity (Worst Case)
+// =========================================================================
+// If the input array is sorted in descending order, the nested loops will
+// perform n * (n - 1) / 2 comparisons and swaps, yielding a quadratic upper bound.
+function bubbleSort(arr: number[]): void {
     let n = arr.length;
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
-                [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+                // Perform structural swap
+                let temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
             }
         }
     }
+}
+
+// =========================================================================
+// 3. RECURSIVE FIBONACCI - O(2ⁿ) Time Complexity (Worst Case)
+// =========================================================================
+// Naive recursion branches twice per call without caching intermediate states,
+// constructing a call tree of depth n. The total calls scale exponentially.
+function fibRecursive(n: number): number {
+    if (n <= 1) return n;
+    return fibRecursive(n - 1) + fibRecursive(n - 2);
+}
+
+// =========================================================================
+// 4. POWERSETS GENERATION - O(2ⁿ) Time/Space Complexity
+// =========================================================================
+// Finding all subsets of a set. A set of size n possesses exactly 2ⁿ subsets.
+// Thus, both generating and storing the powerset requires exponential bound.
+function getPowerSet<T>(arr: T[]): T[][] {
+    const result: T[][] = [[]];
+    for (let value of arr) {
+        const length = result.length;
+        for (let i = 0; i < length; i++) {
+            let temp = [...result[i], value];
+            result.push(temp);
+        }
+    }
+    return result;
 }`
   },
   omega: {
@@ -57,47 +231,212 @@ function bubbleSort(arr) {
     title: 'Omega Notation Ω (Lower Bound)',
     notes: `
       <div class="space-y-6">
+        <!-- Definition -->
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Definition</h3>
-          <p class="leading-relaxed text-sm md:text-base">
-            A function $t(n) \\in \\Omega(g(n))$ if there is a positive constant $c$ and integer $n_0$ such that <span class="font-bold text-accent whitespace-nowrap">$t(n) \\ge c \\cdot g(n)$</span> for all $n \\ge n_0$.
+          <h3 class="text-xl font-bold text-white mb-2">1. Mathematical Foundations of Omega Ω</h3>
+          <p class="leading-relaxed text-sm md:text-base text-gray-300">
+            <strong>Omega Notation ($\\Omega$)</strong> provides an asymptotic lower bound on the growth rate of a function. It defines the best-case scenario or establishes a lower boundary, guaranteeing that an algorithm will take <em>at least</em> this much time or space for sufficiently large inputs.
           </p>
-          <p class="mt-2 text-sm opacity-80">
-            This represents the <strong>Best Case</strong> scenario. The algorithm takes <em>at least</em> this much time for all sufficiently large inputs.
+          
+          <div class="glass p-4 rounded-xl mt-3 space-y-3 border border-white/10">
+            <p class="text-sm font-semibold text-accent">Definition (Threshold Method):</p>
+            <p class="text-sm text-gray-200">
+              We say that $t(n) \\in \\Omega(g(n))$ if and only if there exist a positive real constant $c > 0$ and a positive integer $n_0 \\ge 1$ such that:
+            </p>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5 font-mono text-center text-accent text-sm md:text-base">
+              $t(n) \\ge c \\cdot g(n) \\quad \\text{for all} \\quad n \\ge n_0$
+            </div>
+            
+            <p class="text-sm font-semibold text-accent mt-4">Definition (Limit Method):</p>
+            <p class="text-sm text-gray-200">
+              Using calculus limits, we can rigorously define lower bounds:
+            </p>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5 font-mono text-center text-accent text-sm md:text-base">
+              $\\lim_{n \\to \\infty} \\frac{t(n)}{g(n)} = L$
+            </div>
+            <p class="text-xs text-gray-400 mt-1">
+              If $L > 0$ (including $L = \\infty$), then $t(n) \\in \\Omega(g(n))$. If $L = 0$, then $t(n) \\notin \\Omega(g(n))$.
+            </p>
+          </div>
+        </div>
+
+        <!-- Why It Matters -->
+        <div class="glass p-4 rounded-xl border-l-4 border-accent bg-accent/5">
+          <h4 class="font-bold text-sm text-white mb-1">Why It Matters</h4>
+          <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+            While Big O guarantees that an algorithm won't overshoot a certain performance limit, Omega establishes <strong>theoretical lower bounds</strong> on problems. For example, computer scientists have proven that any comparison-based sorting algorithm (like Merge Sort or QuickSort) must perform at least $\\Omega(n \\log n)$ comparisons in the worst case. This tells us we can never design a comparison-based sort with a worst-case of $O(n)$.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Worked Example Proof: $n^3 + 2n \\in \\Omega(n^2)$</span>
-          <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
-            <li>We want to find $c, n_0 > 0$ such that $n^3 + 2n \\ge c \\cdot n^2$.</li>
-            <li>Since $n^3 \\ge n^2$ for all $n \\ge 1$, we have $n^3 + 2n \\ge n^2$.</li>
-            <li>Pick $c = 1$ and $n_0 = 1$. The inequality holds, proving that $n^3 + 2n \\in \\Omega(n^2)$.</li>
-          </ul>
+
+        <!-- Detailed Step-by-Step Proofs -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-white">2. Rigorous Worked Proofs</h3>
+          
+          <!-- Proof A -->
+          <div class="step-card p-4 rounded-xl border border-white/10 bg-black/25">
+            <span class="step-title text-accent font-bold text-sm">Worked Proof A: $5n^2 - 100n \\in \\Omega(n^2)$</span>
+            <p class="text-xs md:text-sm text-gray-300 mt-2">
+              Prove that there exist $c > 0$ and $n_0 \\ge 1$ such that $5n^2 - 100n \\ge c \\cdot n^2$ for all $n \\ge n_0$.
+            </p>
+            <ol class="list-decimal pl-5 mt-2 space-y-2 text-xs md:text-sm text-gray-300">
+              <li>
+                <strong>Set up the inequality:</strong> $5n^2 - 100n \\ge c \\cdot n^2$.
+              </li>
+              <li>
+                <strong>Divide by $n^2$ (for $n > 0$):</strong> This gives $5 - \\frac{100}{n} \\ge c$.
+              </li>
+              <li>
+                <strong>Observe values as $n$ grows:</strong> The term $\\frac{100}{n}$ decreases. To keep $5 - \\frac{100}{n}$ positive, we must ensure $n$ is large enough.
+              </li>
+              <li>
+                <strong>Select a threshold $n_0$:</strong> Let's pick $n_0 = 50$. At $n = 50$, the expression is $5 - \\frac{100}{50} = 5 - 2 = 3$.
+              </li>
+              <li>
+                <strong>Calculate the constant $c$:</strong> Let $c = 3$. For any $n \\ge 50$, we have $\\frac{100}{n} \\le 2$, which guarantees that $5 - \\frac{100}{n} \\ge 3$.
+              </li>
+            </ol>
+            <p class="text-xs font-mono text-green-400 mt-2">
+              ✔ Proof Complete: Choosing $c = 3$ and $n_0 = 50$ satisfies $5n^2 - 100n \\ge 3n^2$ for all $n \\ge 50$.
+            </p>
+          </div>
+
+          <!-- Proof B -->
+          <div class="step-card p-4 rounded-xl border border-white/10 bg-black/25">
+            <span class="step-title text-accent font-bold text-sm">Worked Proof B: $n^3 + 2n \\in \\Omega(n^2)$</span>
+            <p class="text-xs md:text-sm text-gray-300 mt-2">
+              Prove that $n^3 + 2n \\ge c \\cdot n^2$ for sufficiently large $n$.
+            </p>
+            <ol class="list-decimal pl-5 mt-2 space-y-2 text-xs md:text-sm text-gray-300">
+              <li>
+                <strong>Write the inequality:</strong> $n^3 + 2n \\ge c \\cdot n^2$.
+              </li>
+              <li>
+                <strong>Divide both sides by $n^2$:</strong> $n + \\frac{2}{n} \\ge c$.
+              </li>
+              <li>
+                <strong>Analyze variables:</strong> Since $n \\ge 1$, we know $n + \\frac{2}{n} \\ge n$.
+              </li>
+              <li>
+                <strong>Select parameters:</strong> Pick $n_0 = 1$. Since $n \\ge 1$ for all $n \\ge n_0$, we can choose $c = 1$. The inequality holds: $n^3 + 2n \\ge n^3 \\ge n^2$ for all $n \\ge 1$.
+              </li>
+            </ol>
+            <p class="text-xs font-mono text-green-400 mt-2">
+              ✔ Proof Complete: Choosing $c = 1$ and $n_0 = 1$ satisfies the Omega relation.
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Practice Exercises -->
+        <div class="glass p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+          <h3 class="text-lg font-bold text-white">3. Self-Guided Learning Exercises</h3>
+          
+          <div class="space-y-4">
+            <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+              <p class="text-sm font-semibold text-gray-200">Exercise 1: Prove that $10n^2 + 5n \\in \\Omega(n)$. Identify $c$ and $n_0$.</p>
+              <details class="mt-2 text-xs md:text-sm">
+                <summary class="text-accent cursor-pointer select-none font-bold hover:underline">Show step-by-step mathematical proof</summary>
+                <div class="mt-2 text-gray-300 space-y-2 bg-black/40 p-3 rounded border border-white/5 font-sans">
+                  <p><strong>Step 1:</strong> Goal is to show $10n^2 + 5n \\ge c \\cdot n$ for all $n \\ge n_0$.</p>
+                  <p><strong>Step 2:</strong> Divide both sides by $n$: $10n + 5 \\ge c$.</p>
+                  <p><strong>Step 3:</strong> Since $n \\ge 1$, the term $10n$ is at least $10$. Therefore, $10n + 5 \\ge 15$ for all $n \\ge 1$.</p>
+                  <p><strong>Step 4:</strong> Pick $n_0 = 1$ and $c = 15$. For any $n \\ge n_0$, we have $10n^2 + 5n \\ge 15n$.</p>
+                  <p><strong>Step 5:</strong> Proof complete. The chosen constants satisfy the lower bound inequality.</p>
+                </div>
+              </details>
+            </div>
+
+            <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+              <p class="text-sm font-semibold text-gray-200">Exercise 2: Is $n \\log_2 n \\in \\Omega(n^2)$? Disprove this using limits.</p>
+              <details class="mt-2 text-xs md:text-sm">
+                <summary class="text-accent cursor-pointer select-none font-bold hover:underline">Show mathematical disproof</summary>
+                <div class="mt-2 text-gray-300 space-y-2 bg-black/40 p-3 rounded border border-white/5 font-sans">
+                  <p><strong>Limit-based analysis:</strong></p>
+                  <p>Take the limit of the ratio as $n \\to \\infty$:</p>
+                  <div class="font-mono text-center text-accent py-1">
+                    $\\lim_{n \\to \\infty} \\frac{n \\log_2 n}{n^2} = \\lim_{n \\to \\infty} \\frac{\\log_2 n}{n} = 0$
+                  </div>
+                  <p>Applying L'Hôpital's Rule (or general growth hierarchies), $\\lim_{n \\to \\infty} \\frac{\\log_2 n}{n} = 0$. Since the limit is equal to $0$, $t(n) \\notin \\Omega(n^2)$.</p>
+                  <p><strong>Intuition:</strong> A lower bound means $t(n)$ must grow at least as fast as $g(n)$. Since $n \\log_2 n$ grows strictly slower than $n^2$, $n^2$ cannot act as a lower bound.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-World Applications -->
+        <div>
+          <h3 class="text-xl font-bold text-white mb-2">4. Real-World Applications</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Sorting Optimization Lower Bounds</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                The $\\Omega(n \\log n)$ proof for comparison-based sorting lets computer scientists know when to stop searching for faster algorithms. It shifted researchers' focus toward non-comparison sorting (like Radix Sort or Counting Sort), which bypass the lower bound by exploiting data structures and run in $O(n)$ time!
+              </p>
+            </div>
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Blockchain Hash Difficulty Bounds</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                Consensus algorithms (Proof of Work) require finding a hash below a target threshold. The difficulty is configured mathematically to ensure a strict lower bound on operations ($\\Omega(2^d)$ hash checks), maintaining stable, predictable transaction block-mining times.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     `,
-    code: `// Linear Search: Best Case is Ω(1) (found at index 0 immediately)
-function linearSearchBestCase(arr, target) {
-    if (arr[0] === target) return 0;
-    // ... rest of linear search ...
+    code: `// =========================================================================
+// 1. LINEAR SEARCH - Ω(1) Time Complexity (Best Case)
+// =========================================================================
+// In the absolute best case, the target element is located at index 0 of the
+// array. The search terminates instantly in exactly one operation, Ω(1) constant.
+function linearSearchBestCase<T>(arr: T[], target: T): number {
+    if (arr.length > 0 && arr[0] === target) {
+        return 0; // Terminated in 1 operation
+    }
+    // ... remainder of search continues in loop ...
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === target) return i;
+    }
+    return -1;
 }
 
-// Optimized Bubble Sort: Best Case is Ω(n) (array already sorted)
-function bubbleSortOptimized(arr) {
+// =========================================================================
+// 2. OPTIMIZED BUBBLE SORT - Ω(n) Time Complexity (Best Case)
+// =========================================================================
+// If the input array is already fully sorted, a single pass with no swaps
+// allows the algorithm to detect sorted state and terminate early.
+function bubbleSortOptimized(arr: number[]): void {
     let n = arr.length;
-    let swapped;
+    let swapped: boolean;
     do {
         swapped = false;
         for (let i = 0; i < n - 1; i++) {
             if (arr[i] > arr[i + 1]) {
+                // Perform structural swap
                 let temp = arr[i];
                 arr[i] = arr[i + 1];
                 arr[i + 1] = temp;
                 swapped = true;
             }
         }
-        n--;
-    } while (swapped);
+        n--; // Optimization: last item of each loop is sorted
+    } while (swapped); // If no items were swapped, array is sorted!
+}
+
+// =========================================================================
+// 3. ITERATIVE FIBONACCI - Ω(n) Time Complexity (Best Case)
+// =========================================================================
+// Calculating Fibonacci iteratively solves each subproblem exactly once,
+// performing exactly n loops. This guarantees a tight linear lower bound Ω(n).
+function fibIterative(n: number): number {
+    if (n <= 1) return n;
+    let prev = 0;
+    let curr = 1;
+    for (let i = 2; i <= n; i++) {
+        let next = prev + curr;
+        prev = curr;
+        curr = next;
+    }
+    return curr;
 }`
   },
   theta: {
@@ -105,45 +444,190 @@ function bubbleSortOptimized(arr) {
     title: 'Theta Notation Θ (Tight Bound)',
     notes: `
       <div class="space-y-6">
+        <!-- Definition -->
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Definition</h3>
-          <p class="leading-relaxed text-sm md:text-base">
-            A function $t(n) \\in \\Theta(g(n))$ if and only if there are positive constants $c_1, c_2$ and an integer $n_0$ such that:
+          <h3 class="text-xl font-bold text-white mb-2">1. Mathematical Foundations of Theta Θ</h3>
+          <p class="leading-relaxed text-sm md:text-base text-gray-300">
+            <strong>Theta Notation ($\\Theta$)</strong> provides an asymptotic tight bound on the growth rate of a function. It represents an exact matching envelope, sandwiching the running time from both above and below.
           </p>
-          <div class="latex-output">$c_2 \\cdot g(n) \\le t(n) \\le c_1 \\cdot g(n) \\quad \\forall n \\ge n_0$</div>
-          <p class="text-sm opacity-80 mt-2">
-            This represents the <strong>Average or Tight Bound</strong>. It sandwiches the function, showing the algorithm grows at exactly the same rate as $g(n)$.
-          </p>
+          
+          <div class="glass p-4 rounded-xl mt-3 space-y-3 border border-white/10">
+            <p class="text-sm font-semibold text-accent">Definition (Threshold Method):</p>
+            <p class="text-sm text-gray-200">
+              We say that $t(n) \\in \\Theta(g(n))$ if and only if there exist positive real constants $c_1 > 0, c_2 > 0$ and a positive integer $n_0 \\ge 1$ such that:
+            </p>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5 font-mono text-center text-accent text-sm md:text-base">
+              $c_2 \\cdot g(n) \\le t(n) \\le c_1 \\cdot g(n) \\quad \\text{for all} \\quad n \\ge n_0$
+            </div>
+            <p class="text-xs text-gray-400 mt-1">
+              This is equivalent to saying that $t(n) \\in O(g(n))$ AND $t(n) \\in \\Omega(g(n))$ simultaneously.
+            </p>
+            
+            <p class="text-sm font-semibold text-accent mt-4">Definition (Limit Method):</p>
+            <p class="text-sm text-gray-200">
+              Alternatively, using limits:
+            </p>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5 font-mono text-center text-accent text-sm md:text-base">
+              $\\lim_{n \\to \\infty} \\frac{t(n)}{g(n)} = L$
+            </div>
+            <p class="text-xs text-gray-400 mt-1">
+              If $0 < L < \\infty$ (i.e., the limit is a non-zero, finite constant), then $t(n) \\in \\Theta(g(n))$.
+            </p>
+          </div>
         </div>
-        <div class="step-card">
-          <span class="step-title">Theta vs Big O Concept</span>
-          <p class="text-sm mb-2">Theta is a stronger claim than Big O. While we can say $100n + 5 \\in O(n^2)$ (loose bound), it is only $\\Theta(n)$ because it grows strictly linearly.</p>
-          <ul class="list-disc pl-5 space-y-1 text-xs">
-            <li><strong class="text-green-400">Correct:</strong> $3n^2 + 5 \\in \\Theta(n^2)$</li>
-            <li><strong class="text-red-400">Incorrect:</strong> $3n^2 + 5 \\in \\Theta(n^3)$</li>
+
+        <!-- Why It Matters -->
+        <div class="glass p-4 rounded-xl border-l-4 border-accent bg-accent/5">
+          <h4 class="font-bold text-sm text-white mb-1">Deep Dive: Theta vs Big O</h4>
+          <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+            In everyday speech, developers often use "Big O" when they actually mean "Theta". For example, saying "Linear Search takes $O(n)$" is correct, but saying "Selection Sort takes $O(n^2)$" is loose because Selection Sort <strong>always</strong> takes quadratic time, even in the best case.
+          </p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-xs md:text-sm text-gray-300">
+            <li>Calling $10n + 5 \\in O(n^2)$ is <strong>mathematically true</strong> but extremely sloppy because $n^2$ is an overestimate.</li>
+            <li>Calling $10n + 5 \\in \\Theta(n)$ is a <strong>tight, precise claim</strong>. It asserts that the function scales strictly linearly, never slower or faster.</li>
           </ul>
+        </div>
+
+        <!-- Detailed Step-by-Step Proofs -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-white">2. Rigorous Worked Proofs</h3>
+          
+          <!-- Proof A -->
+          <div class="step-card p-4 rounded-xl border border-white/10 bg-black/25">
+            <span class="step-title text-accent font-bold text-sm">Worked Proof: $4n^2 + 3n + 2 \\in \\Theta(n^2)$</span>
+            <p class="text-xs md:text-sm text-gray-300 mt-2">
+              We must show that there exist $c_1, c_2 > 0$ and $n_0 \\ge 1$ such that $c_2 \\cdot n^2 \\le 4n^2 + 3n + 2 \\le c_1 \\cdot n^2$ for $n \\ge n_0$.
+            </p>
+            <ol class="list-decimal pl-5 mt-2 space-y-2 text-xs md:text-sm text-gray-300">
+              <li>
+                <strong>Establish the upper bound (Big O):</strong>
+                <ul class="list-disc pl-5 mt-1">
+                  <li>For all $n \\ge 1$, we know $3n \\le 3n^2$ and $2 \\le 2n^2$.</li>
+                  <li>Thus, $4n^2 + 3n + 2 \\le 4n^2 + 3n^2 + 2n^2 = 9n^2$. This gives our upper bound multiplier: $c_1 = 9$ with $n_0 = 1$.</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Establish the lower bound (Omega Ω):</strong>
+                <ul class="list-disc pl-5 mt-1">
+                  <li>Since $3n + 2 \\ge 0$ for all $n \\ge 1$, we can write: $4n^2 + 3n + 2 \\ge 4n^2$.</li>
+                  <li>This gives our lower bound multiplier: $c_2 = 4$ with $n_0 = 1$.</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Combine inequalities:</strong>
+                <div class="bg-black/30 p-2 rounded text-center text-accent my-2 font-mono text-xs">
+                  $4n^2 \\le 4n^2 + 3n + 2 \\le 9n^2 \\quad \\text{for all} \\quad n \\ge 1$
+                </div>
+              </li>
+            </ol>
+            <p class="text-xs font-mono text-green-400 mt-2">
+              ✔ Proof Complete: Choosing $c_1 = 9$, $c_2 = 4$, and $n_0 = 1$ rigorously sandwiches the function.
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Practice Exercises -->
+        <div class="glass p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+          <h3 class="text-lg font-bold text-white">3. Self-Guided Learning Exercises</h3>
+          
+          <div class="space-y-4">
+            <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+              <p class="text-sm font-semibold text-gray-200">Exercise 1: Determine the tight bound $\\Theta$ of $t(n) = \\frac{1}{2}n^2 + 3n \\log_2 n$. Prove using limits.</p>
+              <details class="mt-2 text-xs md:text-sm">
+                <summary class="text-accent cursor-pointer select-none font-bold hover:underline">Show limit-based mathematical proof</summary>
+                <div class="mt-2 text-gray-300 space-y-2 bg-black/40 p-3 rounded border border-white/5 font-sans">
+                  <p><strong>Step 1:</strong> Hypothesize that $t(n) \\in \\Theta(n^2)$ because $n^2$ is the dominant term.</p>
+                  <p><strong>Step 2:</strong> Set up the limit ratio with $g(n) = n^2$:</p>
+                  <div class="font-mono text-center text-accent py-1">
+                    $\\lim_{n \\to \\infty} \\frac{\\frac{1}{2}n^2 + 3n \\log_2 n}{n^2}$
+                  </div>
+                  <p><strong>Step 3:</strong> Simplify the fraction:</p>
+                  <div class="font-mono text-center text-accent py-1">
+                    $\\lim_{n \\to \\infty} \\left( \\frac{1}{2} + \\frac{3 \\log_2 n}{n} \\right)$
+                  </div>
+                  <p><strong>Step 4:</strong> Evaluate individual limits. We know that as $n \\to \\infty$, the term $\\frac{3\\log_2 n}{n} \\to 0$. Therefore:</p>
+                  <div class="font-mono text-center text-accent py-1">
+                    $\\lim_{n \\to \\infty} \\left( \\frac{1}{2} + \\frac{3 \\log_2 n}{n} \\right) = \\frac{1}{2} + 0 = \\frac{1}{2}$
+                  </div>
+                  <p><strong>Step 5:</strong> Since $L = \\frac{1}{2}$ is a positive, non-zero, finite constant ($0 < \\frac{1}{2} < \\infty$), the Limit Method proves that $t(n) \\in \\Theta(n^2)$.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-World Applications -->
+        <div>
+          <h3 class="text-xl font-bold text-white mb-2">4. Real-World Applications</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Cryptographic Security</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                In cryptography, developers must prevent side-channel timing attacks. If a decryption function's execution time varies based on the key bits, hackers can deduce private keys by measuring latencies. Thus, operations must be designed to have a strict constant-time $\\Theta(1)$ profile regardless of inputs.
+              </p>
+            </div>
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Stock Trading Systems</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                High-frequency trading engines require highly predictable transaction latency. Standardizing on algorithms with a tight $\\Theta(n \\log n)$ bound (such as Merge Sort or Heap Sort) ensures that transaction processing times remain uniform and stable under heavy market volatility.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     `,
-    code: `// Summing an array: Always takes exactly n operations
-function sumArray(arr) {
+    code: `// =========================================================================
+// 1. ARRAY REDUCTION - Θ(n) Time Complexity (Constant Linear Growth)
+// =========================================================================
+// Summing elements of an array. Regardless of values or distribution, we
+// MUST perform exactly n loop iterations and operations. Best, worst, and
+// average case is exactly bounded at Θ(n).
+function sumArray(arr: number[]): number {
     let total = 0;
     for (let i = 0; i < arr.length; i++) {
-        total += arr[i];
+        total += arr[i]; // Basic operation executed exactly n times
     }
     return total;
-} // Time Complexity is Θ(n) in best, worst, and average cases
+}
 
-// Selection Sort: Always performs Θ(n^2) comparisons regardless of layout
-function selectionSort(arr) {
+// =========================================================================
+// 2. SELECTION SORT - Θ(n²) Time Complexity (Tight Quadratic Bound)
+// =========================================================================
+// Unlike bubble or insertion sort, selection sort always performs the same
+// number of nested loop element comparisons: n*(n-1)/2, even if the array is
+// already sorted. This represents a perfect tight bound of Θ(n²).
+function selectionSort(arr: number[]): void {
     let n = arr.length;
     for (let i = 0; i < n - 1; i++) {
         let minIdx = i;
         for (let j = i + 1; j < n; j++) {
-            if (arr[j] < arr[minIdx]) minIdx = j;
+            if (arr[j] < arr[minIdx]) {
+                minIdx = j; // basic operation executed exactly n*(n-1)/2 times
+            }
         }
-        [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
+        // Swap elements to place minimum in position i
+        let temp = arr[i];
+        arr[i] = arr[minIdx];
+        arr[minIdx] = temp;
     }
+}
+
+// =========================================================================
+// 3. MATRIX EQUALITY CHECK - Θ(n²) Time Complexity (Two-Dimensional Scan)
+// =========================================================================
+// Checking if two matrices of size n x n are equal. The inner loops run exactly
+// n * n times to check entries. If guaranteed no short-circuit (e.g. comparing
+// identical matrices), then time is bounded tightly at Θ(n²).
+function compareMatrices(A: number[][], B: number[][], n: number): boolean {
+    let isEqual = true;
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            if (A[i][j] !== B[i][j]) {
+                isEqual = false; // Check continues for comprehensive audit
+            }
+        }
+    }
+    return isEqual;
 }`
   },
   comp: {
@@ -151,54 +635,181 @@ function selectionSort(arr) {
     title: 'Comparing Efficiency Classes',
     notes: `
       <div class="space-y-6">
+        <!-- growth scale introduction -->
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Growth Rate Comparison</h3>
-          <p class="leading-relaxed text-sm md:text-base">
-            As input size $n$ scales to infinity, the efficiency of different complexity classes varies dramatically.
+          <h3 class="text-xl font-bold text-white mb-2">1. Mathematical Comparison of Complexity Classes</h3>
+          <p class="leading-relaxed text-sm md:text-base text-gray-300">
+            The selection of an algorithm is the single most important decision impacting the performance and scalability of software systems. Let us explore how various growth rates scale as input size $n$ approaches infinity.
           </p>
         </div>
-        <div class="glass p-4 rounded-lg">
-          <h4 class="font-bold text-sm mb-2 text-center text-accent">Efficiency Hierarchy</h4>
-          <p class="text-xs text-center font-mono opacity-85 mb-3">
-            $O(1) < O(\\log n) < O(n) < O(n \\log n) < O(n^2) < O(n^3) < O(2^n) < O(n!)$
+
+        <!-- Limit Comparison Rule -->
+        <div class="glass p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+          <p class="text-sm font-semibold text-accent">The Limit Comparison Rule:</p>
+          <p class="text-sm text-gray-300">
+            To compare the growth rates of any two functions $t(n)$ and $g(n)$, we evaluate the limit of their ratio:
           </p>
+          <div class="bg-black/40 p-3 rounded-lg border border-white/5 font-mono text-center text-accent text-sm">
+            $\\lim_{n \\to \\infty} \\frac{t(n)}{g(n)} = L$
+          </div>
+          <ul class="list-disc pl-5 space-y-2 text-xs md:text-sm text-gray-300">
+            <li>If $L = 0$, then $t(n)$ grows strictly slower than $g(n)$.</li>
+            <li>If $L = \\infty$, then $t(n)$ grows strictly faster than $g(n)$.</li>
+            <li>If $0 < L < \\infty$, then $t(n)$ and $g(n)$ grow at the same rate.</li>
+          </ul>
+          <p class="text-xs text-gray-400">
+            *Note: When evaluating these limits, L'Hôpital's Rule from calculus is highly useful: take the derivative of the numerator and denominator separately when encountering indeterminate forms $\\frac{\\infty}{\\infty}$.
+          </p>
+        </div>
+
+        <!-- growth table -->
+        <div class="glass p-4 rounded-xl border border-white/10">
+          <h4 class="font-bold text-sm mb-2 text-center text-accent">Asymptotic Scaling Reference Chart</h4>
           <div class="overflow-x-auto rounded-lg">
             <table class="w-full text-center text-xs font-mono">
               <thead>
                 <tr class="bg-white/10 text-white font-bold">
-                  <th class="p-2 border border-white/10">n</th>
-                  <th class="p-2 border border-white/10 text-green-400">log₂n</th>
-                  <th class="p-2 border border-white/10 text-blue-400">n</th>
-                  <th class="p-2 border border-white/10 text-cyan-400">n log n</th>
-                  <th class="p-2 border border-white/10 text-yellow-400">n²</th>
-                  <th class="p-2 border border-white/10 text-orange-400">2ⁿ</th>
+                  <th class="p-2 border border-white/10">Input Size (n)</th>
+                  <th class="p-2 border border-white/10 text-green-400">O(1) Constant</th>
+                  <th class="p-2 border border-white/10 text-cyan-400">O(log₂ n) Log</th>
+                  <th class="p-2 border border-white/10 text-blue-400">O(n) Linear</th>
+                  <th class="p-2 border border-white/10 text-indigo-400">O(n log n)</th>
+                  <th class="p-2 border border-white/10 text-yellow-400">O(n²) Quadratic</th>
+                  <th class="p-2 border border-white/10 text-red-400">O(2ⁿ) Exp</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-white/5 opacity-90">
-                <tr><td class="p-2 font-bold">10</td><td class="p-2">3.3</td><td class="p-2">10</td><td class="p-2">33</td><td class="p-2">100</td><td class="p-2">1024</td></tr>
-                <tr><td class="p-2 font-bold">100</td><td class="p-2">6.6</td><td class="p-2">100</td><td class="p-2">664</td><td class="p-2">10k</td><td class="p-2">Huge (1.27E30)</td></tr>
-                <tr><td class="p-2 font-bold">1k</td><td class="p-2">10</td><td class="p-2">1k</td><td class="p-2">9.9k</td><td class="p-2">1M</td><td class="p-2">Incalculable</td></tr>
+              <tbody class="divide-y divide-white/5 opacity-90 text-gray-300">
+                <tr><td class="p-2 font-bold text-white">10</td><td class="p-2 text-green-400">1 ops</td><td class="p-2">3.3 ops</td><td class="p-2">10 ops</td><td class="p-2">33 ops</td><td class="p-2 text-yellow-400">100 ops</td><td class="p-2 text-red-400">1,024 ops</td></tr>
+                <tr><td class="p-2 font-bold text-white">100</td><td class="p-2 text-green-400">1 ops</td><td class="p-2">6.6 ops</td><td class="p-2">100 ops</td><td class="p-2">664 ops</td><td class="p-2 text-yellow-400">10k ops</td><td class="p-2 text-red-400">1.27E+30 ops</td></tr>
+                <tr><td class="p-2 font-bold text-white">1,000</td><td class="p-2 text-green-400">1 ops</td><td class="p-2">10 ops</td><td class="p-2">1k ops</td><td class="p-2">10k ops</td><td class="p-2 text-yellow-400">1M ops</td><td class="p-2 text-red-500">Incalculable</td></tr>
+                <tr><td class="p-2 font-bold text-white">10,000</td><td class="p-2 text-green-400">1 ops</td><td class="p-2">13 ops</td><td class="p-2">10k ops</td><td class="p-2">133k ops</td><td class="p-2 text-yellow-500">100M ops</td><td class="p-2 text-red-600">Incalculable</td></tr>
               </tbody>
             </table>
+          </div>
+          <p class="text-[10px] text-center text-gray-400 mt-2">
+            At $n=100$, an $O(2^n)$ algorithm takes $1.27 \\times 10^{30}$ steps. At $10^9$ operations/second, this would run for $4 \\times 10^{13}$ years!
+          </p>
+        </div>
+
+        <!-- Self-Guided Exercises -->
+        <div class="glass p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+          <h3 class="text-lg font-bold text-white">2. Mathematical Growth Questions</h3>
+          
+          <div class="space-y-4">
+            <div class="bg-black/30 p-3 rounded-lg border border-white/5">
+              <p class="text-sm font-semibold text-gray-200">Exercise 1: Prove that $n \\log_2 n$ grows strictly slower than $n^2$ using L'Hôpital's Rule.</p>
+              <details class="mt-2 text-xs md:text-sm">
+                <summary class="text-accent cursor-pointer select-none font-bold hover:underline">Show calculus proof</summary>
+                <div class="mt-2 text-gray-300 space-y-2 bg-black/40 p-3 rounded border border-white/5 font-sans">
+                  <p>We want to find the limit of their ratio as $n \\to \\infty$:</p>
+                  <div class="font-mono text-center text-accent py-1">
+                    $L = \\lim_{n \\to \\infty} \\frac{n \\log_e n}{n^2} = \\lim_{n \\to \\infty} \\frac{\\log_e n}{n}$
+                  </div>
+                  <p>This is an indeterminate form $\\frac{\\infty}{\\infty}$. Apply L'Hôpital's Rule by taking derivatives of numerator and denominator with respect to $n$:</p>
+                  <div class="font-mono text-center text-accent py-1">
+                    $L = \\lim_{n \\to \\infty} \\frac{\\frac{d}{dn}[\\log_e n]}{\\frac{d}{dn}[n]} = \\lim_{n \\to \\infty} \\frac{\\frac{1}{n}}{1} = \\lim_{n \\to \\infty} \\frac{1}{n} = 0$
+                  </div>
+                  <p>Since the limit $L = 0$, $n \\log_2 n$ grows strictly slower than $n^2$. Therefore, $n \\log_2 n \\in O(n^2)$ but $n^2 \\notin O(n \\log_2 n)$.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <!-- Architectural Impact -->
+        <div>
+          <h3 class="text-xl font-bold text-white mb-2">3. Architectural Impacts in Production Systems</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Client-Side Smoothness (60 FPS)</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                Web browsers repaint screens 60 times a second (once every 16.6ms). If user actions trigger synchronous operations with $O(n^2)$ complexity, processing an array of only 5,000 items can take several hundred milliseconds, leading to complete browser freeze. Maintaining $O(1)$ or $O(n)$ ensures fluid interface response.
+              </p>
+            </div>
+            <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+              <h4 class="font-bold text-accent text-sm mb-1">Server Costs and Cloud Autoscaling</h4>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                An algorithm that takes $O(n)$ requires linear cloud instance resources. If it is quadratic $O(n^2)$, doubling the request volume quadruples CPU workloads, triggering cloud auto-scaling. Upgrading algorithm design from $O(n^2)$ to $O(n \\log n)$ can reduce server bills by over 90%!
+              </p>
+            </div>
           </div>
         </div>
       </div>
     `,
-    code: `// O(1) Constant Time
-function getFirst(arr) {
-    return arr[0] || null;
+    code: `// =========================================================================
+// 1. CONSTANT TIME - O(1)
+// =========================================================================
+// Operation takes identical time irrespective of array size.
+function getFirstElement<T>(arr: T[]): T | null {
+    return arr.length > 0 ? arr[0] : null;
 }
 
-// O(log n) Logarithmic Time
-function binarySearch(arr, target) {
-    let low = 0, high = arr.length - 1;
+// =========================================================================
+// 2. LOGARITHMIC TIME - O(log n)
+// =========================================================================
+// Search space is halved at each recursion level. Bounded at O(log n).
+function binarySearch(arr: number[], target: number): number {
+    let low = 0;
+    let high = arr.length - 1;
     while (low <= high) {
         let mid = Math.floor((low + high) / 2);
         if (arr[mid] === target) return mid;
-        if (arr[mid] < target) low = mid + 1;
+        else if (arr[mid] < target) low = mid + 1;
         else high = mid - 1;
     }
     return -1;
+}
+
+// =========================================================================
+// 3. LINEAR TIME - O(n)
+// =========================================================================
+// Work scales one-to-one with input size n.
+function countTargetOccurrence<T>(arr: T[], target: T): number {
+    let count = 0;
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === target) count++;
+    }
+    return count;
+}
+
+// =========================================================================
+// 4. LINEARITHMIC TIME - O(n log n)
+// =========================================================================
+// Standard split-and-combine recursive sorting (Merge Sort).
+function mergeSort(arr: number[]): number[] {
+    if (arr.length <= 1) return arr;
+    const mid = Math.floor(arr.length / 2);
+    const left = mergeSort(arr.slice(0, mid));
+    const right = mergeSort(arr.slice(mid));
+    
+    // Merge helper
+    const merge = (l: number[], r: number[]): number[] => {
+        let res: number[] = [], i = 0, j = 0;
+        while (i < l.length && j < r.length) {
+            if (l[i] < r[j]) res.push(l[i++]);
+            else res.push(r[j++]);
+        }
+        return [...res, ...l.slice(i), ...r.slice(j)];
+    };
+    return merge(left, right);
+}
+
+// =========================================================================
+// 5. FACTORIAL TIME - O(n!)
+// =========================================================================
+// Extremely dangerous complexity class. Bounded at factorial permutations.
+function generatePermutations<T>(arr: T[]): T[][] {
+    if (arr.length === 0) return [[]];
+    const result: T[][] = [];
+    for (let i = 0; i < arr.length; i++) {
+        const current = arr[i];
+        const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
+        const subPerms = generatePermutations(remaining);
+        for (let perm of subPerms) {
+            result.push([current, ...perm]);
+        }
+    }
+    return result;
 }`
   },
 
