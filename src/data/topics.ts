@@ -1072,166 +1072,461 @@ void mergeSort(int[] arr) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Definition</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Brute Force is a straightforward, direct approach to solving a problem based on the problem statement and definition.
+            Brute Force is a straightforward approach directly based on the problem statement and definitions. It implies a lack of sophistication ("Just do it").
           </p>
-          <ul class="list-disc pl-5 mt-2 space-y-1 text-xs opacity-85">
-            <li><strong>Pros:</strong> Highly versatile, simple, guaranteed correct if a solution exists.</li>
-            <li><strong>Cons:</strong> Almost never produces efficient algorithms (often exponential or high-order polynomial).</li>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-sm opacity-80">
+            <li><strong>Strengths:</strong> Wide applicability, simple to implement, yields reasonable algorithms for small tasks.</li>
+            <li><strong>Weaknesses:</strong> Rarely produces efficient algorithms, often infeasibly slow ($O(n!)$ or $O(2^n)$).</li>
           </ul>
         </div>
-        <div class="step-card">
-          <span class="step-title">Closest Pair Problem</span>
-          <p class="text-sm">Given $n$ points in a 2D plane, find the pair with the smallest Euclidean distance.</p>
-          <p class="text-sm font-mono mt-2 bg-black/20 p-2 rounded text-center">
-            $d = \\sqrt{(x_i - x_j)^2 + (y_i - y_j)^2}$
-          </p>
-          <p class="text-xs opacity-75 mt-2">
-            Brute Force compares every point $i$ with every point $j > i$. Total comparisons: $n(n-1)/2 \\in \\Theta(n^2)$.
-          </p>
+        <div class="glass p-4 rounded-lg">
+          <h4 class="font-bold text-sm mb-2 text-accent">The Closest Pair Problem</h4>
+          <p class="text-sm">Find the two points that are closest together in a set of $n$ 2D points $P_1 = (x_1, y_1) \\dots P_n$.</p>
+          <p class="text-sm mt-2"><strong>Brute Force Strategy:</strong> Calculate distance between EVERY pair of points and keep the minimum.</p>
+          <p class="text-sm mt-2 text-red-300">Efficiency: $\\Theta(n^2)$</p>
         </div>
       </div>
     `,
-    code: `// Brute Force Closest Pair of Points
-function bruteForceClosestPair(points) {
-    let minDist = Infinity;
-    let closestPair = [];
-    let n = points.length;
-    
-    for (let i = 0; i < n - 1; i++) {
-        for (let j = i + 1; j < n; j++) {
-            let dx = points[i].x - points[j].x;
-            let dy = points[i].y - points[j].y;
-            let dist = Math.sqrt(dx*dx + dy*dy);
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">CLOSEST PAIR ALGORITHM</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+dmin <- infinity
+for i <- 1 to n-1 do
+  for j <- i+1 to n do
+    d <- sqrt( (xi - xj)^2 + (yi - yj)^2 )
+    if d < dmin
+      dmin <- d
+      index1 <- i
+      index2 <- j
+return index1, index2
+          </div>
+
+          <span class="code-label">Java Implementation</span>
+          <div class="code-box">
+public double findClosest(Point[] points) {
+    double minDist = Double.MAX_VALUE;
+    for (int i = 0; i < points.length; i++) {
+        for (int j = i + 1; j < points.length; j++) {
+            double dist = points[i].distance(points[j]);
             if (dist < minDist) {
                 minDist = dist;
-                closestPair = [points[i], points[j]];
             }
         }
     }
-    return { distance: minDist, pair: closestPair };
-}`
+    return minDist;
+}
+          </div>
+
+          <span class="code-label">JavaScript (Live Logic)</span>
+          <div class="code-box">
+function bruteClosestPair(points) {
+    let minInfo = { p1: null, p2: null, dist: Infinity };
+    
+    // Compare every point with every other point
+    for(let i = 0; i < points.length; i++){
+        for(let j = i + 1; j < points.length; j++){
+            let dx = points[i].x - points[j].x;
+            let dy = points[i].y - points[j].y;
+            let d = Math.sqrt(dx*dx + dy*dy);
+            
+            if(d < minInfo.dist){
+                minInfo.dist = d;
+                minInfo.p1 = points[i];
+                minInfo.p2 = points[j];
+            }
+        }
+    }
+    return minInfo;
+}
+          </div>
+        </div>
+      </div>
+    `
   },
   bf_string: {
     id: 'bf_string',
-    title: 'Brute Force String Matching',
+    title: 'Brute Force: String Matching',
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">String Matching Definition</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction to Brute Force</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Given a text $T$ of length $n$ and a pattern $P$ of length $m$, find the first occurrence of $P$ in $T$.
+            Brute Force is a straightforward approach directly based on the problem statement. It implies a lack of sophistication, but it is often the quickest to implement and applicable to a wide range of problems.
           </p>
         </div>
         <div class="step-card">
-          <span class="step-title">The Search Strategy</span>
-          <p class="text-xs md:text-sm">
-            Align the pattern at the first character of the text. Compare characters left-to-right. On a mismatch, shift the pattern <strong>exactly 1 position</strong> to the right, and start comparisons again.
-          </p>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-80">
-            <li><strong>Worst Case:</strong> Compare $m$ characters for each of the $n-m+1$ positions. Total comparisons: $m(n-m+1) \\in \\Theta(nm)$.</li>
-            <li><strong>Average Case:</strong> On natural language, mismatches occur very early, giving $\\Theta(n)$ time.</li>
+          <span class="step-title">The String Matching Problem</span>
+          <p class="text-sm mb-2">Given a text $T$ (n characters) and a pattern $P$ (m characters), find the index of the first occurrence of $P$ in $T$.</p>
+          <ul class="list-disc pl-5 mt-2 space-y-2 text-sm">
+            <li><strong>Method:</strong> Align pattern at the beginning of the text. Compare characters from left to right.</li>
+            <li><strong>Mismatch:</strong> As soon as a mismatch occurs, shift the pattern <strong>one position</strong> to the right.</li>
+            <li><strong>Repeat:</strong> Continue until a match is found or the pattern reaches the end ($n-m$).</li>
+          </ul>
+        </div>
+        <div class="glass p-4 rounded-lg">
+          <h4 class="font-bold text-sm mb-2 text-center text-accent">Efficiency Analysis</h4>
+          <p class="text-sm opacity-90 mb-2"><strong>Worst Case:</strong> The search string matches on every character except the last, for every iteration.</p>
+          <ul class="space-y-1 text-sm font-mono">
+            <li>Comparisons: $m(n - m + 1)$</li>
+            <li>Complexity: $\\Theta(nm)$</li>
+            <li>Average Case (Natural Language): $\\Theta(n)$</li>
           </ul>
         </div>
       </div>
     `,
-    code: `// Brute Force String Match
-function stringMatch(text, pattern) {
-    let n = text.length;
-    let m = pattern.length;
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">1. STRING MATCHING</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm BruteForceStringMatch(T[0..n-1], P[0..m-1])
+  // Align pattern at every possible starting index i
+  for i <- 0 to n - m do
+    j <- 0
+    // Compare characters while they match
+    while j < m AND P[j] == T[i + j] do
+      j <- j + 1
+    if j == m return i
+  return -1
+          </div>
+
+          <span class="code-label">Java Code</span>
+          <div class="code-box">
+int bruteForceSearch(String txt, String pat) {
+    int n = txt.length();
+    int m = pat.length();
     
-    for (let i = 0; i <= n - m; i++) {
-        let j = 0;
-        while (j < m && text[i + j] === pattern[j]) {
+    for (int i = 0; i <= n - m; i++) {
+        int j = 0;
+        while (j < m && txt.charAt(i + j) == pat.charAt(j)) {
             j++;
         }
-        if (j === m) return i; // Pattern matched at index i
+        if (j == m) return i; // Found at index i
     }
-    return -1; // No match found
-}`
+    return -1;
+}
+          </div>
+
+          <span class="code-label">Analysis</span>
+          <div class="code-box">
+// Outer loop runs (n - m + 1) times.
+// Inner while loop runs at most m times.
+// Total comparisons = m * (n - m + 1)
+// Since n usually >> m, we drop lower terms.
+// Complexity: O(n * m)
+          </div>
+        </div>
+      </div>
+    `
   },
   bf_geom: {
     id: 'bf_geom',
-    title: 'Geometric Brute Force & Convex Hull',
+    title: 'Brute Force: Geometric Problems',
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Convex Hull Problem</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Closest Pair & Convex Hull</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            The Convex Hull of a set of points is the smallest convex polygon that contains all points in the set. Think of snapping a rubber band around pins.
+            Geometric algorithms deal with points, lines, and polygons. Brute force approaches here are conceptually simple but often computationally expensive.
           </p>
         </div>
+        
+        <!-- --- CLOSEST PAIR --- -->
         <div class="step-card">
-          <span class="step-title">Brute Force Strategy</span>
-          <p class="text-sm">
-            For every pair of points $p_1, p_2$ in the set, draw a line segment. If all other points lie on the <strong>same side</strong> of this line, then the segment forms a boundary of the Convex Hull.
-          </p>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-85">
-            <li>Check every pair of points: $\\Theta(n^2)$ pairs.</li>
-            <li>Check $n-2$ other points for each pair: $\\Theta(n)$ checks.</li>
-            <li><strong>Total Complexity:</strong> $\\Theta(n^3)$ (very slow).</li>
+          <span class="step-title">Closest Pair Problem</span>
+          <p class="text-sm">Find the two points that are closest together in a set of $n$ 2D points.</p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+            <li>Calculate distance between <strong>every pair</strong> of distinct points.</li>
+            <li>Compute distance using Euclidean formula: $d = \\sqrt{(x_i-x_j)^2 + (y_i-y_j)^2}$.</li>
+            <li>Keep track of the minimum distance found so far.</li>
           </ul>
+          <div class="mt-3 p-2 bg-red-500/10 border border-red-500/30 rounded">
+            <p class="text-sm font-mono text-red-300"><strong>Efficiency:</strong> $\\Theta(n^2)$</p>
+            <p class="text-xs opacity-70">Reason: Nested loops checking every pair.</p>
+          </div>
+        </div>
+
+        <!-- --- CONVEX HULL --- -->
+        <div class="step-card">
+          <span class="step-title">Convex Hull Problem</span>
+          <p class="text-sm">Find the smallest convex polygon containing all $n$ points (like a rubber band snapped around pegs).</p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+            <li><strong>Algorithm:</strong> For every pair of points ($n^2$), draw a line.</li>
+            <li>Check if all <strong>other</strong> points ($n$) lie on the same side of that line.</li>
+            <li>If yes, that line segment is part of the Convex Hull boundary.</li>
+          </ul>
+          <div class="mt-3 p-2 bg-red-500/10 border border-red-500/30 rounded">
+            <p class="text-sm font-mono text-red-300"><strong>Efficiency:</strong> $O(n^3)$</p>
+            <p class="text-xs opacity-70">Reason: $n^2$ pairs $\\times$ $n$ checks per pair.</p>
+          </div>
         </div>
       </div>
     `,
-    code: `// Cubic Convex Hull concept
-// We check if ax + by - c has the same sign for all other points
-function solveLineSide(p1, p2, p) {
-    let a = p2.y - p1.y;
-    let b = p1.x - p2.x;
-    let c = p1.x * p2.y - p1.y * p2.x;
-    return a * p.x + b * p.y - c;
-}`
+    code: `
+      <div class="space-y-8">
+        <!-- --- EXAMPLE 1: Closest Pair --- -->
+        <div>
+          <div class="code-section-title">1. CLOSEST PAIR (Quadratic)</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm ClosestPair(P)
+  dmin <- infinity
+  for i <- 1 to n-1 do
+    for j <- i+1 to n do
+      d <- sqrt((xi - xj)^2 + (yi - yj)^2)
+      if d < dmin
+        dmin <- d; index1 <- i; index2 <- j
+  return index1, index2
+          </div>
+
+          <span class="code-label">Java Code</span>
+          <div class="code-box">
+double closestPair(Point[] p) {
+    double min = Double.MAX_VALUE;
+    int n = p.length;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            double dist = p[i].distanceTo(p[j]);
+            if (dist < min) min = dist;
+        }
+    }
+    return min;
+}
+          </div>
+
+          <span class="code-label">Analysis</span>
+          <div class="code-box">
+// Basic Operation: Distance Calculation
+// Summation: Sum(i=1 to n-1) of [ (n) - (i+1) + 1 ]
+// = (n-1) + (n-2) + ... + 1
+// = n(n-1)/2
+// Complexity: Theta(n^2)
+          </div>
+        </div>
+
+        <!-- --- EXAMPLE 2: Convex Hull --- -->
+        <div>
+          <div class="code-section-title">2. CONVEX HULL (Cubic)</div>
+          
+          <span class="code-label">Pseudocode Logic</span>
+          <div class="code-box">
+For each pair of points (p1, p2):
+  Determine a line equation ax + by = c
+  Check all other n-2 points:
+    Do they lie on the same side of line?
+  If True -> Add (p1, p2) to hull boundary.
+          </div>
+
+          <span class="code-label">Analysis</span>
+          <div class="code-box">
+// 1. Pairs of points: O(n^2)
+// 2. Checking all other points: O(n)
+// Total Efficiency: O(n^2) * O(n) = O(n^3)
+// This is very slow. Better algorithms exist (e.g., QuickHull).
+          </div>
+        </div>
+      </div>
+    `
   },
   bf_exhaust: {
     id: 'bf_exhaust',
-    title: 'Exhaustive Search',
+    title: 'Brute Force: Exhaustive Search',
     notes: `
-      <div class="space-y-6">
+      <div class="space-y-8">
+        <!-- --- INTRO --- -->
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Combinatorial Optimization</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Discrete Optimization</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Exhaustive search systematically generates every candidate solution, tests them, and returns the absolute best.
+            Exhaustive Search generates <strong>every possible candidate solution</strong> (permutations or subsets), evaluates them, and picks the best one.
           </p>
         </div>
+
+        <!-- --- 1. TSP VISUAL & NOTES --- -->
         <div class="step-card">
-          <span class="step-title">Classic NP-Hard Problems</span>
-          <ul class="space-y-3 mt-2 text-xs md:text-sm">
-            <li><strong>Travelling Salesperson (TSP):</strong> Find the shortest tour visiting $n$ cities. Generating all tours takes $(n-1)! / 2$ permutations. Time is $\\Theta(n!)$.</li>
-            <li><strong>Knapsack Problem:</strong> Fill a knapsack of capacity $W$ with subsets of items to maximize value. Generating all $2^n$ subsets takes $\\Theta(2^n)$ time.</li>
-            <li><strong>Assignment Problem:</strong> Assign $n$ people to $n$ jobs to minimize cost. Takes $n!$ permutations. Time is $\\Theta(n!)$.</li>
-          </ul>
+          <span class="step-title">1. Travelling Salesman Problem (TSP)</span>
+          <p class="text-sm mb-4">Find the shortest tour visiting every city exactly once and returning to start.</p>
+          
+          <!-- VISUAL GRAPH -->
+          <div class="glass p-4 rounded-lg border border-white/10 mb-4">
+            <h4 class="font-bold text-xs text-center text-accent mb-2">Example Graph (4 Cities)</h4>
+            <div class="flex flex-col md:flex-row items-center gap-6">
+              <!-- SVG Graph -->
+              <svg viewBox="0 0 200 150" class="w-48 h-32">
+                <line x1="50" y1="30" x2="150" y2="30" stroke="#555" stroke-width="2" />
+                <text x="100" y="25" fill="#aaa" font-size="10">10</text>
+                <line x1="150" y1="30" x2="150" y2="120" stroke="#555" stroke-width="2" />
+                <text x="155" y="75" fill="#aaa" font-size="10">15</text>
+                <line x1="150" y1="120" x2="50" y2="120" stroke="#555" stroke-width="2" />
+                <text x="100" y="135" fill="#aaa" font-size="10">20</text>
+                <line x1="50" y1="120" x2="50" y2="30" stroke="#555" stroke-width="2" />
+                <text x="35" y="75" fill="#aaa" font-size="10">10</text>
+                <line x1="50" y1="30" x2="150" y2="120" stroke="#f87171" stroke-width="1" stroke-dasharray="4" />
+                <text x="80" y="70" fill="#f87171" font-size="10">35</text>
+                <!-- Nodes -->
+                <circle cx="50" cy="30" r="12" fill="#1e293b" stroke="#fff" /><text x="50" y="34" text-anchor="middle" fill="#fff" font-size="10">A</text>
+                <circle cx="150" cy="30" r="12" fill="#1e293b" stroke="#fff" /><text x="150" y="34" text-anchor="middle" fill="#fff" font-size="10">B</text>
+                <circle cx="150" cy="120" r="12" fill="#1e293b" stroke="#fff" /><text x="150" y="124" text-anchor="middle" fill="#fff" font-size="10">C</text>
+                <circle cx="50" cy="120" r="12" fill="#1e293b" stroke="#fff" /><text x="50" y="124" text-anchor="middle" fill="#fff" font-size="10">D</text>
+              </svg>
+              <!-- Routes Table -->
+              <div class="text-xs font-mono">
+                <div class="border-b border-white/10 pb-1 mb-1 font-bold">Routes (Start A)</div>
+                <p>A→B→C→D→A: 10+15+20+10 = <span class="text-green-400">55</span></p>
+                <p>A→B→D→C→A: 10+?+20+35 = 80+</p>
+                <div class="mt-2 text-red-300">Cost: $(n-1)!/2$ permutations</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- --- 2. KNAPSACK VISUAL & NOTES --- -->
+        <div class="step-card">
+          <span class="step-title">2. Knapsack Problem</span>
+          <p class="text-sm mb-4">Given items with Weight (w) and Value (v), maximize value in a knapsack of capacity W.</p>
+          
+          <!-- VISUAL ITEMS -->
+          <div class="glass p-4 rounded-lg border border-white/10">
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex gap-2">
+                <!-- Item 1 -->
+                <div class="bg-blue-900/30 border border-blue-500 rounded p-2 text-center w-20">
+                  <div class="text-xs text-gray-400">Item 1</div><div class="font-bold">2kg</div><div class="text-green-400">$20</div>
+                </div>
+                <!-- Item 2 -->
+                <div class="bg-blue-900/30 border border-blue-500 rounded p-2 text-center w-20">
+                  <div class="text-xs text-gray-400">Item 2</div><div class="font-bold">5kg</div><div class="text-green-400">$30</div>
+                </div>
+                <!-- Item 3 -->
+                <div class="bg-blue-900/30 border border-blue-500 rounded p-2 text-center w-20">
+                  <div class="text-xs text-gray-400">Item 3</div><div class="font-bold">10kg</div><div class="text-green-400">$50</div>
+                </div>
+              </div>
+              <!-- Capacity -->
+              <div class="border-2 border-dashed border-white/30 rounded p-3 h-24 flex items-center justify-center w-24 text-center">
+                <div><div class="text-xs text-gray-400">Capacity</div><div class="font-bold text-xl">10kg</div></div>
+              </div>
+            </div>
+            <p class="text-xs font-mono text-center text-accent">Process: Try all $2^n$ subsets</p>
+            <ul class="text-xs mt-2 space-y-1 opacity-80 pl-4 list-disc">
+              <li>{1, 2} -> 7kg, $50 (Valid, Best)</li>
+              <li>{3} -> 10kg, $50 (Valid)</li>
+              <li>{1, 3} -> 12kg (Invalid, >10kg)</li>
+            </ul>
+          </div>
+          <p class="text-xs text-red-300 mt-2 text-right">Efficiency: $\\Omega(2^n)$</p>
+        </div>
+
+        <!-- --- 3. ASSIGNMENT PROBLEM --- -->
+        <div class="step-card">
+          <span class="step-title">3. Assignment Problem</span>
+          <p class="text-sm mb-4">Assign $n$ people to $n$ jobs (one-to-one) to minimize total cost.</p>
+
+          <!-- MATRIX VISUAL -->
+          <div class="glass p-4 rounded-lg border border-white/10 mb-4">
+            <h4 class="font-bold text-xs text-center text-accent mb-2">Cost Matrix C[i,j]</h4>
+            <div class="grid grid-cols-4 gap-1 text-center text-xs font-mono items-center">
+              <!-- Header -->
+              <div></div><div class="text-gray-400">Job1</div><div class="text-gray-400">Job2</div><div class="text-gray-400">Job3</div>
+              <!-- P1 -->
+              <div class="text-gray-400 font-bold">P1</div>
+              <div class="bg-black/20 py-2 rounded">9</div>
+              <div class="bg-green-500/20 text-green-400 border border-green-500 py-2 rounded font-bold">2</div>
+              <div class="bg-black/20 py-2 rounded">7</div>
+              <!-- P2 -->
+              <div class="text-gray-400 font-bold">P2</div>
+              <div class="bg-green-500/20 text-green-400 border border-green-500 py-2 rounded font-bold">6</div>
+              <div class="bg-black/20 py-2 rounded">4</div>
+              <div class="bg-black/20 py-2 rounded">3</div>
+              <!-- P3 -->
+              <div class="text-gray-400 font-bold">P3</div>
+              <div class="bg-black/20 py-2 rounded">5</div>
+              <div class="bg-black/20 py-2 rounded">8</div>
+              <div class="bg-green-500/20 text-green-400 border border-green-500 py-2 rounded font-bold">1</div>
+            </div>
+            <p class="text-xs text-center mt-3">Cost = 2 + 6 + 1 = <span class="text-green-400 font-bold">9</span></p>
+          </div>
+          <p class="text-xs text-red-300 mt-2 text-right">Efficiency: $\\Theta(n!)$ (Permutations)</p>
         </div>
       </div>
     `,
-    code: `// Knapsack Exhaustive Search via Binary Subsets
-function knapsackExhaustive(items, capacity) {
-    let n = items.length;
-    let bestValue = 0;
-    let bestSubset = [];
+    code: `
+      <div class="space-y-8">
+        <!-- --- EXAMPLE 1: TSP --- -->
+        <div>
+          <div class="code-section-title">1. TSP ALGORITHM (Permutations)</div>
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm TSP(Cities C)
+  min_dist <- infinity
+  best_path <- null
+  // Generate every possible order
+  foreach permutation P of C do
+    if cost(P) < min_dist
+      min_dist <- cost(P)
+      best_path <- P
+  return best_path
+          </div>
+          <span class="code-label">Analysis</span>
+          <div class="code-box">
+// Cities = n
+// Number of permutations = (n-1)!
+// We divide by 2 because A->B... is same dist as ...B->A
+// Complexity: Theta(n!)
+          </div>
+        </div>
+
+        <!-- --- EXAMPLE 2: KNAPSACK --- -->
+        <div>
+          <div class="code-section-title">2. KNAPSACK (Subsets)</div>
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm Knapsack(Weights W, Values V, Capacity C)
+  max_val <- 0
+  // Iterate 0 to 2^n - 1 (Binary representation of subsets)
+  for i <- 0 to 2^n - 1 do
+    subset <- getItemsFromBinary(i)
+    if weight(subset) <= C
+      if value(subset) > max_val
+        max_val <- value(subset)
+  return max_val
+          </div>
+        </div>
+
+        <!-- --- EXAMPLE 3: ASSIGNMENT --- -->
+        <div>
+          <div class="code-section-title">3. ASSIGNMENT (Permutations)</div>
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm Assignment(CostMatrix C[0..n-1, 0..n-1])
+  min_cost <- infinity
+  // Generate permutations of columns {0, 1, ..., n-1}
+  foreach permutation p of {0...n-1} do
+    current_cost <- 0
+    for i <- 0 to n-1 do
+      // p[i] is the job assigned to person i
+      current_cost <- current_cost + C[i, p[i]]
     
-    // Total subsets is 2^n
-    for (let i = 0; i < (1 << n); i++) {
-        let currentWeight = 0;
-        let currentValue = 0;
-        let currentSubset = [];
-        
-        for (let j = 0; j < n; j++) {
-            if ((i & (1 << j)) !== 0) {
-                currentWeight += items[j].weight;
-                currentValue += items[j].value;
-                currentSubset.push(items[j]);
-            }
-        }
-        
-        if (currentWeight <= capacity && currentValue > bestValue) {
-            bestValue = currentValue;
-            bestSubset = currentSubset;
-        }
-    }
-    return { value: bestValue, items: bestSubset };
-}`
+    if current_cost < min_cost
+      min_cost <- current_cost
+      best_assignment <- p
+  return best_assignment
+          </div>
+          <div class="code-box">
+// Note: Exhaustive search is impractical for n > 12.
+// The Hungarian Algorithm solves this in O(n^3).
+          </div>
+        </div>
+      </div>
+    `
   },
 
   // ============================================
