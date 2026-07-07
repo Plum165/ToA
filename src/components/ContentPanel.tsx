@@ -148,9 +148,13 @@ export default function ContentPanel({ topic }: ContentPanelProps) {
                 <span>Language bindings: Java / JavaScript</span>
                 <span className="bg-white/10 px-2 py-0.5 rounded">Syntax-highlighted</span>
               </div>
-              <pre className="code-box select-all">
-                <code>{topic.code}</code>
-              </pre>
+              {topic.code.trim().startsWith('<div') ? (
+                <div dangerouslySetInnerHTML={{ __html: topic.code }} />
+              ) : (
+                <pre className="code-box select-all">
+                  <code>{topic.code}</code>
+                </pre>
+              )}
             </div>
           )}
 
