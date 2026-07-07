@@ -1,0 +1,6 @@
+{
+  "name": "Theory of Algorithms",
+  "description": "Interactive educational platform for the Theory of Algorithms curriculum. Includes step-by-step algorithmic tracers, dynamic complexity charts, and interactive practice exercises.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
