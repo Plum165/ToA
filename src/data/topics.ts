@@ -1534,33 +1534,89 @@ Algorithm Assignment(CostMatrix C[0..n-1, 0..n-1])
   // ============================================
   dec_intro: {
     id: 'dec_intro',
-    title: 'Decrease & Conquer & Insertion Sort',
+    title: "Decrease & Conquer: Intro & Insertion Sort",
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">The Strategy</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">The Decrease & Conquer Strategy</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Solve a problem by reducing an instance of size $n$ to an instance of size $n-1$, solving it, and extending the solution.
+            The core principle of **Decrease & Conquer** is to solve a problem by reducing an instance of size $n$ to a smaller instance of the same problem, solving the smaller instance, and then extending that solution to solve the original instance.
           </p>
         </div>
         <div class="step-card">
-          <span class="step-title">Insertion Sort</span>
-          <p class="text-sm">
-            Assume the sub-array $A[0 \\dots i-1]$ is already sorted. Insert $A[i]$ into its correct location by shifting larger elements right.
-          </p>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-80">
-            <li><strong>Worst Case (Reverse):</strong> $\\sum_{i=1}^{n-1} i = \\frac{n(n-1)}{2} \\in \\Theta(n^2)$.</li>
-            <li><strong>Best Case (Sorted):</strong> $\\Theta(n)$ comparisons. Excellent for nearly-sorted lists!</li>
+          <span class="step-title">Three Major Variations</span>
+          <ul class="list-disc pl-5 mt-2 space-y-2 text-sm">
+            <li><strong>Decrease by a Constant (usually 1):</strong> Size is reduced by the same constant at each step (e.g., Insertion Sort, Topological Sort, Generating Permutations).</li>
+            <li><strong>Decrease by a Constant Factor (usually 2):</strong> Size is reduced by the same constant factor at each step (e.g., Binary Search, Fake Coin Problem, Russian Peasant Multiplication).</li>
+            <li><strong>Variable-Size Decrease:</strong> Size reduction varies from step to step based on the input data (e.g., Euclid's GCD, Interpolation Search, Selection Problem).</li>
           </ul>
+        </div>
+        <div class="glass p-4 rounded-lg">
+          <h4 class="font-bold text-sm mb-2 text-accent">Insertion Sort</h4>
+          <p class="text-sm">
+            Insertion Sort is a classic bottom-up application of decrease-by-1. To sort an array $A[0 \dots n-1]$, we assume the subarray $A[0 \dots i-1]$ is already sorted, and we insert the single element $A[i]$ into its correct sorted position by shifting larger elements to the right.
+          </p>
+          <p class="text-sm mt-2 text-red-300">Worst-Case Efficiency: $\Theta(n^2)$</p>
+          <p class="text-sm text-green-400">Best-Case Efficiency: $\Theta(n)$</p>
         </div>
       </div>
     `,
-    code: `// Insertion Sort in JavaScript
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">INSERTION SORT ALGORITHM</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm InsertionSort(A[0..n-1])
+  // Sorts a given array by insertion sort
+  // Input: An array A[0..n-1] of n orderable elements
+  // Output: Array A[0..n-1] sorted in nondecreasing order
+  for i <- 1 to n - 1 do
+    v <- A[i]
+    j <- i - 1
+    while j >= 0 AND A[j] > v do
+      A[j + 1] <- A[j]
+      j <- j - 1
+    A[j + 1] <- v
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity:
+  - Worst Case (Reverse Sorted): Θ(n²) comparisons and shifts.
+  - Best Case (Already Sorted): Θ(n) comparisons, 0 shifts.
+  - Average Case (Random): Θ(n²) comparisons and shifts.
+- Space Complexity: Θ(1) auxiliary space (in-place).
+- Reason: The outer loop runs n-1 times. In the worst case, the inner loop runs i times for each i, leading to sum_{i=1}^{n-1} i = n(n-1)/2 ≈ n²/2 operations.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static void insertionSort(int[] A) {
+    int n = A.length;
+    for (int i = 1; i < n; i++) {
+        int v = A[i];
+        int j = i - 1;
+        
+        // Shift elements greater than v to the right
+        while (j >= 0 && A[j] > v) {
+            A[j + 1] = A[j];
+            j--;
+        }
+        A[j + 1] = v;
+    }
+}
+          </div>
+
+          <span class="code-label">JavaScript</span>
+          <div class="code-box">
 function insertionSort(arr) {
-    let n = arr.length;
+    const n = arr.length;
     for (let i = 1; i < n; i++) {
         let v = arr[i];
         let j = i - 1;
+        
         // Shift elements of arr[0..i-1] that are greater than v
         while (j >= 0 && arr[j] > v) {
             arr[j + 1] = arr[j];
@@ -1569,175 +1625,1019 @@ function insertionSort(arr) {
         arr[j + 1] = v;
     }
     return arr;
-}`
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def insertion_sort(arr):
+    n = len(arr)
+    for i in range(1, n):
+        v = arr[i]
+        j = i - 1
+        
+        # Shift elements of arr[0..i-1] that are greater than v
+        while j >= 0 and arr[j] > v:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = v
+    return arr
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Insertion sort is highly efficient for small datasets and partially sorted arrays (nearly O(n) time). It is a stable sorting algorithm and sorts in-place.
+          </div>
+        </div>
+      </div>
+    `
   },
   dec_topo: {
     id: 'dec_topo',
-    title: 'Topological Sort',
+    title: "Topological Sort",
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Definition</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Definition & Applications</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            For a Directed Acyclic Graph (DAG), list vertices so that for every edge $u \\to v$, $u$ comes before $v$ in the ordering.
+            For a **Directed Acyclic Graph (DAG)**, a topological sort is a linear ordering of its vertices such that for every directed edge $u \to v$, vertex $u$ comes before $v$ in the ordering.
+          </p>
+          <p class="text-xs opacity-75 mt-2">
+            Topological sorting is widely used for task scheduling, resolving build dependencies (e.g., packages), and instruction pipelining.
           </p>
         </div>
+
+        <!-- --- VISUAL EXAMPLE (SVG GRAPH) --- -->
+        <div class="glass p-4 rounded-lg border border-white/10">
+          <h4 class="font-bold text-sm mb-6 text-center text-accent">Visual Trace: Source Removal Method</h4>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- --- STEP 1 --- -->
+            <div class="bg-black/20 rounded-lg p-2 text-center">
+              <div class="text-xs font-bold text-blue-300 mb-2">Step 1: Remove "a" (Source)</div>
+              <svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">
+                <defs><marker id="head" orient="auto" markerWidth="6" markerHeight="6" refX="5" refY="3"><path d="M0,0 V6 L6,3 Z" fill="#999"/></marker></defs>
+                
+                <line x1="30" y1="60" x2="90" y2="20" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />
+                <line x1="30" y1="60" x2="90" y2="100" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />
+                <line x1="110" y1="20" x2="170" y2="60" stroke="#555" stroke-width="2" marker-end="url(#head)" />
+                <line x1="110" y1="100" x2="170" y2="60" stroke="#555" stroke-width="2" marker-end="url(#head)" />
+
+                <circle cx="20" cy="60" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />
+                <text x="20" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">a</text>
+                
+                <circle cx="100" cy="20" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />
+                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="12">b</text>
+                
+                <circle cx="100" cy="100" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />
+                <text x="100" y="105" text-anchor="middle" fill="#fff" font-size="12">c</text>
+                
+                <circle cx="180" cy="60" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />
+                <text x="180" y="65" text-anchor="middle" fill="#fff" font-size="12">d</text>
+              </svg>
+              <p class="text-xs mt-1 text-green-400">List: { a }</p>
+            </div>
+
+            <!-- --- STEP 2 --- -->
+            <div class="bg-black/20 rounded-lg p-2 text-center">
+              <div class="text-xs font-bold text-blue-300 mb-2">Step 2: Remove "b" (Source)</div>
+              <svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">
+                <line x1="110" y1="20" x2="170" y2="60" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />
+                <line x1="110" y1="100" x2="170" y2="60" stroke="#555" stroke-width="2" marker-end="url(#head)" />
+
+                <circle cx="20" cy="60" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />
+                <text x="20" y="65" text-anchor="middle" fill="#555" font-size="12">a</text>
+                
+                <circle cx="100" cy="20" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />
+                <text x="100" y="25" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">b</text>
+                
+                <circle cx="100" cy="100" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />
+                <text x="100" y="105" text-anchor="middle" fill="#fff" font-size="12">c</text>
+                
+                <circle cx="180" cy="60" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />
+                <text x="180" y="65" text-anchor="middle" fill="#fff" font-size="12">d</text>
+              </svg>
+              <p class="text-xs mt-1 text-green-400">List: { a, b }</p>
+            </div>
+
+            <!-- --- STEP 3 --- -->
+            <div class="bg-black/20 rounded-lg p-2 text-center">
+              <div class="text-xs font-bold text-blue-300 mb-2">Step 3: Remove "c" (Source)</div>
+              <svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">
+                <line x1="110" y1="100" x2="170" y2="60" stroke="#f87171" stroke-width="2" stroke-dasharray="4" marker-end="url(#head)" />
+
+                <circle cx="20" cy="60" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />
+                <text x="20" y="65" text-anchor="middle" fill="#555" font-size="12">a</text>
+                
+                <circle cx="100" cy="20" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" />
+                <text x="100" y="25" text-anchor="middle" fill="#555" font-size="12">b</text>
+                
+                <circle cx="100" cy="100" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />
+                <text x="100" y="105" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">c</text>
+                
+                <circle cx="180" cy="60" r="15" fill="#1e293b" stroke="#555" stroke-width="2" />
+                <text x="180" y="65" text-anchor="middle" fill="#fff" font-size="12">d</text>
+              </svg>
+              <p class="text-xs mt-1 text-green-400">List: { a, b, c }</p>
+            </div>
+
+            <!-- --- STEP 4 --- -->
+            <div class="bg-black/20 rounded-lg p-2 text-center">
+              <div class="text-xs font-bold text-blue-300 mb-2">Step 4: Remove "d" (Source)</div>
+              <svg viewBox="0 0 200 120" class="w-full h-32 mx-auto">
+                <circle cx="20" cy="60" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" /> 
+                <text x="20" y="65" text-anchor="middle" fill="#555" font-size="12">a</text>
+                <circle cx="100" cy="20" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" /> 
+                <text x="100" y="25" text-anchor="middle" fill="#555" font-size="12">b</text>
+                <circle cx="100" cy="100" r="15" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2" /> 
+                <text x="100" y="105" text-anchor="middle" fill="#555" font-size="12">c</text>
+                
+                <circle cx="180" cy="60" r="15" fill="#22c55e" stroke="#fff" stroke-width="2" />
+                <text x="180" y="65" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">d</text>
+              </svg>
+              <p class="text-xs mt-1 text-green-400">List: { a, b, c, d }</p>
+            </div>
+
+          </div>
+        </div>
+
         <div class="step-card">
           <span class="step-title">Source Removal Algorithm</span>
-          <p class="text-xs md:text-sm">
-            1. Find a vertex with <strong>in-degree 0</strong> (no incoming edges).<br>
-            2. Add it to the sorted list.<br>
-            3. Remove the vertex and all its outgoing edges from the graph.<br>
-            4. Repeat until the graph is empty. If no source exists but nodes remain, there is a cycle!
+          <p class="text-sm">
+            Topological Sort can be elegantly solved using **Decrease & Conquer** via Kahn's Source Removal Algorithm.
           </p>
+          <ol class="list-decimal pl-5 mt-2 space-y-1 text-sm">
+            <li>Identify a vertex with <strong>in-degree 0</strong> (called a source).</li>
+            <li>Output the source vertex to the sorted order.</li>
+            <li><strong>Decrease problem size:</strong> Remove the source and all its outgoing edges from the graph.</li>
+            <li>Repeat until no vertices remain. If nodes remain but none have in-degree 0, the graph contains a cycle.</li>
+          </ol>
         </div>
       </div>
     `,
-    code: `// Source Removal Topological Sort Concept
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">TOPOLOGICAL SORT (KAHN'S SOURCE REMOVAL)</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm SourceRemovalTopoSort(G)
+  // Implements topological sort via source removal
+  // Input: A directed acyclic graph (DAG) G = (V, E)
+  // Output: A list of vertices in topological order
+  
+  Calculate in-degree for all vertices
+  Initialize an empty list L
+  Initialize a Queue Q with all vertices having in-degree = 0
+  
+  while Q is not empty do
+    u <- Dequeue from Q
+    L.append(u)
+    
+    for each neighbor v of u do
+      in-degree[v] <- in-degree[v] - 1
+      if in-degree[v] == 0 then
+        Enqueue v into Q
+        
+  if L.length < |V| then
+    return "Error: Graph contains a cycle"
+  else
+    return L
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: Θ(|V| + |E|) where |V| is the number of vertices and |E| is the number of edges.
+- Space Complexity: Θ(|V|) to store in-degrees and queue space.
+- Reason: Each vertex is enqueued and dequeued exactly once. For each vertex, we iterate over its outgoing edges exactly once, giving overall linear time complexity.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+import java.util.*;
+
+public class TopologicalSort {
+    public static List<Integer> topoSort(int numVertices, List<List<Integer>> adj) {
+        int[] inDegree = new int[numVertices];
+        for (int u = 0; u < numVertices; u++) {
+            for (int v : adj.get(u)) {
+                inDegree[v]++;
+            }
+        }
+        
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numVertices; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        
+        List<Integer> order = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            order.add(u);
+            
+            for (int v : adj.get(u)) {
+                inDegree[v]--;
+                if (inDegree[v] == 0) {
+                    queue.add(v);
+                }
+            }
+        }
+        
+        if (order.size() != numVertices) {
+            throw new IllegalStateException("Cycle detected in graph!");
+        }
+        return order;
+    }
+}
+          </div>
+
+          <span class="code-label">JavaScript</span>
+          <div class="code-box">
 function topologicalSort(numVertices, edges) {
-    let inDegree = Array(numVertices).fill(0);
-    let adj = Array.from({length: numVertices}, () => []);
+    const inDegree = Array(numVertices).fill(0);
+    const adj = Array.from({ length: numVertices }, () => []);
     
     edges.forEach(([u, v]) => {
         adj[u].push(v);
         inDegree[v]++;
     });
     
-    let queue = [];
+    const queue = [];
     for (let i = 0; i < numVertices; i++) {
-        if (inDegree[i] === 0) queue.push(i);
+        if (inDegree[i] === 0) {
+            queue.push(i);
+        }
     }
     
-    let order = [];
+    const order = [];
     while (queue.length > 0) {
-        let u = queue.shift();
+        const u = queue.shift();
         order.push(u);
         
         adj[u].forEach(v => {
             inDegree[v]--;
-            if (inDegree[v] === 0) queue.push(v);
+            if (inDegree[v] === 0) {
+                queue.push(v);
+            }
         });
     }
     
     return order.length === numVertices ? order : "Cycle Detected";
-}`
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+from collections import deque
+
+def topological_sort(num_vertices, edges):
+    in_degree = [0] * num_vertices
+    adj = [[] for _ in range(num_vertices)]
+    
+    for u, v in edges:
+        adj[u].append(v)
+        in_degree[v] += 1
+        
+    queue = deque([i for i in range(num_vertices) if in_degree[i] == 0])
+    order = []
+    
+    while queue:
+        u = queue.popleft()
+        order.append(u)
+        for v in adj[u]:
+            in_degree[v] -= 1
+            if in_degree[v] == 0:
+                queue.append(v)
+                
+    if len(order) != num_vertices:
+        return "Cycle Detected"
+    return order
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+The Source Removal method is also known as Kahn's Algorithm. An alternative approach is utilizing Depth-First Search (DFS) and ordering vertices by decreasing post-visit order numbers.
+          </div>
+        </div>
+      </div>
+    `
   },
   dec_perm: {
     id: 'dec_perm',
-    title: 'Generating Permutations (Johnson-Trotter)',
+    title: "Generating Permutations (Johnson-Trotter)",
     notes: `
-      <div class="space-y-6">
+      <div class="space-y-8">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Johnson-Trotter Algorithm</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">The Johnson-Trotter Algorithm</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            An elegant algorithm to generate all $n!$ permutations without recursion, where each permutation differs from its predecessor by swapping exactly two adjacent elements.
+            This algorithm systematically generates all $n!$ permutations of $\{1, 2, \dots, n\}$ iteratively. It does so by applying the decrease-by-1 strategy: generating permutations of size $n$ from those of size $n-1$.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">The Mobil Rule</span>
-          <p class="text-xs md:text-sm">
-            Each number is assigned a direction (left $\\leftarrow$ or right $\\rightarrow$). A number is <strong>Mobile</strong> if it points to an adjacent neighbor that is smaller than itself.
+
+        <div class="glass p-4 rounded-lg border-l-4 border-blue-500">
+          <h4 class="font-bold text-sm mb-2 text-accent">Concept of Mobile Elements</h4>
+          <p class="text-xs md:text-sm mb-2">
+            Each integer $i$ has an associated direction arrow pointing left ($\leftarrow$) or right ($\rightarrow$).
           </p>
-          <ol class="list-decimal pl-5 mt-2 text-xs space-y-1">
-            <li>Find the largest mobile integer $k$.</li>
-            <li>Swap $k$ with the element it points to.</li>
-            <li>Reverse the direction of all elements larger than $k$.</li>
-            <li>Repeat until no mobile elements remain.</li>
-          </ol>
+          <ul class="list-disc pl-5 space-y-1 text-xs md:text-sm">
+            <li>An integer is **Mobile** if its arrow points to an adjacent neighbor that is **smaller** than itself.</li>
+            <li>Initially, all integers point left: $\leftarrow 1 \quad \leftarrow 2 \quad \dots \quad \leftarrow n$.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 pl-2 border-l-4 border-accent">Visual Trace (n=3)</h3>
+          
+          <!-- STATE 1 -->
+          <div class="step-card">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono text-gray-400">Step 1</span>
+              <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Largest Mobile: 3</span>
+            </div>
+            <div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">
+              <span class="text-gray-500">←1</span> <span class="text-gray-500">←2</span> <span class="text-green-400 font-bold">←3</span>
+            </div>
+            <p class="text-xs mt-2 opacity-80">3 points to 2. Since 3 > 2, 3 is mobile. <strong>Swap Left.</strong></p>
+          </div>
+
+          <!-- STATE 2 -->
+          <div class="step-card">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono text-gray-400">Step 2</span>
+              <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Largest Mobile: 3</span>
+            </div>
+            <div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">
+              <span class="text-gray-500">←1</span> <span class="text-green-400 font-bold">←3</span> <span class="text-gray-500">←2</span>
+            </div>
+            <p class="text-xs mt-2 opacity-80">3 points to 1. Since 3 > 1, 3 is mobile. <strong>Swap Left.</strong></p>
+          </div>
+
+          <!-- STATE 3 -->
+          <div class="step-card">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono text-gray-400">Step 3</span>
+              <span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">Largest Mobile: 2</span>
+            </div>
+            <div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">
+              <span class="text-red-400 opacity-60">←3</span> <span class="text-gray-500">←1</span> <span class="text-yellow-400 font-bold">←2</span>
+            </div>
+            <div class="text-xs mt-2 space-y-1">
+              <p>3 is at the wall and cannot move left. <strong>2</strong> is now the largest mobile integer (it points to 1).</p>
+              <p class="text-white font-bold">Action: Swap 2 Left.</p>
+            </div>
+          </div>
+
+          <!-- STATE 4 -->
+          <div class="step-card border-l-4 border-purple-500">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono text-gray-400">Step 4 (Direction Reverse)</span>
+              <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Rule #3 Triggered</span>
+            </div>
+            <div class="font-mono text-xl text-center bg-black/30 p-3 rounded tracking-widest">
+              <span class="text-purple-300 font-bold">→3</span> <span class="text-yellow-400">←2</span> <span class="text-gray-500">←1</span>
+            </div>
+            <div class="text-xs mt-2 space-y-1">
+              <p>We just moved 2. The rule says: reverse the direction of all elements larger than the mobile element (3 > 2).</p>
+              <p>Therefore, <span class="text-red-400">←3</span> becomes <span class="text-green-400">→3</span>.</p>
+            </div>
+          </div>
         </div>
       </div>
     `,
-    code: `// Concept: Find largest mobile element
-function getLargestMobileIndex(arr, dirs) {
-    let maxVal = -1;
-    let maxIdx = -1;
-    for (let i = 0; i < arr.length; i++) {
-        let dir = dirs[i]; // -1 for Left, 1 for Right
-        let nextIdx = i + dir;
-        if (nextIdx >= 0 && nextIdx < arr.length) {
-            if (arr[i] > arr[nextIdx] && arr[i] > maxVal) {
-                maxVal = arr[i];
-                maxIdx = i;
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">JOHNSON-TROTTER PERMUTATION GENERATOR</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm JohnsonTrotter(n)
+  // Generates all n! permutations of {1, ..., n}
+  // Input: A positive integer n
+  // Output: List of all permutations
+  
+  Initialize values val[1..n] <- [1, 2, ..., n]
+  Initialize directions dir[1..n] <- [Left, Left, ..., Left]
+  Print the initial permutation
+  
+  while there exists a mobile integer in val do
+    Find the largest mobile integer k in val
+    Find its index i in val
+    
+    // Swap k with its adjacent neighbor it points to
+    neighbor_index <- i + (dir[i] == Left ? -1 : 1)
+    Swap val[i] and val[neighbor_index]
+    Swap dir[i] and dir[neighbor_index]
+    
+    // Reverse directions of all elements larger than k
+    for j <- 1 to n do
+      if val[j] > k then
+        dir[j] <- (dir[j] == Left ? Right : Left)
+        
+    Print current permutation
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: Θ(n!) because it generates exactly n! permutations, and each transition takes O(n) time.
+- Space Complexity: Θ(n) to store the elements and their directions.
+- Reason: There are exactly n! unique permutations. Each step involves scanning for the largest mobile element, performing a swap, and potentially updating directions, which runs in O(n) time per permutation.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+import java.util.*;
+
+public class JohnsonTrotter {
+    public static List<int[]> generatePermutations(int n) {
+        List<int[]> permutations = new ArrayList<>();
+        int[] val = new int[n];
+        boolean[] isLeft = new boolean[n]; // true for left, false for right
+        
+        for (int i = 0; i < n; i++) {
+            val[i] = i + 1;
+            isLeft[i] = true;
+        }
+        
+        permutations.add(val.clone());
+        
+        while (true) {
+            int mobileIdx = -1;
+            int maxMobileVal = -1;
+            
+            // Find largest mobile integer
+            for (int i = 0; i < n; i++) {
+                int dir = isLeft[i] ? -1 : 1;
+                int neighbor = i + dir;
+                
+                if (neighbor >= 0 && neighbor < n) {
+                    if (val[i] > val[neighbor]) {
+                        if (val[i] > maxMobileVal) {
+                            maxMobileVal = val[i];
+                            mobileIdx = i;
+                        }
+                    }
+                }
+            }
+            
+            if (mobileIdx == -1) break; // No mobile elements left
+            
+            // Swap mobile element with neighbor
+            int dir = isLeft[mobileIdx] ? -1 : 1;
+            int neighborIdx = mobileIdx + dir;
+            
+            int tempVal = val[mobileIdx];
+            val[mobileIdx] = val[neighborIdx];
+            val[neighborIdx] = tempVal;
+            
+            boolean tempDir = isLeft[mobileIdx];
+            isLeft[mobileIdx] = isLeft[neighborIdx];
+            isLeft[neighborIdx] = tempDir;
+            
+            // Reverse direction of all elements larger than k
+            for (int i = 0; i < n; i++) {
+                if (val[i] > maxMobileVal) {
+                    isLeft[i] = !isLeft[i];
+                }
+            }
+            
+            permutations.add(val.clone());
+        }
+        
+        return permutations;
+    }
+}
+          </div>
+
+          <span class="code-label">JavaScript</span>
+          <div class="code-box">
+function johnsonTrotter(n) {
+    const val = Array.from({ length: n }, (_, i) => i + 1);
+    const isLeft = Array(n).fill(true); // true = Left, false = Right
+    const permutations = [[...val]];
+    
+    while (true) {
+        let mobileIdx = -1;
+        let maxMobileVal = -1;
+        
+        for (let i = 0; i < n; i++) {
+            const dir = isLeft[i] ? -1 : 1;
+            const neighborIdx = i + dir;
+            
+            if (neighborIdx >= 0 && neighborIdx < n) {
+                if (val[i] > val[neighborIdx]) {
+                    if (val[i] > maxMobileVal) {
+                        maxMobileVal = val[i];
+                        mobileIdx = i;
+                    }
+                }
             }
         }
+        
+        if (mobileIdx === -1) break;
+        
+        const dir = isLeft[mobileIdx] ? -1 : 1;
+        const neighborIdx = mobileIdx + dir;
+        
+        // Swap values
+        [val[mobileIdx], val[neighborIdx]] = [val[neighborIdx], val[mobileIdx]];
+        // Swap directions
+        [isLeft[mobileIdx], isLeft[neighborIdx]] = [isLeft[neighborIdx], isLeft[mobileIdx]];
+        
+        // Reverse direction for all values > maxMobileVal
+        for (let i = 0; i < n; i++) {
+            if (val[i] > maxMobileVal) {
+                isLeft[i] = !isLeft[i];
+            }
+        }
+        
+        permutations.push([...val]);
     }
-    return maxIdx;
-}`
+    
+    return permutations;
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def johnson_trotter(n):
+    val = list(range(1, n + 1))
+    is_left = [True] * n # True for Left, False for Right
+    permutations = [val.copy()]
+    
+    while True:
+        mobile_idx = -1
+        max_mobile_val = -1
+        
+        # Find largest mobile element
+        for i in range(n):
+            direction = -1 if is_left[i] else 1
+            neighbor_idx = i + direction
+            
+            if 0 <= neighbor_idx < n:
+                if val[i] > val[neighbor_idx]:
+                    if val[i] > max_mobile_val:
+                        max_mobile_val = val[i]
+                        mobile_idx = i
+                        
+        if mobile_idx == -1:
+            break
+            
+        direction = -1 if is_left[mobile_idx] else 1
+        neighbor_idx = mobile_idx + direction
+        
+        # Swap values and directions
+        val[mobile_idx], val[neighbor_idx] = val[neighbor_idx], val[mobile_idx]
+        is_left[mobile_idx], is_left[neighbor_idx] = is_left[neighbor_idx], is_left[mobile_idx]
+        
+        # Reverse directions of larger elements
+        for i in range(n):
+            if val[i] > max_mobile_val:
+                is_left[i] = not is_left[i]
+                
+        permutations.append(val.copy())
+        
+    return permutations
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+The Johnson-Trotter algorithm is highly efficient because it generates permutations in an order where adjacent elements are swapped (minimal change ordering).
+          </div>
+        </div>
+      </div>
+    `
   },
   dec_factor: {
     id: 'dec_factor',
-    title: 'Decrease by a Constant Factor',
+    title: "Decrease by Constant Factor",
     notes: `
-      <div class="space-y-6">
+      <div class="space-y-8">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Logarithmic Reduction</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Logarithmic Reductions</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Reduce problem size by a constant factor (usually $2$) at each step. This yields highly optimal $\\Theta(\\log n)$ complexity.
+            In decrease-by-constant-factor algorithms, the size of the instance is reduced by the same constant factor (usually 2 or 3) at each step. This usually yields exceptional $\Theta(\log n)$ logarithmic runtime performance.
           </p>
         </div>
+
+        <!-- --- 1. FAKE COIN VISUAL --- -->
         <div class="step-card">
-          <span class="step-title">Fake Coin Problem</span>
-          <p class="text-xs md:text-sm leading-relaxed">
-            Among $n$ coins, find one fake coin that is lighter. <br>
-            <strong>Decrease by 3-Way split:</strong> Divide the coins into three piles: $A, B$ of size $\\lfloor n/3 \\rfloor$ and $C$ of the remainder. Weigh $A$ vs $B$ on a balance scale.
-          </p>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-85">
-            <li>If $A < B$: Recurse on pile $A$.</li>
-            <li>If $A > B$: Recurse on pile $B$.</li>
-            <li>If $A == B$: Recurse on pile $C$ (the remaining coins).</li>
-            <li>This takes exactly $\\Theta(\\log_3 n)$ weighings.</li>
-          </ul>
+          <span class="step-title">1. The Fake Coin Problem (3-Way Split)</span>
+          <p class="text-sm mb-4">Identify one lighter fake coin among $n$ coins using a balance scale.</p>
+          
+          <div class="glass p-4 rounded-lg border border-white/10">
+            <h4 class="font-bold text-xs text-center text-accent mb-2">Visual Trace: 8 Coins</h4>
+            <div class="flex flex-col gap-3 font-mono text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-blue-300 w-12">Step 1</span>
+                <div class="flex-1 text-center border-b border-white/10 pb-1">
+                  Weigh: PileA [10, 10] vs PileB [10, 9] (Remaining: [10, 10, 10, 10])<br>
+                  <span class="text-red-400">Right Pile is Lighter!</span> The fake is in PileB.
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-blue-300 w-12">Step 2</span>
+                <div class="flex-1 text-center">
+                  Weigh: [10] vs [9]<br>
+                  <span class="text-green-400 font-bold">Found Fake Coin at Index with 9g!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-right mt-1 opacity-70">Complexity: $\Theta(\log_3 n)$</p>
+        </div>
+
+        <!-- --- 2. RUSSE VISUAL --- -->
+        <div class="step-card">
+          <span class="step-title">2. Russian Peasant Multiplication (Multiplication à la Russe)</span>
+          <p class="text-sm mb-4">Multiply two positive integers $n$ and $m$ by repeatedly halving $n$ and doubling $m$.</p>
+          
+          <div class="glass p-4 rounded-lg border border-white/10">
+            <h4 class="font-bold text-xs text-center text-accent mb-2">Trace: 50 × 20</h4>
+            <table class="w-full text-xs text-center font-mono">
+              <tr class="border-b border-white/20 text-gray-400"><th>n (Halve)</th><th>m (Double)</th><th>Action</th></tr>
+              <tr><td>50</td><td>20</td><td class="opacity-50">Ignore (Even)</td></tr>
+              <tr><td>25</td><td>40</td><td class="text-green-400">Add 40</td></tr>
+              <tr><td>12</td><td>80</td><td class="opacity-50">Ignore (Even)</td></tr>
+              <tr><td>6</td><td>160</td><td class="opacity-50">Ignore (Even)</td></tr>
+              <tr><td>3</td><td>320</td><td class="text-green-400">Add 320</td></tr>
+              <tr><td>1</td><td>640</td><td class="text-green-400">Add 640</td></tr>
+              <tr class="border-t border-white/20 font-bold text-accent"><td>0</td><td></td><td>Sum = 40 + 320 + 640 = 1000</td></tr>
+            </table>
+          </div>
         </div>
       </div>
     `,
-    code: `// Russian Peasant Multiplication (Multiplication à la Russe)
-// Multiply n x m by halving n and doubling m
-function RussianPeasantMultiply(n, m) {
-    let res = 0;
-    while (n > 0) {
-        if (n % 2 !== 0) { // If odd, accumulate m
-            res += m;
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">DECREASE BY CONSTANT FACTOR LOGIC</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm RussianPeasantMultiplication(n, m)
+  // Computes n * m by decreasing by constant factor
+  // Input: Positive integers n and m
+  // Output: Product of n and m
+  sum <- 0
+  while n > 0 do
+    if n % 2 != 0 then
+      sum <- sum + m
+    n <- floor(n / 2)
+    m <- m * 2
+  return sum
+
+Algorithm FindFakeCoin(Coins[0..n-1])
+  // Finds one lighter fake coin among n coins
+  // Input: Array of coins with weights
+  if n == 1 return Coins[0]
+  
+  Divide coins into 3 piles: PileA, PileB, PileC
+  // PileA and PileB must be equal size: floor(n/3)
+  // PileC contains the remainder
+  
+  if Weight(PileA) < Weight(PileB) then
+    return FindFakeCoin(PileA)
+  else if Weight(PileA) > Weight(PileB) then
+    return FindFakeCoin(PileB)
+  else
+    return FindFakeCoin(PileC)
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: 
+  - Russian Peasant Multiplication: Θ(log n)
+  - Fake Coin Problem (3-way): Θ(log₃ n)
+- Space Complexity: Θ(1) auxiliary space (can be done iteratively).
+- Reason: At each step, Russian Peasant Multiplication divides n by 2, requiring log₂ n steps. The 3-way coin weighing splits the search space into exactly 1/3 of its original size at each level of the recursion, taking log₃ n steps.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public class ConstantFactor {
+    // Russian Peasant Multiplication
+    public static int russianMultiply(int n, int m) {
+        int result = 0;
+        while (n > 0) {
+            if ((n & 1) != 0) { // If odd
+                result += m;
+            }
+            n = n >> 1; // Halve n (bit shift right)
+            m = m << 1; // Double m (bit shift left)
         }
-        n = Math.floor(n / 2); // Halve
-        m = m * 2;             // Double
+        return result;
     }
-    return res;
-}`
+
+    // 3-way Fake Coin finding helper logic
+    public static int findFakeCoin(int[] coins, int start, int end) {
+        int n = end - start + 1;
+        if (n == 1) return start;
+        
+        int pileSize = n / 3;
+        if (pileSize == 0) {
+            // Only 2 coins left
+            if (coins[start] < coins[end]) return start;
+            else return end;
+        }
+        
+        int startA = start;
+        int endA = start + pileSize - 1;
+        int startB = endA + 1;
+        int endB = startB + pileSize - 1;
+        int startC = endB + 1;
+        int endC = end;
+        
+        int weightA = getSum(coins, startA, endA);
+        int weightB = getSum(coins, startB, endB);
+        
+        if (weightA < weightB) {
+            return findFakeCoin(coins, startA, endA);
+        } else if (weightA > weightB) {
+            return findFakeCoin(coins, startB, endB);
+        } else {
+            return findFakeCoin(coins, startC, endC);
+        }
+    }
+    
+    private static int getSum(int[] coins, int s, int e) {
+        int sum = 0;
+        for (int i = s; i <= e; i++) sum += coins[i];
+        return sum;
+    }
+}
+          </div>
+
+          <span class="code-label">JavaScript</span>
+          <div class="code-box">
+// Russian Peasant Multiplication
+function russianMultiply(n, m) {
+    let result = 0;
+    while (n > 0) {
+        if (n % 2 !== 0) {
+            result += m;
+        }
+        n = Math.floor(n / 2);
+        m *= 2;
+    }
+    return result;
+}
+
+// Fake Coin (3-way)
+function findFakeCoin(coins, start = 0, end = coins.length - 1) {
+    const n = end - start + 1;
+    if (n === 1) return start;
+    
+    const pileSize = Math.floor(n / 3);
+    if (pileSize === 0) {
+        return coins[start] < coins[end] ? start : end;
+    }
+    
+    const startA = start;
+    const endA = start + pileSize - 1;
+    const startB = endA + 1;
+    const endB = startB + pileSize - 1;
+    const startC = endB + 1;
+    const endC = end;
+    
+    const sum = (s, e) => {
+        let total = 0;
+        for (let i = s; i <= e; i++) total += coins[i];
+        return total;
+    };
+    
+    const weightA = sum(startA, endA);
+    const weightB = sum(startB, endB);
+    
+    if (weightA < weightB) {
+        return findFakeCoin(coins, startA, endA);
+    } else if (weightA > weightB) {
+        return findFakeCoin(coins, startB, endB);
+    } else {
+        return findFakeCoin(coins, startC, endC);
+    }
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def russian_multiply(n, m):
+    result = 0
+    while n > 0:
+        if n % 2 != 0:
+            result += m
+        n //= 2
+        m *= 2
+    return result
+
+def find_fake_coin(coins, start=0, end=None):
+    if end is None:
+        end = len(coins) - 1
+    n = end - start + 1
+    if n == 1:
+        return start
+        
+    pile_size = n // 3
+    if pile_size == 0:
+        return start if coins[start] < coins[end] else end
+        
+    start_a, end_a = start, start + pile_size - 1
+    start_b, end_b = end_a + 1, end_a + pile_size
+    start_c, end_c = end_b + 1, end
+    
+    weight_a = sum(coins[start_a:end_a + 1])
+    weight_b = sum(coins[start_b:end_b + 1])
+    
+    if weight_a < weight_b:
+        return find_fake_coin(coins, start_a, end_a)
+    elif weight_a > weight_b:
+        return find_fake_coin(coins, start_b, end_b)
+    else:
+        return find_fake_coin(coins, start_c, end_c)
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Russian peasant multiplication operates identically to hardware-level binary multiplication (shifting and adding). 3-way coin-weighing is a classic example of ternary search, which converges faster than binary search due to 3-way branch division.
+          </div>
+        </div>
+      </div>
+    `
   },
   dec_var: {
     id: 'dec_var',
-    title: 'Variable Size Decrease',
+    title: "Variable Size Decrease",
     notes: `
-      <div class="space-y-6">
+      <div class="space-y-8">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Variable Size Reduction</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Concept</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            The reduction factor varies depending on the data values of the subproblem instance.
+            In variable-size decrease algorithms, the size reduction pattern varies at each step and depends directly on the specific values of the elements rather than just their quantities.
           </p>
         </div>
+
+        <!-- --- 1. EUCLID VISUAL --- -->
         <div class="step-card">
-          <span class="step-title">Euclid's GCD Algorithm</span>
-          <p class="text-sm">Based on $gcd(m, n) = gcd(n, m \\% n)$. The reduction step is highly variable but guarantees logarithmic bounds in the worst case.</p>
-        </div>
-        <div class="step-card">
-          <span class="step-title">Interpolation Search</span>
-          <p class="text-sm leading-relaxed">
-            Instead of checking the middle, make an educated guess based on values (like finding "Z" at the end of a phone book).
-          </p>
-          <div class="bg-black/30 p-2 rounded text-xs font-mono mb-2">
-            pos = lo + [(target - A[lo]) * (hi - lo)] / (A[hi] - A[lo])
+          <span class="step-title">1. Euclid's Algorithm (GCD)</span>
+          <p class="text-sm mb-4">Find the Greatest Common Divisor of $m$ and $n$ using $gcd(m, n) = gcd(n, m \bmod n)$.</p>
+          
+          <div class="glass p-4 rounded-lg border border-white/10">
+            <h4 class="font-bold text-xs text-center text-accent mb-3">Trace: GCD(60, 24)</h4>
+            <div class="flex flex-col gap-2 font-mono text-sm">
+              <div class="flex items-center justify-between bg-black/20 p-2 rounded">
+                <span>Step 1</span>
+                <span class="text-blue-300">60 % 24 = 12</span>
+                <span class="opacity-50">New pair: (24, 12)</span>
+              </div>
+              <div class="flex items-center justify-between bg-black/20 p-2 rounded">
+                <span>Step 2</span>
+                <span class="text-blue-300">24 % 12 = 0</span>
+                <span class="opacity-50">New pair: (12, 0)</span>
+              </div>
+              <div class="bg-green-500/20 border border-green-500 p-2 rounded text-center font-bold text-green-400">
+                Remainder is 0. GCD is 12!
+              </div>
+            </div>
           </div>
-          <ul class="list-disc pl-5 text-xs space-y-1 opacity-80">
-            <li><strong>Average Case:</strong> $\\Theta(\\log \\log n)$ - phenomenally fast!</li>
-            <li><strong>Worst Case:</strong> $\\Theta(n)$ if values grow exponentially.</li>
-          </ul>
+          <p class="text-xs text-right mt-1 opacity-70">Complexity: $\Theta(\log n)$</p>
+        </div>
+
+        <!-- --- 2. INTERPOLATION SEARCH VISUAL --- -->
+        <div class="step-card">
+          <span class="step-title">2. Interpolation Search</span>
+          <p class="text-sm mb-4">Interpolation search estimates the position of the target key in a sorted array based on its value, similar to how humans search a phonebook.</p>
+
+          <div class="glass p-5 rounded-lg border border-white/10 mb-4">
+            <h4 class="font-bold text-xs text-center text-accent mb-4">Visual: Probing for Value "30"</h4>
+            
+            <div class="relative h-12 w-full bg-white/5 rounded-lg border border-white/20 mb-2">
+              <div class="absolute left-0 -top-6 text-xs text-gray-400 text-center"><span class="font-bold text-white">0</span><br>↓</div>
+              <div class="absolute right-0 -top-6 text-xs text-gray-400 text-center"><span class="font-bold text-white">100</span><br>↓</div>
+              
+              <div class="absolute left-[30%] h-full w-1 bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.8)]"></div>
+              
+              <div class="absolute left-[30%] -bottom-8 -translate-x-1/2 text-center">
+                <div class="text-yellow-400 text-lg font-bold">↑</div>
+                <div class="text-xs text-yellow-300 font-bold whitespace-nowrap">Probe (30)</div>
+              </div>
+            </div>
+            
+            <div class="mt-10 text-xs font-mono text-center opacity-80">
+              Range: 0 to 100. Target: 30.<br>
+              Probe = lo + [(target - A[lo]) / (A[hi] - A[lo])] * (hi - lo) ≈ 30% mark.
+            </div>
+          </div>
+
+          <div class="bg-black/20 p-3 rounded-lg text-sm">
+            <p class="font-bold text-gray-400 mb-2">Interpolation Position Formula:</p>
+            <p class="font-mono text-yellow-300 text-xs bg-black/40 p-2 rounded text-center">
+              pos = lo + ⌊((target - A[lo]) * (hi - lo)) / (A[hi] - A[lo])⌋
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs text-center mt-3">
+            <div class="p-2 border border-green-500/30 rounded bg-green-500/10 text-green-300"><strong>Average Case:</strong><br>$\Theta(\log \log n)$<br>(Extremely Fast)</div>
+            <div class="p-2 border border-red-500/30 rounded bg-red-500/10 text-red-300"><strong>Worst Case:</strong><br>$\Theta(n)$<br>(Highly Skewed Data)</div>
+          </div>
         </div>
       </div>
     `,
-    code: `// Euclid's GCD
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">VARIABLE SIZE DECREASE ALGORITHMS</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm EuclidGCD(m, n)
+  // Computes the greatest common divisor of m and n
+  // Input: Two nonnegative, non-both-zero integers m and n
+  // Output: Greatest common divisor of m and n
+  while n != 0 do
+    r <- m % n
+    m <- n
+    n <- r
+  return m
+
+Algorithm InterpolationSearch(A[0..n-1], target)
+  // Searches for target in a sorted, uniformly distributed array
+  lo <- 0
+  hi <- n - 1
+  while lo <= hi AND target >= A[lo] AND target <= A[hi] do
+    if lo == hi then
+      if A[lo] == target return lo
+      return -1
+      
+    // Value-proportionate probe formula
+    pos <- lo + floor( ((target - A[lo]) * (hi - lo)) / (A[hi] - A[lo]) )
+    
+    if A[pos] == target return pos
+    else if A[pos] < target then
+      lo <- pos + 1
+    else
+      hi <- pos - 1
+  return -1
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity:
+  - Euclid GCD: Θ(log n) worst case (Lame's Theorem).
+  - Interpolation Search: Θ(log (log n)) average case under uniform distribution; Θ(n) worst case if elements increase exponentially.
+- Space Complexity: Θ(1) auxiliary space.
+- Reason: Euclid's GCD size decrease varies depending on m % n, but the product mn decreases by a factor of at least 2 every two iterations. Interpolation search uses numerical proportion to estimate position, which behaves like a binary-like search but on extremely compressed ranges.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public class VariableDecrease {
+    // Euclid's GCD
+    public static int gcd(int m, int n) {
+        while (n != 0) {
+            int r = m % n;
+            m = n;
+            n = r;
+        }
+        return m;
+    }
+
+    // Interpolation Search
+    public static int interpolationSearch(int[] A, int target) {
+        int lo = 0;
+        int hi = A.length - 1;
+        
+        while (lo <= hi && target >= A[lo] && target <= A[hi]) {
+            if (lo == hi) {
+                if (A[lo] == target) return lo;
+                return -1;
+            }
+            
+            // Numerical ratio calculation
+            int pos = lo + ((target - A[lo]) * (hi - lo)) / (A[hi] - A[lo]);
+            
+            if (A[pos] == target) {
+                return pos;
+            } else if (A[pos] < target) {
+                lo = pos + 1;
+            } else {
+                hi = pos - 1;
+            }
+        }
+        return -1;
+    }
+}
+          </div>
+
+          <span class="code-label">JavaScript</span>
+          <div class="code-box">
+// Euclid's GCD
 function gcd(m, n) {
     while (n !== 0) {
-        let r = m % n;
+        const r = m % n;
         m = n;
         n = r;
     }
@@ -1746,73 +2646,284 @@ function gcd(m, n) {
 
 // Interpolation Search
 function interpolationSearch(arr, target) {
-    let lo = 0, hi = arr.length - 1;
+    let lo = 0;
+    let hi = arr.length - 1;
+    
     while (lo <= hi && target >= arr[lo] && target <= arr[hi]) {
         if (lo === hi) {
             if (arr[lo] === target) return lo;
             return -1;
         }
-        let pos = lo + Math.floor(((hi - lo) * (target - arr[lo])) / (arr[hi] - arr[lo]));
-        if (arr[pos] === target) return pos;
-        if (arr[pos] < target) lo = pos + 1;
-        else hi = pos - 1;
+        
+        // Ratio probe
+        const pos = lo + Math.floor(((target - arr[lo]) * (hi - lo)) / (arr[hi] - arr[lo]));
+        
+        if (arr[pos] === target) {
+            return pos;
+        } else if (arr[pos] < target) {
+            lo = pos + 1;
+        } else {
+            hi = pos - 1;
+        }
     }
     return -1;
-}`
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+# Euclid's GCD
+def gcd(m, n):
+    while n != 0:
+        m, n = n, m % n
+    return m
+
+# Interpolation Search
+def interpolation_search(arr, target):
+    lo = 0
+    hi = len(arr) - 1
+    
+    while lo <= hi and arr[lo] <= target <= arr[hi]:
+        if lo == hi:
+            if arr[lo] == target:
+                return lo
+            return -1
+            
+        # Probe formula
+        pos = lo + int(((target - arr[lo]) * (hi - lo)) / (arr[hi] - arr[lo]))
+        
+        if arr[pos] == target:
+            return pos
+        elif arr[pos] < target:
+            lo = pos + 1
+        else:
+            hi = pos - 1
+            
+    return -1
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Interpolation search requires both sorted values and uniform distribution of data. On skewed datasets (e.g., [1, 2, 4, 8, 16, 32...]), performance degrades heavily to O(n).
+          </div>
+        </div>
+      </div>
+    `
   },
   dec_kth: {
     id: 'dec_kth',
-    title: 'k-th Order Statistic (QuickSelect)',
+    title: "k-th Order Statistic (QuickSelect)",
     notes: `
-      <div class="space-y-6">
+      <div class="space-y-8">
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">The Selection Problem</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Find the $k$-th smallest element in an unsorted array of size $n$ without sorting the entire array first.
+            The Selection Problem seeks to find the $k$-th smallest element in an unsorted array of size $n$ (such as finding the median, minimum, or maximum) without fully sorting the array first.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">QuickSelect Algorithm</span>
-          <p class="text-xs md:text-sm">
-            Partition the array around a pivot element $s$. Everything left is $\\le$ pivot; everything right is $\\ge$ pivot.
-          </p>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-85">
-            <li>If pivot index $s == k$, we have found our element!</li>
-            <li>If $s > k$, recursively search the <strong>left</strong> partition.</li>
-            <li>If $s < k$, recursively search the <strong>right</strong> partition.</li>
-            <li><strong>Average Case:</strong> $T(n) = T(n/2) + n \\in \\Theta(n)$ time.</li>
-            <li><strong>Worst Case:</strong> $\\Theta(n^2)$ if pivot selections are highly skewed.</li>
-          </ul>
+
+        <!-- --- VISUAL FLOW DIAGRAM --- -->
+        <div class="glass p-5 rounded-xl border border-white/10 text-center">
+          <h4 class="font-bold text-sm mb-4 text-accent uppercase tracking-wider">How it works (Lomuto Partition)</h4>
+          <div class="flex flex-col gap-3 max-w-md mx-auto">
+            <div class="flex rounded-lg overflow-hidden font-mono text-xs font-bold">
+              <div class="bg-blue-600/40 flex-1 py-3 border-r border-white/10">Smaller<br>(Left Subarray)</div>
+              <div class="bg-yellow-600/40 w-20 py-3 text-yellow-200">PIVOT INDEX<br>(s)</div>
+              <div class="bg-red-600/40 flex-1 py-3 border-l border-white/10">Larger<br>(Right Subarray)</div>
+            </div>
+            <p class="text-xs opacity-70">Compare Pivot Index (s) with Target rank (k)</p>
+            <div class="grid grid-cols-3 gap-2 text-xs font-bold">
+              <div class="bg-blue-500/10 p-2 rounded border border-blue-500/30 text-blue-300">If k < s<br>Search Left</div>
+              <div class="bg-green-500/10 p-2 rounded border border-green-500/30 text-green-300">If k == s<br>Found Pivot!</div>
+              <div class="bg-red-500/10 p-2 rounded border border-red-500/30 text-red-300">If k > s<br>Search Right</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- --- PRETTY STEP-BY-STEP TRACE --- -->
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 pl-2 border-l-4 border-accent">Step-by-Step Walkthrough</h3>
+          
+          <!-- INPUT CARD -->
+          <div class="bg-white/5 p-4 rounded-lg mb-4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-bold text-gray-400 uppercase">Input Array</span>
+              <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Target Index: k=2 (3rd smallest)</span>
+            </div>
+            <p class="font-mono text-lg tracking-wide text-center">[ 7, 10, 4, 3, 20, 15 ]</p>
+          </div>
+
+          <!-- STEP 1 -->
+          <div class="step-card">
+            <div class="flex justify-between">
+              <span class="step-title">Step 1: Partition around A[0] (7)</span>
+              <span class="text-xs font-mono text-yellow-400">Pivot = 7</span>
+            </div>
+            <div class="font-mono text-center bg-black/30 p-2 rounded mb-2">
+              <span class="text-blue-300">4, 3</span> | <span class="text-yellow-400 font-bold">7</span> | <span class="text-red-400">10, 20, 15</span>
+            </div>
+            <p class="text-xs text-center">Pivot ends at <strong>Index 2</strong>.</p>
+            <div class="mt-2 text-center text-sm font-bold text-green-400 bg-green-500/10 p-2 rounded border border-green-500/30">
+              Pivot index s = 2. Since s == k, we have found our answer: 7!
+            </div>
+          </div>
         </div>
       </div>
     `,
-    code: `// QuickSelect Implementation
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">QUICKSELECT (HOARE'S SELECTION) ALGORITHM</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm QuickSelect(A[l..r], k)
+  // Finds the k-th smallest element in A[l..r]
+  // Input: Subarray A[l..r] and target statistic rank k (0-indexed)
+  // Output: The value of the k-th smallest element
+  if l == r return A[l]
+  
+  // Partition around pivot A[l] using Lomuto partition
+  s <- Partition(A, l, r)
+  
+  if s == k then
+    return A[s]
+  else if s > k then
+    return QuickSelect(A[l..s-1], k)
+  else
+    return QuickSelect(A[s+1..r], k)
+
+Algorithm Partition(A, l, r)
+  // Lomuto partitioning
+  pivot <- A[l]
+  s <- l
+  for i <- l + 1 to r do
+    if A[i] < pivot then
+      s <- s + 1
+      Swap A[s] and A[i]
+  Swap A[l] and A[s]
+  return s
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity:
+  - Average Case: Θ(n) linear time.
+  - Worst Case: Θ(n²) if partitioning is highly skewed (e.g., sorted array with first element as pivot).
+- Space Complexity: Θ(log n) average recursion depth; can be optimized to Θ(1) using iterative search.
+- Reason: In average case, the partition size halves at each recursive call: n + n/2 + n/4 + ... = 2n, leading to O(n) total work.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public class Selection {
+    public static int quickSelect(int[] arr, int k) {
+        return select(arr, 0, arr.length - 1, k);
+    }
+    
+    private static int select(int[] arr, int l, int r, int k) {
+        if (l == r) return arr[l];
+        
+        int s = partition(arr, l, r);
+        
+        if (s == k) {
+            return arr[s];
+        } else if (s > k) {
+            return select(arr, l, s - 1, k);
+        } else {
+            return select(arr, s + 1, r, k);
+        }
+    }
+    
+    private static int partition(int[] arr, int l, int r) {
+        int pivot = arr[l];
+        int s = l;
+        for (int i = l + 1; i <= r; i++) {
+            if (arr[i] < pivot) {
+                s++;
+                int temp = arr[s];
+                arr[s] = arr[i];
+                arr[i] = temp;
+            }
+        }
+        int temp = arr[l];
+        arr[l] = arr[s];
+        arr[s] = temp;
+        return s;
+    }
+}
+          </div>
+
+          <span class="code-label">JavaScript</span>
+          <div class="code-box">
 function quickSelect(arr, k) {
     return select(arr, 0, arr.length - 1, k);
 }
 
 function select(arr, l, r, k) {
     if (l === r) return arr[l];
-    let s = partition(arr, l, r);
-    if (s === k) return arr[s];
-    if (s > k) return select(arr, l, s - 1, k);
-    return select(arr, s + 1, r, k);
+    
+    const s = partition(arr, l, r);
+    
+    if (s === k) {
+        return arr[s];
+    } else if (s > k) {
+        return select(arr, l, s - 1, k);
+    } else {
+        return select(arr, s + 1, r, k);
+    }
 }
 
 function partition(arr, l, r) {
-    let pivot = arr[l];
-    let i = l + 1;
-    let j = r;
-    while (i <= j) {
-        while (i <= r && arr[i] <= pivot) i++;
-        while (j >= l && arr[j] > pivot) j--;
-        if (i < j) {
-            [arr[i], arr[j]] = [arr[j], arr[i]];
+    const pivot = arr[l];
+    let s = l;
+    for (let i = l + 1; i <= r; i++) {
+        if (arr[i] < pivot) {
+            s++;
+            [arr[s], arr[i]] = [arr[i], arr[s]];
         }
     }
-    [arr[l], arr[j]] = [arr[j], arr[l]];
-    return j;
-}`
+    [arr[l], arr[s]] = [arr[s], arr[l]];
+    return s;
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def quick_select(arr, k):
+    return select(arr, 0, len(arr) - 1, k)
+
+def select(arr, l, r, k):
+    if l == r:
+        return arr[l]
+        
+    s = partition(arr, l, r)
+    
+    if s == k:
+        return arr[s]
+    elif s > k:
+        return select(arr, l, s - 1, k)
+    else:
+        return select(arr, s + 1, r, k)
+
+def partition(arr, l, r):
+    pivot = arr[l]
+    s = l
+    for i in range(l + 1, r + 1):
+        if arr[i] < pivot:
+            s += 1
+            arr[s], arr[i] = arr[i], arr[s]
+    arr[l], arr[s] = arr[s], arr[l]
+    return s
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+QuickSelect is also known as Hoare's Selection Algorithm. It is highly optimized compared to full sorting (O(n log n)) when only a specific rank (like the median) is required.
+          </div>
+        </div>
+      </div>
+    `
   },
 
   // ============================================
