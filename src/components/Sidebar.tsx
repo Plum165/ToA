@@ -183,19 +183,6 @@ export default function Sidebar({
         )}
       </div>
 
-      <div className="mt-4 pt-4 border-t border-white/10">
-        <div className="bg-accent/5 p-3 rounded-xl border border-accent/20">
-          <p className="text-[10px] text-accent font-bold uppercase mb-1">Learning Progress</p>
-          <div className="w-full bg-white/10 h-1.5 rounded-full">
-            <div className="bg-accent h-full rounded-full" style={{ width: '75%' }}></div>
-          </div>
-          <p className="text-[10px] text-right mt-1 text-slate-400">75% Complete</p>
-        </div>
-      </div>
-
-      <div className="pt-2 border-t border-white/10 text-[10px] font-mono text-center text-gray-400">
-        Curriculum Status: <span className="text-emerald-400 font-bold">Comprehensive</span> • Offline-First
-      </div>
     </aside>
   );
 }

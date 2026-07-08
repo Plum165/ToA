@@ -1,5 +1,5 @@
 import { Theme } from '../types';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, GraduationCap, ExternalLink } from 'lucide-react';
 
 interface HeaderProps {
   currentTheme: string;
@@ -43,20 +43,21 @@ export default function Header({ currentTheme, onThemeChange }: HeaderProps) {
             <BookOpen className="w-5 h-5 text-accent" />
           </div>
           <div>
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-white">Algorithmic Intelligence Portal</h1>
-            <p className="text-xs text-slate-400 font-mono">v5.2.0 • CORE ARCHITECTURE MODERNIZED</p>
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-white">Theory of ALogrithms</h1>
           </div>
         </div>
         
         <div className="flex flex-wrap items-center justify-center gap-4">
-          {/* System Status Indicators */}
-          <div className="hidden sm:flex flex-col items-end border-r border-white/10 pr-4">
-            <span className="text-[9px] uppercase tracking-widest text-accent font-bold">System Status</span>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium text-slate-300">OFFLINE MODE: ACTIVE</span>
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            </div>
-          </div>
+          <a
+            href="https://automark-code-judge.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-1.5 bg-accent/15 border border-accent/25 hover:bg-accent/25 transition-all text-accent hover:text-accent font-bold text-xs rounded-lg shadow-md hover:shadow-accent/5 cursor-pointer"
+          >
+            <GraduationCap className="w-4 h-4" />
+            <span>Practice Test</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+          </a>
 
           <div className="flex items-center gap-2 bg-black/25 rounded-lg p-1.5 pr-3 border border-white/10 shadow-inner">
             <span
