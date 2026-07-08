@@ -3963,26 +3963,131 @@ By keeping points pre-sorted in both X and Y and passing them down the recursion
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">The Philosophy</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Solve a problem by transforming it into an instance that is simpler, has a different representation, or is a completely different problem with a known solution.
+            The <strong>Transform and Conquer</strong> design paradigm is a two-stage methodology. Instead of attacking a complex problem directly, we map or transform the instance into an alternative form that is significantly easier to solve. Once transformed, we solve that modified instance, and then (if necessary) convert the solution back to the original domain.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">The Three Sub-techniques</span>
-          <ul class="space-y-2 mt-2 text-xs md:text-sm">
-            <li><strong>1. Instance Simplification:</strong> Transform to a simpler instance of the same problem (e.g. Pre-sorting).</li>
-            <li><strong>2. Representation Change:</strong> Transform into an alternative representation (e.g. Heaps, Horner's Rule).</li>
-            <li><strong>3. Problem Reduction:</strong> Transform to a different problem entirely (e.g. reducing Least Common Multiple to GCD).</li>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Instance Simplification:</strong> Re-structuring input into an easier instance of the <em>same</em> problem (e.g., Pre-sorting).</li>
+            <li><strong>Representation Change:</strong> Converting input to a different structural representation (e.g., Heaps, AVL Trees, Horner's Form).</li>
+            <li><strong>Problem Reduction:</strong> Translating the task into a completely different problem with an existing optimal solver (e.g., LCM &le; GCD).</li>
           </ul>
+        </div>
+
+        <div class="step-card">
+          <span class="step-title">The Transformation Pipeline</span>
+          <div class="flex items-center justify-between gap-1 text-xs font-bold text-center my-2 font-mono overflow-x-auto p-2">
+            <div class="p-2 bg-blue-500/20 border border-blue-500/50 rounded">Original Input</div>
+            <div class="text-gray-400">⟶</div>
+            <div class="p-2 bg-purple-500/20 border border-purple-500/50 rounded">Transformation Stage</div>
+            <div class="text-gray-400">⟶</div>
+            <div class="p-2 bg-green-500/20 border border-green-500/50 rounded">Conquest Solver</div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Ignoring Overhead:</strong> Neglecting the cost of the transformation itself, which can dominate the total run time.</li>
+            <li><strong>Incomplete Mapping:</strong> Forgetting to map the transformed solution back to the original problem space.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Classify finding the median after sorting, and representing a graph as an adjacency list.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1">
+                Finding the median after sorting is <strong>Instance Simplification</strong>. Graph representation change is <strong>Representation Change</strong>.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Levitin, A. (2011). Introduction to the Design and Analysis of Algorithms. Chapter 6.
+          </p>
         </div>
       </div>
     `,
-    code: `// Conceptual transformation flow:
-// Input Instance (Hard) ---> Transformed Instance (Easy)
-//                                   |
-//                                   v
-// Final Answer <--- Output Solution (Reconstructed)`
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm TransformAndConquer(Instance I)
+    T_Instance = Transform(I)
+    T_Solution = Solve(T_Instance)
+    return MapBack(T_Solution)
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: O(Transformation) + O(Solving)
+- Space Complexity: O(Space(Transformation))
+- Reason: The algorithm runs as a sequential pipeline. The step with the largest asymptotic complexity acts as the overall bottleneck.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public interface Pipeline&lt;I, S&gt; {
+    default S execute(I input) {
+        return solve(transform(input));
+    }
+    I transform(I input);
+    S solve(I transformed);
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+class Pipeline {
+  constructor(transformFn, solveFn) {
+    this.transform = transformFn;
+    this.solve = solveFn;
+  }
+  execute(input) {
+    return this.solve(this.transform(input));
+  }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+class Pipeline:
+    def __init__(self, transform_fn, solve_fn):
+        self.transform = transform_fn
+        self.solve = solve_fn
+    def execute(self, input_val):
+        return self.solve(self.transform(input_val))
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Constructing a balanced BST or a heap transforms unstructured sequences into structured hierarchies, allowing for fast searches, deletions, and retrievals in O(log n) time.
+          </div>
+        </div>
+      </div>
+    `
   },
   trans_presort: {
     id: 'trans_presort',
@@ -3990,35 +4095,137 @@ By keeping points pre-sorted in both X and Y and passing them down the recursion
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Pre-sorting Efficiency</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            We can simplify a problem by sorting the input array first in $O(n \\log n)$ time, which makes subsequent steps trivial.
+            <strong>Instance Simplification</strong> transforms a problem's input into a simpler, canonical state. The most prominent variant is <strong>Pre-sorting</strong>. By ordering the list first, we can replace multiple expensive $O(n^2)$ scans with a single rapid $O(n)$ pass.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Element Uniqueness Proof</span>
-          <p class="text-xs md:text-sm">
-            Check if an array has any duplicates.
-          </p>
-          <ul class="list-disc pl-5 mt-1 text-xs space-y-1 opacity-80">
-            <li><strong>Brute Force:</strong> Compare all pairs $\\in \\Theta(n^2)$.</li>
-            <li><strong>Pre-sorting:</strong> Sort the array ($O(n \\log n)$) then do a single linear scan checking if $A[i] == A[i+1]$ ($O(n)$).</li>
-            <li><strong>Total Time:</strong> $O(n \\log n) + O(n) = O(n \\log n)$, which is significantly faster.</li>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Element Uniqueness:</strong> The problem of verifying whether all values in a collection are distinct.</li>
+            <li><strong>Adjacent Checking:</strong> Scanning adjacent values ($A[i]$ vs $A[i+1]$) of a sorted array to detect duplicates in linear time.</li>
           </ul>
+        </div>
+
+        <div class="step-card">
+          <span class="step-title">Pre-sorting Cluster Effect</span>
+          <div class="bg-black/40 p-3 rounded font-mono text-xs space-y-2 my-2">
+            <div>Unsorted: [ 3, 7, 2, 3, 9 ] &rarr; Search pairs is $O(n^2)$</div>
+            <div class="text-yellow-300 font-bold">⟶ SORT ⟶</div>
+            <div>Sorted: [ 2, <span class="text-red-400 font-bold underline">3, 3</span>, 7, 9 ] &rarr; Duplicates cluster together!</div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Destructive Sorting:</strong> Sorting the array in-place without copying it, causing side-effects for callers that expect the original order.</li>
+            <li><strong>Incorrect Scan Bounds:</strong> Running the loop to index $n-1$, leading to Out-of-Bounds errors when evaluating $A[i+1]$.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>How can you find the mode (most frequent element) of an array in $O(n \log n)$ time using pre-sorting?</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1">
+                Sort the array first. Then do a single scan while counting consecutive occurrences of identical values. Update the max frequency whenever a streak finishes.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Cormen, T. H., et al. (2022). Introduction to Algorithms (4th Edition). MIT Press.
+          </p>
         </div>
       </div>
     `,
-    code: `// Element Uniqueness via Pre-sorting
-function hasUniqueElements(arr) {
-    // 1. Sort the array
-    arr.sort((a, b) => a - b);
-    
-    // 2. Single pass comparison
-    for (let i = 0; i < arr.length - 1; i++) {
-        if (arr[i] === arr[i + 1]) return false; // Duplicate found!
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm UniqueElements(A[0..n-1])
+    Sort(A) // O(n log n)
+    for i <- 0 to n - 2 do
+        if A[i] == A[i+1]
+            return false
+    return true
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(n log n)
+- Space Complexity: O(n) (or O(1) if sorting in-place)
+- Reason: Sorting takes Θ(n log n) time. The sequential comparison pass takes Θ(n) comparisons. The sorting phase represents the dominant bottleneck.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+import java.util.Arrays;
+
+public class UniqueChecker {
+    public static boolean hasUnique(int[] arr) {
+        int[] copy = arr.clone();
+        Arrays.sort(copy);
+        for (int i = 0; i &lt; copy.length - 1; i++) {
+            if (copy[i] == copy[i + 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function hasUniqueElements(arr: number[]): boolean {
+    const sorted = [...arr].sort((a, b) =&gt; a - b);
+    for (let i = 0; i &lt; sorted.length - 1; i++) {
+        if (sorted[i] === sorted[i + 1]) {
+            return false;
+        }
     }
     return true;
-}`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def has_unique_elements(arr):
+    sorted_arr = sorted(arr)
+    for i in range(len(sorted_arr) - 1):
+        if sorted_arr[i] == sorted_arr[i + 1]:
+            return False
+    return True
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Although a hash set can perform this check in average O(n) time, sorting uses O(1) auxiliary space (e.g., using HeapSort), which is ideal in memory-constrained devices.
+          </div>
+        </div>
+      </div>
+    `
   },
   trans_horner: {
     id: 'trans_horner',
@@ -4026,35 +4233,149 @@ function hasUniqueElements(arr) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Polynomial Evaluation</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Evaluate $P(x) = a_n \\cdot x^n + a_{n-1} \\cdot x^{n-1} \\dots + a_0$ at value $x$.
+            Evaluating a polynomial $P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_0$ naively takes quadratic $\Theta(n^2)$ time. **Horner's Rule** is a classic **Representation Change** algorithm that rewrites the polynomial in a nested multiply-add format, lowering multiplications to exactly $n$.
           </p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Polynomial Representation:</strong> Converting standard summation $\sum a_i x^i$ to nested factors: $(\dots((a_n x + a_{n-1})x + a_{n-2})x \dots)x + a_0$.</li>
+            <li><strong>Coefficient List:</strong> The sequence $[a_n, a_{n-1}, \dots, a_0]$ from highest to lowest degree.</li>
+          </ul>
+        </div>
+
         <div class="step-card">
-          <span class="step-title">Horner's Factorization</span>
-          <p class="text-xs md:text-sm">
-            Factor out $x$ repeatedly to form nested multiplications:
-          </p>
-          <div class="bg-black/30 p-2 rounded text-center font-mono text-xs mb-2">
-            P(x) = (...((a_n * x + a_n-1) * x + a_n-2) * x ... + a_0)
+          <span class="step-title">Trace Example: P(x) = 2x³ - 6x² + 2x - 1 at x = 3</span>
+          <p class="text-xs mb-2">Nested factorization: $((2x - 6)x + 2)x - 1$</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse font-mono">
+              <thead>
+                <tr class="border-b border-white/10 text-gray-400">
+                  <th class="py-1">Step</th>
+                  <th class="py-1">Coeff</th>
+                  <th class="py-1">Accumulated Result</th>
+                  <th class="py-1">Calculation Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-white/5"><td>Start</td><td>a_3 = 2</td><td>2</td><td>Initialize with highest coefficient</td></tr>
+                <tr class="border-b border-white/5"><td>1</td><td>a_2 = -6</td><td>0</td><td>(2 &times; 3) + (-6) = 0</td></tr>
+                <tr class="border-b border-white/5"><td>2</td><td>a_1 = 2</td><td>2</td><td>(0 &times; 3) + 2 = 2</td></tr>
+                <tr><td>End</td><td>a_0 = -1</td><td class="text-green-400 font-bold">5</td><td class="text-green-400 font-bold">(2 &times; 3) + (-1) = 5</td></tr>
+              </tbody>
+            </table>
           </div>
-          <p class="text-xs">
-            This cuts multiplications to $n$ and additions to $n$, reducing complexity from quadratic $\\Theta(n^2)$ (or $\\Theta(n)$ with power accumulation) to exactly $n$ cycles in $\\Theta(n)$ time.
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Forgetting Zero Coefficients:</strong> Omitting zero coefficients for missing degrees (e.g., $x^2 - 1$ must be $[1, 0, -1]$).</li>
+            <li><strong>Reversed Iteration:</strong> Iterating from lowest power upward instead of highest downward.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Evaluate $P(x) = 3x^3 + 2x^2 + 5$ at $x = -2$.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1">
+                Coefficients: $[3, 2, 0, 5]$. Accumulator:<br>
+                &bull; Start: $r = 3$<br>
+                &bull; Step 1: $r = 3 \times (-2) + 2 = -4$<br>
+                &bull; Step 2: $r = -4 \times (-2) + 0 = 8$<br>
+                &bull; Step 3: $r = 8 \times (-2) + 5 = -11$. Result: <strong>-11</strong>.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Knuth, D. E. (1997). The Art of Computer Programming, Vol 2.
           </p>
         </div>
       </div>
     `,
-    code: `// Horner's Rule in JavaScript
-function evaluatePolynomial(coefficients, x) {
-    let n = coefficients.length - 1;
-    let result = coefficients[n]; // Start with highest power coefficient
-    
-    for (let i = n - 1; i >= 0; i--) {
-        result = result * x + coefficients[i]; // Nested Multiply-Add
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm Horner(A[0..n], x)
+    result <- A[n]
+    for i <- n - 1 downto 0 do
+        result <- result * x + A[i]
+    return result
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(n)
+- Space Complexity: Θ(1)
+- Reason: The single loop performs exactly n multiplications and n additions, achieving the theoretical lower bound for arbitrary polynomial evaluation.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class HornerPolynomial {
+    public static double evaluate(double[] A, double x) {
+        int n = A.length - 1;
+        double result = A[n];
+        for (int i = n - 1; i &gt;= 0; i--) {
+            result = result * x + A[i];
+        }
+        return result;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function evaluateHorner(coefficients: number[], x: number): number {
+    const n = coefficients.length - 1;
+    let result = coefficients[n];
+    for (let i = n - 1; i &gt;= 0; i--) {
+        result = result * x + coefficients[i];
     }
     return result;
-} // Executed in Θ(n) operations`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def evaluate_horner(coefficients, x):
+    n = len(coefficients) - 1
+    result = coefficients[n]
+    for i in range(n - 1, -1, -1):
+        result = result * x + coefficients[i]
+    return result
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+This process is mathematically equivalent to synthetic division. The intermediate accumulator values form the coefficients of the quotient polynomial from dividing P(x) by (x - c).
+          </div>
+        </div>
+      </div>
+    `
   },
   trans_expo: {
     id: 'trans_expo',
@@ -4062,41 +4383,169 @@ function evaluatePolynomial(coefficients, x) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Fast Exponentiation</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Compute $a^n$ efficiently. Instead of doing $n-1$ multiplications, we apply a Left-to-Right binary representation scan of the exponent.
+            Computing $a^n$ naively requires $n-1$ multiplications. By applying **Representation Change**, we express the exponent $n$ in binary and scan it **Left-to-Right** using Horner-style doubling (squaring) and adding (multiplying). This reduces multiplications to logarithmic $\Theta(\log n)$ bounds.
           </p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Square and Multiply:</strong> Doubling the accumulated power corresponds to squaring ($p \gets p^2$), and adding a $1$ bit corresponds to multiplying ($p \gets p \times a$).</li>
+            <li><strong>Bitwise Scanning:</strong> Scanning binary bits from the second most-significant bit down to the least-significant bit.</li>
+          </ul>
+        </div>
+
         <div class="step-card">
-          <span class="step-title">Exam Step-by-Step Proof: $a^{13}$</span>
-          <p class="text-sm">How many multiplications are needed to compute $a^{13}$ using Horner's Left-to-Right binary exponentiation?</p>
-          <ol class="list-decimal pl-5 mt-2 text-xs space-y-1">
-            <li>Convert exponent to binary: $13_{10} = 1101_2$ (size $k = 4$ bits).</li>
-            <li>Starting with $p = a$ (corresponding to leading bit 1).</li>
-            <li><strong>Bit 1 (index 1):</strong> Square $p$: $p^2 = a^2$. Since bit is 1, multiply by $a$: $p = a^3$. <span class="text-accent">(2 multiplications)</span></li>
-            <li><strong>Bit 0 (index 2):</strong> Square $p$: $p^2 = a^6$. Bit is 0, so no multiply. <span class="text-accent">(1 multiplication)</span></li>
-            <li><strong>Bit 1 (index 3):</strong> Square $p$: $p^2 = a^{12}$. Since bit is 1, multiply by $a$: $p = a^{13}$. <span class="text-accent">(2 multiplications)</span></li>
-          </ol>
-          <div class="mt-2 bg-green-500/20 p-2 rounded text-xs border border-green-500">
-            <strong>Total multiplications:</strong> 2 + 1 + 2 = <strong>5 multiplications</strong>.
+          <span class="step-title">Trace Example: Computing $a^{13}$ (13 = 1101$_2$)</span>
+          <p class="text-xs mb-2">Starting with $p = a$ for the leading bit, we scan remaining bits <strong class="text-yellow-400">101</strong> Left-to-Right:</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse font-mono">
+              <thead>
+                <tr class="border-b border-white/10 text-gray-400">
+                  <th class="py-1">Bit</th>
+                  <th class="py-1">Action</th>
+                  <th class="py-1">Accumulator State</th>
+                  <th class="py-1">Multiplies</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-white/5"><td>1 (leading)</td><td>Initialize</td><td>p = a</td><td>0</td></tr>
+                <tr class="border-b border-white/5"><td>1</td><td>Square & Multiply</td><td>p = (a)² &times; a = a³</td><td>2</td></tr>
+                <tr class="border-b border-white/5"><td>0</td><td>Square Only</td><td>p = (a³)² = a⁶</td><td>1</td></tr>
+                <tr><td>1</td><td class="text-green-400 font-bold">Square & Multiply</td><td class="text-green-400 font-bold">p = (a⁶)² &times; a = a¹³</td><td class="text-green-400 font-bold">2</td></tr>
+              </tbody>
+            </table>
           </div>
+          <div class="mt-2 bg-green-500/10 p-2 rounded text-xs text-green-300">
+            <strong>Total multiplications:</strong> 2 + 1 + 2 = <strong>5 multiplications</strong> (versus 12 naively!).
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Incorrect Scan Direction:</strong> Scanning Right-to-Left without updating multipliers correctly. Left-to-Right is the natural Horner polynomial evaluation scheme.</li>
+            <li><strong>Extra Multiply on Start:</strong> Squaring the accumulator for the leading bit (index $k$). The leading bit should simply initialize the accumulator to $a$.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Determine the multiplications to compute $a^{19}$ ($19_{10} = 10011_2$).</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1">
+                Bits: $[1, 0, 0, 1, 1]$.<br>
+                &bull; Start (bit 1): $p = a$<br>
+                &bull; Bit 0: Square &rarr; $p = a^2$ (1 mul)<br>
+                &bull; Bit 0: Square &rarr; $p = a^4$ (1 mul)<br>
+                &bull; Bit 1: Square & Multiply &rarr; $p = a^8 \times a = a^9$ (2 muls)<br>
+                &bull; Bit 1: Square & Multiply &rarr; $p = a^{18} \times a = a^{19}$ (2 muls).<br>
+                Total multiplications = $1 + 1 + 2 + 2 = \mathbf{6}$ multiplications.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Menezes, A. J., et al. (1996). Handbook of Applied Cryptography. CRC Press.
+          </p>
         </div>
       </div>
     `,
-    code: `// Left-to-Right Binary Exponentiation
-function binaryPower(a, n) {
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm LeftToRightBinaryPower(a, n)
+    // n in binary: b_k b_k-1 ... b_0 where b_k is 1
+    p <- a
+    for i <- k - 1 downto 0 do
+        p <- p * p
+        if b_i == 1
+            p <- p * a
+    return p
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(log n)
+- Space Complexity: Θ(1) auxiliary space (or Θ(log n) to store the bit representation)
+- Reason: The loop runs exactly once for each of the O(log n) bits of the exponent. Each iteration executes exactly 1 (if bit is 0) or 2 (if bit is 1) multiplications.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class BinaryExponentiation {
+    public static long power(long a, int n) {
+        if (n == 0) return 1;
+        String bin = Integer.toBinaryString(n);
+        long p = a;
+        for (int i = 1; i &lt; bin.length(); i++) {
+            p = p * p;
+            if (bin.charAt(i) == '1') {
+                p = p * a;
+            }
+        }
+        return p;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function binaryPower(a: number, n: number): number {
     if (n === 0) return 1;
-    let binary = n.toString(2); // Convert exponent to binary string
+    const binary = n.toString(2);
     let p = a;
-    
-    for (let i = 1; i < binary.length; i++) {
-        p = p * p; // Square
+    for (let i = 1; i &lt; binary.length; i++) {
+        p = p * p;
         if (binary[i] === '1') {
-            p = p * a; // Multiply if bit is 1
+            p = p * a;
         }
     }
     return p;
-} // Complexity is Θ(log n)`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def binary_power(a, n):
+    if n == 0:
+        return 1
+    binary = bin(n)[2:]
+    p = a
+    for i in range(1, len(binary)):
+        p = p * p
+        if binary[i] == '1':
+            p = p * a
+    return p
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+This algorithm is central to modular exponentiation in cryptosystems like RSA, where we compute (a^n) mod m for extremely large numbers to enforce secure key cryptography.
+          </div>
+        </div>
+      </div>
+    `
   },
   trans_red: {
     id: 'trans_red',
@@ -4104,40 +4553,157 @@ function binaryPower(a, n) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Reducing Problems</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Solve a problem by converting its instances into a completely different problem that is already solved.
+            **Problem Reduction** is one of the most powerful paradigms in Computer Science. Instead of designing a new algorithm, we map or transform problem $P$ to another problem $Q$ with a known, highly efficient solver. Once solved, we map the results back to answer the original task.
           </p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Reduction (P &le; Q):</strong> A mapping that converts any instance of $P$ into an equivalent instance of $Q$.</li>
+            <li><strong>Least Common Multiple (LCM):</strong> Reduced to Greatest Common Divisor (GCD) using $\\text{LCM}(u,v) = \\frac{|u \\times v|}{\\text{GCD}(u,v)}$.</li>
+            <li><strong>State Space Graph:</strong> A configuration graph where vertices represent states and directed edges represent valid actions. Finding the optimal set of moves reduces to BFS shortest-path exploration.</li>
+          </ul>
+        </div>
+
         <div class="step-card">
-          <span class="step-title">Arithmetic Reduction</span>
-          <p class="text-xs">Find LCM(u, v) by reducing to GCD:</p>
-          <div class="bg-black/30 p-2 rounded font-mono text-center text-xs mb-2">
-            LCM(u, v) = (u * v) / GCD(u, v)
+          <span class="step-title">State-Space Graph Reduction Concept</span>
+          <div class="bg-black/40 p-2 rounded-xl border border-white/10 text-center my-2">
+            <svg viewBox="0 0 400 110" class="w-full h-24 max-w-sm mx-auto">
+              <defs>
+                <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#888" />
+                </marker>
+                <marker id="garr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#22c55e" />
+                </marker>
+              </defs>
+              <line x1="45" y1="55" x2="145" y2="25" stroke="#555" stroke-width="1" marker-end="url(#arr)" />
+              <line x1="45" y1="55" x2="145" y2="85" stroke="#22c55e" stroke-width="2" marker-end="url(#garr)" />
+              <line x1="145" y1="25" x2="245" y2="25" stroke="#555" stroke-width="1" marker-end="url(#arr)" />
+              <line x1="145" y1="85" x2="245" y2="55" stroke="#22c55e" stroke-width="2" marker-end="url(#garr)" />
+              <line x1="245" y1="55" x2="345" y2="55" stroke="#22c55e" stroke-width="2" marker-end="url(#garr)" />
+              <circle cx="45" cy="55" r="16" fill="#3b82f6" />
+              <text x="45" y="58" text-anchor="middle" fill="white" font-size="8" font-weight="bold">Start</text>
+              <circle cx="145" cy="25" r="14" fill="#334155" />
+              <text x="145" y="28" text-anchor="middle" fill="white" font-size="7">State A</text>
+              <circle cx="145" cy="85" r="14" fill="#334155" stroke="#22c55e" stroke-width="1.5" />
+              <text x="145" y="88" text-anchor="middle" fill="white" font-size="7">State B</text>
+              <circle cx="245" cy="25" r="14" fill="#334155" />
+              <circle cx="245" cy="55" r="14" fill="#334155" stroke="#22c55e" stroke-width="1.5" />
+              <text x="245" y="58" text-anchor="middle" fill="white" font-size="7">State D</text>
+              <circle cx="345" cy="55" r="16" fill="#ef4444" />
+              <text x="345" y="58" text-anchor="middle" fill="white" font-size="8" font-weight="bold">Goal</text>
+            </svg>
           </div>
         </div>
-        <div class="step-card">
-          <span class="step-title">State Space Graph Reduction</span>
-          <p class="text-xs md:text-sm">
-            Many puzzles (River Crossing, 8-puzzle) can be modeled as a graph where:
-          </p>
-          <ul class="list-disc pl-5 text-xs space-y-1 opacity-80">
-            <li><strong>Vertices:</strong> Represent valid puzzle configurations (states).</li>
-            <li><strong>Edges:</strong> Represent valid moves (transitions).</li>
-            <li><strong>Solution:</strong> Reduced to a Breadth-First Search (BFS) for the shortest path from Start vertex to Goal vertex.</li>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Integer Overflow on Multiply:</strong> Doing $u \times v$ first can overflow. To avoid this, divide by GCD first: $(u / \text{GCD}(u,v)) \times v$.</li>
+            <li><strong>Infinite State Exploration:</strong> Forgetting to track already visited nodes during BFS state exploration, triggering infinite loop states.</li>
           </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Show how to reduce finding the maximum of an array to finding the minimum.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1">
+                Negate all elements in the array: $A' = [-x \text{ for } x \in A]$. Find the minimum of $A'$: $m = \text{find\_min}(A')$. Return the negation of the minimum: $\max(A) = -m$.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Sipser, M. (2012). Introduction to the Theory of Computation.
+          </p>
         </div>
       </div>
     `,
-    code: `// LCM Reduction to GCD
-function gcd(a, b) {
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm LCM(u, v)
+    if u == 0 or v == 0
+        return 0
+    g <- GCD(u, v)
+    return (u / g) * v
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(log(min(u, v))) using Euclidean GCD.
+- Space Complexity: Θ(1)
+- Reason: The reduction step requires a constant number of basic operations, meaning the total efficiency matches Euclidean's logarithmic GCD solver.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class LCMReduction {
+    public static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+    public static long lcm(long u, long v) {
+        if (u == 0 || v == 0) return 0;
+        return (u / gcd(u, v)) * v;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function gcd(a: number, b: number): number {
     return b === 0 ? a : gcd(b, a % b);
 }
 
-function lcm(u, v) {
+function lcm(u: number, v: number): number {
     if (u === 0 || v === 0) return 0;
-    return Math.abs(u * v) / gcd(u, v);
-}`
+    return (u / gcd(u, v)) * v;
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+def lcm(u, v):
+    if u == 0 or v == 0:
+        return 0
+    return (u // gcd(u, v)) * v
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Reduction is central to computational complexity theory, where we reduce NP-complete decision problems (like 3-SAT) to other problems to prove their NP-hardness.
+          </div>
+        </div>
+      </div>
+    `
   },
 
   // ============================================
