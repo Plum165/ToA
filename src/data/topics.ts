@@ -4715,48 +4715,277 @@ Reduction is central to computational complexity theory, where we reduce NP-comp
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">The Tradeoff</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Trade extra memory space (storage) to gain significantly faster processing speeds.
+            The **Space-Time Tradeoff** states that we can reduce the running time of an algorithm by consuming more memory (space). In modern computing, memory is cheap, so we often trade space to gain speed. A prime example is **Counting Sort**, which sorts keys in linear time by using an auxiliary array to count element frequencies.
           </p>
+          <div class="mt-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded text-sm">
+            <strong class="text-purple-300">Did you know?</strong> <strong>Dynamic Programming</strong> is a classic Space-Time Tradeoff. We store solutions to sub-problems in memory (Space) to avoid re-calculating them later (Time).
+          </div>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Counting Sort:</strong> A non-comparison-based sorting algorithm that sorts integers by counting the number of occurrences of each unique element.</li>
+            <li><strong>Distribution Array (Cumulative Frequencies):</strong> An array where the value at index $i$ is the prefix sum of frequencies, representing the final starting index or boundaries for elements in the sorted output.</li>
+          </ul>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-green-900/20 border border-green-500/30 p-4 rounded-lg">
+            <h4 class="font-bold text-green-300 mb-2 border-b border-green-500/20 pb-2">Advantages</h4>
+            <ul class="list-disc pl-5 text-sm space-y-1 opacity-90">
+              <li><strong>Linear Time:</strong> Runs in $\Theta(n + k)$ time, bypassing the $\Omega(n \log n)$ barrier of comparison-based sorting when the range of elements $k$ is small.</li>
+              <li><strong>Stability:</strong> Preserves the relative input order of equal elements (vital for composite sorting keys, e.g., Radix Sort).</li>
+            </ul>
+          </div>
+          <div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
+            <h4 class="font-bold text-red-300 mb-2 border-b border-red-500/20 pb-2">Weaknesses</h4>
+            <ul class="list-disc pl-5 text-sm space-y-1 opacity-90">
+              <li><strong>Memory Footprint:</strong> If the range $k$ is huge (e.g., $1$ to $10^9$), allocating the frequency array causes critical space overhead.</li>
+              <li><strong>Constraint-Bound:</strong> Restricted to integers or keys that can map directly to contiguous array indices.</li>
+            </ul>
+          </div>
+        </div>
+
         <div class="step-card">
-          <span class="step-title">Counting Sort</span>
-          <p class="text-xs leading-relaxed">
-            Sort an array of size $n$ of integers where values are in a known small range $[0, k]$.
-          </p>
-          <ol class="list-decimal pl-5 mt-2 text-xs space-y-1">
-            <li>Build a frequency array $D[0..k]$ counting elements in $O(n)$ time.</li>
-            <li>Accumulate prefix sums to get distributions $D[i] = D[i] + D[i-1]$ in $O(k)$ time.</li>
-            <li>Insert elements into stable output array backwards in $O(n)$ time.</li>
-            <li><strong>Complexity:</strong> $\\Theta(n + k)$ time and $\\Theta(n + k)$ extra space. Stable and fast!</li>
-          </ol>
+          <span class="step-title">Trace Example: Sorting by Counting ($A = [13, 11, 12, 13, 12, 12]$)</span>
+          <p class="text-sm mb-4">Let's walk through the three phases of the algorithm with an array of size $n = 6$ and range $k$ of keys from $11$ to $13$.</p>
+
+          <div class="glass p-4 rounded-lg border border-white/10 mb-6">
+            <h4 class="font-bold text-xs text-center text-accent mb-2">Step 1 & 2: Frequency & Distribution arrays</h4>
+            <div class="grid grid-cols-4 gap-2 text-center text-sm font-mono">
+              <div class="text-gray-400 border-b border-white/10">Value</div>
+              <div class="font-bold">11</div><div class="font-bold">12</div><div class="font-bold">13</div>
+              
+              <div class="text-gray-400 text-left pl-2">Frequency</div>
+              <div class="bg-blue-500/20 rounded">1</div>
+              <div class="bg-blue-500/20 rounded">3</div>
+              <div class="bg-blue-500/20 rounded">2</div>
+
+              <div class="text-gray-400 text-left pl-2">Distribution</div>
+              <div class="bg-yellow-500/20 rounded text-yellow-200">1</div>
+              <div class="bg-yellow-500/20 rounded text-yellow-200">4</div>
+              <div class="bg-yellow-500/20 rounded text-yellow-200">6</div>
+            </div>
+            <p class="text-xs text-center mt-2 opacity-60">Distribution (Prefix Sum) determines the boundary position for each element.</p>
+          </div>
+
+          <div class="glass p-4 rounded-lg border border-white/10">
+            <h4 class="font-bold text-xs text-center text-accent mb-2">Step 3: Stable Output Placement (Scanning backwards)</h4>
+            <div class="space-y-2 font-mono text-xs md:text-sm">
+              <div class="flex items-center justify-between border-b border-white/5 pb-1">
+                <span>A[5] = 12</span>
+                <span class="text-gray-400">Dist[12] is 4</span>
+                <span class="text-green-400">Place at S[3]</span>
+                <span class="text-yellow-500">Dist[12] &rarr; 3</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-white/5 pb-1">
+                <span>A[4] = 12</span>
+                <span class="text-gray-400">Dist[12] is 3</span>
+                <span class="text-green-400">Place at S[2]</span>
+                <span class="text-yellow-500">Dist[12] &rarr; 2</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-white/5 pb-1">
+                <span>A[3] = 13</span>
+                <span class="text-gray-400">Dist[13] is 6</span>
+                <span class="text-green-400">Place at S[5]</span>
+                <span class="text-yellow-500">Dist[13] &rarr; 5</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-white/5 pb-1">
+                <span>A[2] = 12</span>
+                <span class="text-gray-400">Dist[12] is 2</span>
+                <span class="text-green-400">Place at S[1]</span>
+                <span class="text-yellow-500">Dist[12] &rarr; 1</span>
+              </div>
+              <div class="flex items-center justify-between border-b border-white/5 pb-1">
+                <span>A[1] = 11</span>
+                <span class="text-gray-400">Dist[11] is 1</span>
+                <span class="text-green-400">Place at S[0]</span>
+                <span class="text-yellow-500">Dist[11] &rarr; 0</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>A[0] = 13</span>
+                <span class="text-gray-400">Dist[13] is 5</span>
+                <span class="text-green-400">Place at S[4]</span>
+                <span class="text-yellow-500">Dist[13] &rarr; 4</span>
+              </div>
+            </div>
+            <div class="mt-4 pt-2 border-t border-white/20 text-center">
+              <p class="text-xs mb-1 font-bold text-accent">Final Output Array (S):</p>
+              <div class="flex justify-center gap-1 font-mono text-sm">
+                <div class="px-2 py-1 bg-green-500/20 rounded border border-green-500">11</div>
+                <div class="px-2 py-1 bg-green-500/20 rounded border border-green-500">12</div>
+                <div class="px-2 py-1 bg-green-500/20 rounded border border-green-500">12</div>
+                <div class="px-2 py-1 bg-green-500/20 rounded border border-green-500">12</div>
+                <div class="px-2 py-1 bg-green-500/20 rounded border border-green-500">13</div>
+                <div class="px-2 py-1 bg-green-500/20 rounded border border-green-500">13</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="warn-box text-xs">
-          <strong>Memory Warning:</strong> If range $k$ is massive ($k = 10^9$), Counting Sort crashes the system due to memory allocation bounds, even if $n$ is tiny.
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Massive Key Range:</strong> Forgetting that if keys are extremely spread out (e.g. $[0, 10^9]$), allocating $D$ of size $10^9 + 1$ can trigger an Out-Of-Memory exception even for sorting two items.</li>
+            <li><strong>Forward Output Scan:</strong> Scanning the input array from left-to-right (forward) when building the output array, which breaks stability. It must be processed backwards.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>How would you adapt Counting Sort to handle an array that contains negative integers?</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1">
+                Find the minimum element in the input array ($\text{min}$). Offset all elements by subtracting $\text{min}$ when accessing the frequency array, converting keys to indices in $[0, \text{max} - \text{min}]$. When placing elements into the output array, add the offset back: $\text{output}[\text{count}[A[i] - \text{min}] - 1] = A[i]$.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Cormen, T. H., et al. (2022). Introduction to Algorithms (4th Edition). MIT Press.
+          </p>
         </div>
       </div>
     `,
-    code: `// Counting Sort Stable Implementation
-function countingSort(arr, k) {
-    let n = arr.length;
-    let count = Array(k + 1).fill(0);
-    let output = Array(n);
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm CountingSort(A[0..n-1], k)
+    // A contains elements in range 0 to k
+    let D[0..k] be array initialized to 0
+    let S[0..n-1] be output array
+    
+    for i <- 0 to n - 1 do
+        D[A[i]] <- D[A[i]] + 1
+        
+    for j <- 1 to k do
+        D[j] <- D[j] + D[j-1]
+        
+    for i <- n - 1 downto 0 do
+        val <- A[i]
+        S[D[val] - 1] <- val
+        D[val] <- D[val] - 1
+        
+    return S
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(n + k) in all cases (best, worst, average)
+- Space Complexity: Θ(n + k) auxiliary space
+- Reason: The algorithm performs constant-time array operations across loops of sizes n, k, and n. It is highly efficient for small values of range k, scaling linearly with the sum of input size n and range k.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+import java.util.Arrays;
+
+public class CountingSortStable {
+    public static int[] sort(int[] arr, int k) {
+        int n = arr.length;
+        int[] D = new int[k + 1];
+        int[] S = new int[n];
+        
+        // 1. Calculate frequencies
+        for (int i = 0; i &lt; n; i++) {
+            D[arr[i]]++;
+        }
+        
+        // 2. Compute prefix sums (distributions)
+        for (int j = 1; j &lt;= k; j++) {
+            D[j] += D[j - 1];
+        }
+        
+        // 3. Stably place elements backwards
+        for (int i = n - 1; i &gt;= 0; i--) {
+            int val = arr[i];
+            S[D[val] - 1] = val;
+            D[val]--;
+        }
+        return S;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function countingSort(arr: number[], k: number): number[] {
+    const n = arr.length;
+    const D = Array(k + 1).fill(0);
+    const S = Array(n);
     
     // 1. Frequencies
-    for (let i = 0; i < n; i++) count[arr[i]]++;
-    
-    // 2. Distributions
-    for (let i = 1; i <= k; i++) count[i] += count[i - 1];
-    
-    // 3. Place stably (backwards)
-    for (let i = n - 1; i >= 0; i--) {
-        let val = arr[i];
-        output[count[val] - 1] = val;
-        count[val]--;
+    for (let i = 0; i &lt; n; i++) {
+        D[arr[i]]++;
     }
-    return output;
-}`
+    
+    // 2. Cumulative distributions
+    for (let j = 1; j &lt;= k; j++) {
+        D[j] += D[j - 1];
+    }
+    
+    // 3. Place stably backwards
+    for (let i = n - 1; i &gt;= 0; i--) {
+        const val = arr[i];
+        S[D[val] - 1] = val;
+        D[val]--;
+    }
+    return S;
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def counting_sort(arr, k):
+    n = len(arr)
+    D = [0] * (k + 1)
+    S = [0] * n
+    
+    # 1. Count frequencies
+    for num in arr:
+        D[num] += 1
+        
+    # 2. Cumulative prefix sums
+    for j in range(1, k + 1):
+        D[j] += D[j - 1]
+        
+    # 3. Output backwards
+    for i in range(n - 1, -1, -1):
+        val = arr[i]
+        S[D[val] - 1] = val
+        D[val] -= 1
+        
+    return S
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Counting Sort is a non-comparison sort. It completely bypasses the lower bound of Ω(n log n) comparison-based sorting, but its high performance is conditional on k being in O(n).
+          </div>
+        </div>
+      </div>
+    `
   },
   spa_horspool: {
     id: 'spa_horspool',
@@ -4764,52 +4993,272 @@ function countingSort(arr, k) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Input Enhancement</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Instead of shifting by 1, pre-calculate shift properties of the pattern into a <strong>Shift Table</strong> based on the character matched. Matches right-to-left.
+            **Horspool's Algorithm** is a highly efficient string-matching algorithm that utilizes the **Input Enhancement** technique. Rather than checking characters and moving the pattern forward by exactly 1 index upon a mismatch, it pre-computes a **Shift Table** for the pattern. This allows the algorithm to skip over multiple characters at a time, checking alignments from **Right-to-Left**.
           </p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Shift Table:</strong> A table mapping each alphabet symbol to a skip size, computed using the formula: $Shift(c) = m - 1 - index(c)$ where $index(c)$ is the rightmost position of $c$ in the pattern (excluding the pattern's last character). For characters not in the pattern, the shift is equal to the pattern's length $m$.</li>
+            <li><strong>Right-to-Left Matching:</strong> Comparing characters starting from the end of the pattern backwards to the beginning, which allows early mismatches to execute large skips.</li>
+          </ul>
+        </div>
+
         <div class="step-card">
-          <span class="step-title">Shift Table Construction</span>
-          <p class="text-xs leading-relaxed">
-            The shift table maps every alphabet character to its skip value: <br>
-            <strong>Formula:</strong> $Shift(c) = m - 1 - index(c)$ of rightmost occurrence (excluding last letter). If not in pattern, shift is $m$.
-          </p>
-          <div class="bg-black/30 p-2 rounded text-xs font-mono mb-2">
-            Example "BARBER" (m=6):<br>
-            A -> 6-1-1 = 4<br>
-            R -> 6-1-2 = 3 (penultimate R)<br>
-            B -> 6-1-3 = 2 (middle B)<br>
-            E -> 6-1-4 = 1<br>
-            Others -> 6
+          <span class="step-title">Shift Table Construction ("BARBER", m=6)</span>
+          <p class="text-xs mb-3">Formula: $Shift(c) = m - 1 - index(c)$ for the rightmost occurrence of $c$ in the prefix of length $m-1$.</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-center text-xs border-collapse border border-white/10">
+              <thead>
+                <tr class="bg-blue-900/30 text-blue-200">
+                  <th class="p-2 border border-white/10">Char</th>
+                  <th class="p-2 border border-white/10">Rightmost Prefix Index</th>
+                  <th class="p-2 border border-white/10">Calculation ($6 - 1 - \text{index}$)</th>
+                  <th class="p-2 border border-white/10 text-accent font-bold">Shift</th>
+                </tr>
+              </thead>
+              <tbody class="font-mono">
+                <tr><td class="p-2 border border-white/10">A</td><td class="p-2 border border-white/10">1</td><td class="p-2 border border-white/10">6 - 1 - 1</td><td class="p-2 border border-white/10 text-accent font-bold">4</td></tr>
+                <tr><td class="p-2 border border-white/10">R</td><td class="p-2 border border-white/10">2 (excluding index 5)</td><td class="p-2 border border-white/10">6 - 1 - 2</td><td class="p-2 border border-white/10 text-accent font-bold">3</td></tr>
+                <tr><td class="p-2 border border-white/10">B</td><td class="p-2 border border-white/10">3</td><td class="p-2 border border-white/10">6 - 1 - 3</td><td class="p-2 border border-white/10 text-accent font-bold">2</td></tr>
+                <tr><td class="p-2 border border-white/10">E</td><td class="p-2 border border-white/10">4</td><td class="p-2 border border-white/10">6 - 1 - 4</td><td class="p-2 border border-white/10 text-accent font-bold">1</td></tr>
+                <tr class="bg-red-500/5 text-red-300"><td class="p-2 border border-white/10">Others</td><td class="p-2 border border-white/10">-</td><td class="p-2 border border-white/10">Default value</td><td class="p-2 border border-white/10 font-bold">6</td></tr>
+              </tbody>
+            </table>
           </div>
+        </div>
+
+        <div class="step-card">
+          <span class="step-title">🎞 Animated Shift Movement Trace</span>
+          <p class="text-sm mb-4">Text: <code>JIM_SAW_ME_IN_A_BARBER_SHOP</code>. Pattern: <code>BARBER</code> (m=6).</p>
+          <div class="space-y-4 font-mono text-xs md:text-sm">
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span class="text-xs text-yellow-300 font-bold">Frame 1 (Initial Alignment):</span>
+              <pre class="mt-1">JIM_SA<span class="text-red-400 font-bold">W</span>_ME_IN_A_BARBER_SHOP
+BARBE<span class="text-red-400 font-bold">R</span></pre>
+              <p class="text-xs text-blue-300 mt-2">Mismatch on W. Look at aligned text character W. ShiftTable[W] = 6. Shift pattern by 6.</p>
+            </div>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span class="text-xs text-yellow-300 font-bold">Frame 2:</span>
+              <pre class="mt-1">JIM_SAW_ME_<span class="text-red-400 font-bold">I</span>N_A_BARBER_SHOP
+      BARBE<span class="text-red-400 font-bold">R</span></pre>
+              <p class="text-xs text-blue-300 mt-2">Mismatch on I. Look at aligned character I. ShiftTable[I] = 6. Shift pattern by 6.</p>
+            </div>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span class="text-xs text-yellow-300 font-bold">Frame 3:</span>
+              <pre class="mt-1">JIM_SAW_ME_IN_A_B<span class="text-red-400 font-bold">A</span>RBER_SHOP
+            BARBE<span class="text-red-400 font-bold">R</span></pre>
+              <p class="text-xs text-blue-300 mt-2">Mismatch on A. Look at aligned character A. ShiftTable[A] = 4. Shift pattern by 4.</p>
+            </div>
+            <div class="bg-green-950/30 border border-green-500/30 p-3 rounded-lg">
+              <span class="text-xs text-green-400 font-bold">Frame 4:</span>
+              <pre class="mt-1">JIM_SAW_ME_IN_A_<span class="text-green-400 font-bold">BARBER</span>_SHOP
+                <span class="text-green-400 font-bold">BARBER</span></pre>
+              <p class="text-xs text-green-300 mt-2 font-semibold">✔ Match found! Return index 16.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card border-l-4 border-purple-500">
+          <span class="step-title">Why it works well: Input Enhancement</span>
+          <p class="text-sm leading-relaxed">
+            In standard natural texts, many characters aligned with the end of the pattern do not occur in the pattern at all. Horspool exploits this by skipping past the entire window of length $m$ in a single comparison.
+          </p>
+        </div>
+
+        <div class="step-card border-l-4 border-red-500">
+          <span class="step-title">Worst-Case Construction (Θ(nm))</span>
+          <p class="text-xs md:text-sm mb-2">
+            The worst case matches brute force when the alignment repeatedly shifts by only 1 index.
+          </p>
+          <div class="bg-black/40 p-3 rounded font-mono text-xs mb-2">
+            Text: AAAAAAAAAAAAAAAAAA<br>
+            Pattern: AAAAAB
+          </div>
+          <p class="text-xs opacity-80">
+            Every window matches all the A's and fails on the final character B. Since the aligned text character A is at index $m-2$ in the pattern, the shift size remains constant at 1, causing quadratic $\Theta(nm)$ comparison passes.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Last Character in Shift:</strong> Including the last pattern character at index $m-1$ in prefix scanning, yielding a skip of 0, resulting in infinite loops.</li>
+            <li><strong>Using Wrong Text Index:</strong> Grabbing the mismatched character index rather than the character aligned with the end of the pattern for looking up shift distance.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Construct the Horspool shift table for the pattern <code>REORDER</code> over the standard English alphabet.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <div class="mt-1 space-y-1">
+                <p>Length $m = 7$. Exclude final character 'R' at index 6.</p>
+                <p>&bull; 'E': rightmost index in prefix is 4 &rarr; Shift = $7 - 1 - 4 = \mathbf{2}$</p>
+                <p>&bull; 'O': rightmost index in prefix is 2 &rarr; Shift = $7 - 1 - 2 = \mathbf{4}$</p>
+                <p>&bull; 'R': rightmost index in prefix is 3 &rarr; Shift = $7 - 1 - 3 = \mathbf{3}$</p>
+                <p>&bull; 'D': rightmost index in prefix is 5 &rarr; Shift = $7 - 1 - 5 = \mathbf{1}$</p>
+                <p>&bull; All other characters (including 'R' outside index 3, and default letters) &rarr; Shift = $\mathbf{7}$.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Horspool, R. N. (1980). Practical Fast Export-Import of String Search Algorithms.
+          </p>
         </div>
       </div>
     `,
-    code: `// Horspool's Algorithm
-function horspoolSearch(text, pattern) {
-    let n = text.length;
-    let m = pattern.length;
-    let shiftTable = {};
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm ShiftTable(P[0..m-1])
+    Initialize Table with value m for all characters
+    for j <- 0 to m - 2 do
+        Table[P[j]] <- m - 1 - j
+    return Table
+
+Algorithm HorspoolMatching(T[0..n-1], P[0..m-1])
+    Table <- ShiftTable(P)
+    i <- m - 1
+    while i < n do
+        k <- 0
+        while k < m and P[m - 1 - k] == T[i - k] do
+            k <- k + 1
+        if k == m then
+            return i - m + 1
+        else
+            i <- i + Table[T[i]]
+    return -1
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity:
+  - Worst Case: Θ(n * m) (e.g. searching all A's)
+  - Average Case: Θ(n)
+  - Best Case: Θ(n / m)
+- Space Complexity: Θ(sigma) where sigma is alphabet size
+- Reason: The shift table maps each potential character to its shift distance. The search loop compares strings backwards, enabling fast jumps of size m in the best-case alignments.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+import java.util.Arrays;
+
+public class HorspoolSearch {
+    public static int search(String text, String pattern) {
+        int n = text.length();
+        int m = pattern.length();
+        int[] shiftTable = new int[256];
+        
+        // 1. Build Shift Table
+        Arrays.fill(shiftTable, m);
+        for (int j = 0; j &lt; m - 1; j++) {
+            shiftTable[pattern.charAt(j)] = m - 1 - j;
+        }
+        
+        // 2. Search Loop
+        int i = m - 1;
+        while (i &lt; n) {
+            int k = 0;
+            while (k &lt; m && pattern.charAt(m - 1 - k) == text.charAt(i - k)) {
+                k++;
+            }
+            if (k == m) {
+                return i - m + 1; // Match found!
+            }
+            // Shift pattern based on aligned character in text
+            i += shiftTable[text.charAt(i)];
+        }
+        return -1; // No match found
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function horspoolSearch(text: string, pattern: string): number {
+    const n = text.length;
+    const m = pattern.length;
+    const shiftTable: Record&lt;string, number&gt; = {};
     
     // 1. Build Shift Table
-    for (let i = 0; i < 256; i++) shiftTable[String.fromCharCode(i)] = m;
-    for (let j = 0; j < m - 1; j++) {
+    for (let i = 0; i &lt; 256; i++) {
+        shiftTable[String.fromCharCode(i)] = m;
+    }
+    for (let j = 0; j &lt; m - 1; j++) {
         shiftTable[pattern[j]] = m - 1 - j;
     }
     
     // 2. Search
-    let i = m - 1; // Align pattern end
-    while (i < n) {
+    let i = m - 1;
+    while (i &lt; n) {
         let k = 0;
-        while (k < m && pattern[m - 1 - k] === text[i - k]) {
+        while (k &lt; m && pattern[m - 1 - k] === text[i - k]) {
             k++;
         }
-        if (k === m) return i - m + 1; // Found match!
-        i += shiftTable[text[i]] || m; // Shift pattern by table skip value
+        if (k === m) {
+            return i - m + 1; // Match found!
+        }
+        i += shiftTable[text[i]] ?? m;
     }
     return -1;
-}`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def horspool_search(text, pattern):
+    n = len(text)
+    m = len(pattern)
+    
+    # 1. Build Shift Table
+    shift_table = {chr(i): m for i in range(256)}
+    for j in range(m - 1):
+        shift_table[pattern[j]] = m - 1 - j
+        
+    # 2. Search loop
+    i = m - 1
+    while i &lt; n:
+        k = 0
+        while k &lt; m and pattern[m - 1 - k] == text[i - k]:
+            k += 1
+        if k == m:
+            return i - m + 1
+        i += shift_table.get(text[i], m)
+        
+    return -1
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Horspool is a simplified variant of the Boyer-Moore algorithm, dropping the Good Suffix heuristic. In practice, because bad character shifts dominate typical lookups, its performance is comparable to Boyer-Moore while being much simpler to implement.
+          </div>
+        </div>
+      </div>
+    `
   },
   spa_boyer: {
     id: 'spa_boyer',
@@ -4817,94 +5266,507 @@ function horspoolSearch(text, pattern) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Boyer-Moore Dual Rules</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Boyer-Moore is the gold standard of string matching. It scans the pattern from <strong>Right-to-Left</strong> and determines shifts using <strong>two independent heuristics</strong>:
+            The **Boyer-Moore Algorithm** is widely considered the gold standard for sequential string matching. Similar to Horspool, it scans the pattern from **Right-to-Left**. However, instead of relying on a single skip table, it uses **two independent heuristics** at each alignment window: the **Bad Symbol** rule and the **Good Suffix** rule. It evaluates both rules and makes the largest safe shift.
           </p>
-        </div>
-        <div class="step-card">
-          <span class="step-title">1. Bad Symbol Heuristic</span>
-          <p class="text-xs">Aligns the mismatched character in the text with its last occurrence in the pattern.</p>
-          <div class="bg-black/30 p-2 rounded font-mono text-xs mb-2">
-            $d_1 = \\max(T(c) - k, 1)$
+          <div class="mt-2 p-3 bg-purple-500/10 border border-purple-500/30 rounded text-center font-mono text-sm">
+            $Shift = \max( \text{Bad\_Symbol\_Shift}, \text{Good\_Suffix\_Shift} )$
           </div>
-          <p class="text-[10px] opacity-75">where $T(c)$ is shift table, and $k$ is number of successfully matched suffix characters.</p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Bad Symbol Heuristic ($d_1$):</strong> If a mismatch occurs at text character $c$ and $k$ suffix characters matched, align $c$ with its rightmost prefix occurrence in the pattern. $d_1 = \max(T(c) - k, 1)$.</li>
+            <li><strong>Good Suffix Heuristic ($d_2$):</strong> If $k > 0$ characters match a suffix of the pattern, find the next rightmost occurrence of that suffix elsewhere in the pattern. If it doesn't occur, find a prefix of the pattern that matches a suffix of the matched portion. Otherwise, shift by $m$.</li>
+          </ul>
+        </div>
+
         <div class="step-card">
-          <span class="step-title">2. Good Suffix Heuristic</span>
-          <p class="text-xs leading-relaxed">
-            Looks at the matched suffix of length $k$. If it appears elsewhere in the pattern, align with that. If a prefix of the pattern matches a suffix of the matched text, align those. Else, shift by $m$.
-          </p>
+          <span class="step-title">1. Bad Symbol Table Construction</span>
+          <p class="text-xs mb-2">For a pattern, we map each alphabet letter to its distance from the end: $T(c) = m - 1 - \text{index}$ of rightmost prefix occurrence. Default is $m$.</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-center text-xs border border-white/10">
+              <thead>
+                <tr class="bg-white/5">
+                  <th class="p-2 border border-white/10">Pattern: "BARBER" (m=6)</th>
+                  <th class="p-2 border border-white/10">B</th>
+                  <th class="p-2 border border-white/10">A</th>
+                  <th class="p-2 border border-white/10">R</th>
+                  <th class="p-2 border border-white/10">E</th>
+                  <th class="p-2 border border-white/10">Others</th>
+                </tr>
+              </thead>
+              <tbody class="font-mono">
+                <tr>
+                  <td class="p-2 border font-bold text-accent">Value T(c)</td>
+                  <td class="p-2 border">2</td>
+                  <td class="p-2 border">4</td>
+                  <td class="p-2 border">0 (excludes last)</td>
+                  <td class="p-2 border">1</td>
+                  <td class="p-2 border">6</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-2 bg-yellow-500/10 p-2 rounded text-xs text-yellow-200">
+            <strong>Example mismatch trace:</strong> If we compare text suffix "ER" ($k=2$) against pattern "BARBER" and mismatch at text character 'S' against pattern 'B':<br>
+            &bull; Mismatch character $c = \text{'S'}$. $T(\text{'S'}) = 6$. Matched suffix count $k = 2$.<br>
+            &bull; $d_1 = \max(6 - 2, 1) = \mathbf{4}$.
+          </div>
         </div>
-        <div class="warn-box text-xs">
-          <strong>Decision rule:</strong> At each mismatch, compute shifts $d_1$ and $d_2$. Shift by the <strong>largest</strong> value: $Shift = \\max(d_1, d_2)$.
+
+        <div class="step-card border-l-4 border-emerald-400">
+          <span class="step-title">2. Good Suffix Rule — Graphical Explanation of Cases</span>
+          <p class="text-xs opacity-80 mb-4">The three topological conditions when shifting matching subsegments:</p>
+          
+          <div class="space-y-6 font-mono text-xs md:text-sm">
+            <div class="glass p-3 rounded border border-white/5">
+              <span class="text-emerald-400 font-bold">Case 1: Suffix occurs elsewhere in the pattern</span>
+              <p class="text-[11px] opacity-75 mt-1">Shift to align the other occurrence of the suffix in the pattern with the text.</p>
+              <pre class="mt-2 bg-black/30 p-2 rounded">
+TEXT:    T E X T <span class="text-green-400 font-bold">B A B</span>
+PATTERN: M A O <span class="text-green-400 font-bold">B A B</span>  &rarr;  Matched "BAB" (k=3)
+SHIFT:   M A O B A B &larr; Shift left, aligned with other prefix occurrence</pre>
+            </div>
+
+            <div class="glass p-3 rounded border border-white/5">
+              <span class="text-yellow-400 font-bold">Case 2: Suffix DOES NOT recur fully, but a prefix matches its end</span>
+              <p class="text-[11px] opacity-75 mt-1">Align the matching prefix segment of the pattern with the text.</p>
+              <pre class="mt-2 bg-black/30 p-2 rounded">
+TEXT:    A B C <span class="text-green-400 font-bold">B A B</span>
+PATTERN: <span class="text-yellow-400 font-bold">A B</span> C B <span class="text-green-400 font-bold">A B</span>  &rarr;  Suffix "AB" ends match
+SHIFT:       A B C B A B &larr; Shift so prefix "AB" aligns with matched text</pre>
+            </div>
+
+            <div class="glass p-3 rounded border border-white/5">
+              <span class="text-red-400 font-bold">Case 3: No recurrences or overlapping prefixes</span>
+              <p class="text-[11px] opacity-75 mt-1">Safely skip the pattern past the entire matched window.</p>
+              <pre class="mt-2 bg-black/30 p-2 rounded">
+TEXT:    X X X <span class="text-green-400 font-bold">D E F</span>
+PATTERN: A B C <span class="text-green-400 font-bold">D E F</span>
+SHIFT:         A B C D E F &larr; Full shift of length m = 6</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card border-l-4 border-yellow-400">
+          <span class="step-title">Heuristics Comparison Matrix</span>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-center border-collapse border border-white/10">
+              <thead>
+                <tr class="bg-white/5">
+                  <th class="p-2 border">Feature</th>
+                  <th class="p-2 border text-yellow-300">Horspool</th>
+                  <th class="p-2 border text-purple-300">Boyer-Moore</th>
+                </tr>
+              </thead>
+              <tbody class="font-mono">
+                <tr><td class="p-2 border">Scan Direction</td><td class="p-2 border">Right-to-Left</td><td class="p-2 border">Right-to-Left</td></tr>
+                <tr><td class="p-2 border">Bad Symbol Rule</td><td class="p-2 border">✔ Yes (Simple last-aligned char)</td><td class="p-2 border">✔ Yes (Standard adjusted by matches $k$)</td></tr>
+                <tr><td class="p-2 border">Good Suffix Rule</td><td class="p-2 border text-red-300">✘ No</td><td class="p-2 border text-green-300">✔ Yes</td></tr>
+                <tr><td class="p-2 border">Worst-Case Time</td><td class="p-2 border">$\Theta(nm)$</td><td class="p-2 border text-green-300">$O(n + m)$ (with both rules)</td></tr>
+                <tr><td class="p-2 border">Preprocessing Cost</td><td class="p-2 border">Low ($O(m + \sigma)$)</td><td class="p-2 border">Moderate ($O(m + \sigma)$)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Negative Shifts:</strong> Forgetting the $\max(\dots, 1)$ guard in the Bad Symbol rule, causing negative shifts (reversing pattern search) when the mismatched letter is located to the right of the compared position.</li>
+            <li><strong>Incomplete Good Suffix Array:</strong> Omitting prefix-suffix matching properties (Case 2), leading to suboptimal or incorrect (too large) shifts.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Why does Boyer-Moore often achieve sublinear $O(n/m)$ time complexity in practice, inspecting fewer than $n$ characters?</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1">
+                Because if the character aligned with the end of the pattern is completely absent from the pattern, the Bad Symbol heuristic shifts the pattern fully by $m$ positions. This enables the algorithm to skip whole blocks of $m$ characters in a single comparison.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Boyer, R. S., & Moore, J. S. (1977). A Fast String Searching Algorithm. ACM Communications.
+          </p>
         </div>
       </div>
     `,
-    code: `// Boyer-Moore Search outer skeleton
-function boyerMooreSearch(text, pattern) {
-    let n = text.length;
-    let m = pattern.length;
-    let badCharTable = buildBadCharTable(pattern);
-    let goodSuffixTable = buildGoodSuffixTable(pattern);
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm BoyerMooreSearch(T[0..n-1], P[0..m-1])
+    badCharTable <- BuildBadChar(P)
+    goodSuffixTable <- BuildGoodSuffix(P)
     
-    let s = 0; // Alignment shift
-    while (s <= (n - m)) {
+    s <- 0  // shift of the pattern with respect to text
+    while s <= (n - m) do
+        j <- m - 1
+        
+        // Scan Right-to-Left
+        while j >= 0 and P[j] == T[s + j] do
+            j <- j - 1
+            
+        if j < 0 then
+            return s  // Match found at shift s
+        else
+            k <- (m - 1) - j  // number of matched characters
+            d1 <- max(badCharTable[T[s + j]] - k, 1)
+            d2 <- goodSuffixTable[j]
+            s <- s + max(d1, d2)
+            
+    return -1
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity:
+  - Worst Case: O(n + m) (guaranteed when both bad symbol and good suffix rules are fully active)
+  - Best Case: O(n / m)
+- Space Complexity: O(m + sigma) auxiliary space
+- Reason: Pre-processing requires space for the bad character table of size sigma and the good suffix table of size m. The search scans right-to-left, yielding very large steps under mismatched conditions.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class BoyerMooreSearch {
+    // Note: This exhibits standard search loop using Bad Symbol rule
+    // combined with a safe fallback of 1 shift when good suffix is omitted.
+    public static int search(String text, String pattern) {
+        int n = text.length();
+        int m = pattern.length();
+        int[] badChar = new int[256];
+        
+        // Preprocess: Last occurrence of each character
+        for (int i = 0; i &lt; 256; i++) {
+            badChar[i] = -1;
+        }
+        for (int i = 0; i &lt; m; i++) {
+            badChar[pattern.charAt(i)] = i;
+        }
+        
+        int s = 0; // Alignment shift
+        while (s &lt;= (n - m)) {
+            int j = m - 1;
+            
+            // Scan Right-to-Left
+            while (j &gt;= 0 && pattern.charAt(j) == text.charAt(s + j)) {
+                j--;
+            }
+            
+            if (j &lt; 0) {
+                return s; // Match found!
+            } else {
+                // Aligns pattern with the bad character
+                s += Math.max(1, j - badChar[text.charAt(s + j)]);
+            }
+        }
+        return -1;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function boyerMooreSearch(text: string, pattern: string): number {
+    const n = text.length;
+    const m = pattern.length;
+    const badCharTable: Record&lt;string, number&gt; = {};
+    
+    // Preprocess: Last occurrence index
+    for (let i = 0; i &lt; 256; i++) {
+        badCharTable[String.fromCharCode(i)] = -1;
+    }
+    for (let i = 0; i &lt; m; i++) {
+        badCharTable[pattern[i]] = i;
+    }
+    
+    let s = 0;
+    while (s &lt;= (n - m)) {
         let j = m - 1;
-        while (j >= 0 && pattern[j] === text[s + j]) {
+        
+        while (j &gt;= 0 && pattern[j] === text[s + j]) {
             j--;
         }
-        if (j < 0) {
-            return s; // Match found at offset s
+        
+        if (j &lt; 0) {
+            return s; // Match found!
         } else {
-            let d1 = Math.max(1, j - (badCharTable[text[s + j]] ?? -1));
-            let d2 = goodSuffixTable[j] || 0;
-            s += Math.max(d1, d2);
+            // Shift aligning with bad char
+            s += Math.max(1, j - (badCharTable[text[s + j]] ?? -1));
         }
     }
     return -1;
-}`
-  },
+}
+          </pre>
+        </div>
 
-  // ============================================
-  // CATEGORY: GREEDY (gre)
-  // ============================================
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def boyer_moore_search(text, pattern):
+    n = len(text)
+    m = len(pattern)
+    
+    # Preprocess: Last occurrence index
+    bad_char = {chr(i): -1 for i in range(256)}
+    for i in range(m):
+        bad_char[pattern[i]] = i
+        
+    s = 0
+    while s &lt;= (n - m):
+        j = m - 1
+        
+        while j &gt;= 0 and pattern[j] == text[s + j]:
+            j -= 1
+            
+        if j &lt; 0:
+            return s
+        else:
+            s += max(1, j - bad_char.get(text[s + j], -1))
+            
+    return -1
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Boyer-Moore is a linear string-matching algorithm when the pattern doesn't contain matching periodic components. It is used in systems like GNU grep, optimizing text lookup queries.
+          </div>
+        </div>
+      </div>
+    `
+  },
   gre_intro: {
     id: 'gre_intro',
     title: 'Greedy Technique & Change Making',
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">The Greedy Principle</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Make the locally optimal, irrevocable choice at each step, hoping it aggregates to a globally optimal solution.
+            The **Greedy Technique** is a design paradigm that builds up a solution piece by piece, always making the choice that offers the most obvious and immediate benefit at that specific moment. This is a <strong>locally optimal choice</strong> made with the hope that it will lead to a <strong>globally optimal solution</strong>. Greedy choices are irrevocable: once made, they can never be reconsidered or backtracked.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Greedy Change-Making</span>
-          <p class="text-xs md:text-sm">
-            Make change for amount $n$ using denominations $d_1 > d_2 > \\dots > d_m$ by repeatedly selecting the largest denomination $\\le$ remaining amount.
-          </p>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-80">
-            <li><strong>Optimal:</strong> Stably optimal for <em>canonical</em> coin sets like USD $\{25, 10, 5, 1\}$.</li>
-            <li><strong>Suboptimal:</strong> Fails for $\{4, 3, 1\}$ with amount 6. Greedy chooses $4 + 1 + 1$ (3 coins), whereas the optimal is $3 + 3$ (2 coins).</li>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Greedy Choice Property:</strong> A global optimum can be reached by making local, greedy choices at each step. This is the cornerstone of greedy correctness proofs.</li>
+            <li><strong>Optimal Substructure:</strong> A problem exhibits optimal substructure if an optimal solution to the problem contains within it optimal solutions to its sub-problems.</li>
+            <li><strong>Canonical Coin Denominations:</strong> A set of coin values for which the greedy change-making algorithm is guaranteed to return the minimum possible number of coins (e.g., USD coins: $\{25, 10, 5, 1\}$).</li>
           </ul>
+        </div>
+
+        <div class="step-card">
+          <span class="step-title">Trace Example: Greedy Change for 48¢ (USD: [25, 10, 5, 1])</span>
+          <p class="text-sm mb-3">At each step, we greedily select the largest denomination that is less than or equal to the remaining amount.</p>
+          <div class="space-y-2 font-mono text-xs md:text-sm">
+            <div class="flex items-center justify-between border-b border-white/5 pb-1">
+              <span>Amount: 48¢</span>
+              <span class="text-gray-400">Available: [25, 10, 5, 1]</span>
+              <span class="text-green-400">Pick 25¢</span>
+              <span class="text-yellow-500">Remaining: 23¢</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-white/5 pb-1">
+              <span>Amount: 23¢</span>
+              <span class="text-gray-400">Available: [10, 5, 1]</span>
+              <span class="text-green-400">Pick 10¢</span>
+              <span class="text-yellow-500">Remaining: 13¢</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-white/5 pb-1">
+              <span>Amount: 13¢</span>
+              <span class="text-gray-400">Available: [10, 5, 1]</span>
+              <span class="text-green-400">Pick 10¢</span>
+              <span class="text-yellow-500">Remaining: 3¢</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-white/5 pb-1">
+              <span>Amount: 3¢</span>
+              <span class="text-gray-400">Available: [1]</span>
+              <span class="text-green-400">Pick 1¢</span>
+              <span class="text-yellow-500">Remaining: 2¢</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-white/5 pb-1">
+              <span>Amount: 2¢</span>
+              <span class="text-gray-400">Available: [1]</span>
+              <span class="text-green-400">Pick 1¢</span>
+              <span class="text-yellow-500">Remaining: 1¢</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Amount: 1¢</span>
+              <span class="text-gray-400">Available: [1]</span>
+              <span class="text-green-400">Pick 1¢</span>
+              <span class="text-yellow-500">Remaining: 0¢</span>
+            </div>
+          </div>
+          <div class="mt-3 p-2 bg-green-500/10 border border-green-500/20 rounded text-center text-xs">
+            <strong>Coins Selected:</strong> $[25, 10, 10, 1, 1, 1]$ &mdash; Total: <span class="text-accent font-bold">6 coins</span>.
+          </div>
+        </div>
+
+        <div class="step-card border-l-4 border-red-500 bg-red-950/10">
+          <span class="step-title">The Greedy Failure (Non-Canonical Denominations)</span>
+          <p class="text-xs md:text-sm mb-2">Let denominations be $D = \{4, 3, 1\}$ and target amount be $6$.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+            <div class="bg-black/30 p-2 rounded">
+              <p class="text-red-400 font-bold border-b border-white/5 pb-1 mb-1">Greedy Path:</p>
+              <p>1. Select 4 (Remains: 2)</p>
+              <p>2. Select 1 (Remains: 1)</p>
+              <p>3. Select 1 (Remains: 0)</p>
+              <p class="mt-2 text-yellow-300">Total Coins: 3 ([4, 1, 1])</p>
+            </div>
+            <div class="bg-black/30 p-2 rounded">
+              <p class="text-green-400 font-bold border-b border-white/5 pb-1 mb-1">Optimal Path:</p>
+              <p>1. Select 3 (Remains: 3)</p>
+              <p>2. Select 3 (Remains: 0)</p>
+              <p class="mt-4 text-green-300">Total Coins: 2 ([3, 3])</p>
+            </div>
+          </div>
+          <p class="text-xs mt-2 text-red-200">
+            Because greedy is short-sighted and picked the 4 first, it was locked into a sub-optimal choice. Under non-canonical sets, we must utilize Dynamic Programming.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Assuming Optimality:</strong> Assuming a greedy algorithm is correct without verifying the greedy choice property. Greedy should always be backed by a mathematical proof of optimality (such as an induction or exchange argument).</li>
+            <li><strong>Denomination Order:</strong> Attempting greedy change-making without sorting denominations in descending order first, resulting in infinite loops or runtime crashes.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Prove or disprove: For any coin denomination set containing $1$, Greedy Change-making will always find some valid representation of the amount, even if it is not optimal.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1 text-gray-200 leading-relaxed">
+                <strong>True.</strong> Because the set contains $1$, any remaining amount can always be fully cleared by repeatedly taking $1$-unit coins. Therefore, a solution is guaranteed to exist (feasibility is satisfied), though it may contain a sub-optimal (excessive) number of coins.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Kleinberg, J., & Tardos, É. (2005). Algorithm Design. Pearson Education.
+          </p>
         </div>
       </div>
     `,
-    code: `// Greedy Coin Changer
-function getChangeGreedy(coins, amount) {
-    // Expects coins sorted descending: [25, 10, 5, 1]
-    let result = [];
-    for (let i = 0; i < coins.length; i++) {
-        let coin = coins[i];
-        while (amount >= coin) {
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm GreedyChange(Coins[0..m-1], Amount)
+    // Coins is sorted descending: Coins[0] > Coins[1] ...
+    let Result be an empty list
+    for i <- 0 to m - 1 do
+        while Amount >= Coins[i] do
+            Amount <- Amount - Coins[i]
+            Append Coins[i] to Result
+            
+    if Amount == 0 then
+        return Result
+    else
+        return "No solution"
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: O(m + N) where m is the number of denominations and N is the total count of coins selected.
+- Space Complexity: O(N) auxiliary space to store the selected coins.
+- Reason: The nested loops execute once for each unique coin returned. If the amount is vast and denominations are small, the loop execution scale matches the output coin volume.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+import java.util.ArrayList;
+import java.util.List;
+
+public class GreedyChangeChanger {
+    public static List&lt;Integer&gt; getChange(int[] coins, int amount) {
+        List&lt;Integer&gt; result = new ArrayList&lt;&gt;();
+        for (int coin : coins) {
+            while (amount &gt;= coin) {
+                amount -= coin;
+                result.add(coin);
+            }
+        }
+        return result;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function getChangeGreedy(coins: number[], amount: number): number[] {
+    // Assumes coins are pre-sorted descending: [25, 10, 5, 1]
+    const result: number[] = [];
+    for (let i = 0; i &lt; coins.length; i++) {
+        const coin = coins[i];
+        while (amount &gt;= coin) {
             amount -= coin;
             result.push(coin);
         }
     }
-    return result; // May be suboptimal if coins not canonical
-}`
+    return result;
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def get_change_greedy(coins, amount):
+    # Coins must be sorted in descending order
+    result = []
+    for coin in coins:
+        while amount &gt;= coin:
+            amount -= coin
+            result.append(coin)
+    return result
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Greedy change-making works perfectly for US currency coins because it forms a "matroid-like" structure, ensuring local choices match the global optimum. For general coin systems, Dynamic Programming is required.
+          </div>
+        </div>
+      </div>
+    `
   },
   gre_huff: {
     id: 'gre_huff',
@@ -4912,33 +5774,202 @@ function getChangeGreedy(coins, amount) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Variable-Length Text Compression</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Static fixed-length encodings (like ASCII using 8 bits per letter) waste space. Frequent letters should use short codes, and rare letters long ones.
+            **Huffman Coding** is a lossless data compression algorithm. The basic idea is to assign variable-length codes to input characters, with lengths based on their frequencies. The most frequent character gets the shortest code, and the least frequent character gets the longest. To ensure unambiguous decoding, the codes must be **prefix-free** (no code is a prefix of another).
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Prefix-Free Property</span>
-          <p class="text-xs">
-            To prevent ambiguity, no character code can be a prefix of another (e.g. if A is 0, B cannot start with 0). We construct a binary tree where characters reside exclusively at <strong>leaves</strong>.
-          </p>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Prefix-Free Code:</strong> A set of binary codes where no codeword is a prefix of another codeword, allowing unique decoding without requiring look-ahead delimiters.</li>
+            <li><strong>Huffman Tree:</strong> A binary tree built bottom-up from character frequencies, where characters are stored solely at leaf nodes, minimizing the weighted path length.</li>
+            <li><strong>Entropy:</strong> The theoretical minimum average number of bits required to represent a character in a source alphabet.</li>
+          </ul>
         </div>
+
         <div class="step-card">
-          <span class="step-title">Exam Tree Trace: A(0.15), B(0.45), C(0.40)</span>
-          <ol class="list-decimal pl-5 text-xs space-y-1">
-            <li>Priority Queue (PQ): A(0.15), C(0.40), B(0.45)</li>
-            <li>Merge two lowest: A(0.15) and C(0.40) into Node_AC(0.55). <br>Left = A, Right = C.</li>
-            <li>PQ now: B(0.45), Node_AC(0.55).</li>
-            <li>Merge B and AC into Root(1.0). Left = B, Right = AC.</li>
-            <li><strong>Traverse (Left=0, Right=1):</strong> B is at Left: <strong>0</strong>. AC is at Right: 1. A is Right-Left: <strong>10</strong>. C is Right-Right: <strong>11</strong>.</li>
-            <li><strong>Avg Bits per Letter:</strong> $0.45(1) + 0.15(2) + 0.40(2) = 1.55$ bits.</li>
-          </ol>
+          <span class="step-title">Trace Example: Tree Construction (A: 0.40, B: 0.35, C: 0.15, D: 0.10)</span>
+          <p class="text-sm mb-4">Let's walk through the greedy tree-building process using a priority queue sorted by frequency.</p>
+          
+          <div class="space-y-4 text-xs font-mono">
+            <div class="bg-black/30 p-2 rounded">
+              <span class="text-accent font-bold">1. Initial Priority Queue (PQ):</span>
+              <p class="mt-1">Queue: [ D(0.10), C(0.15), B(0.35), A(0.40) ]</p>
+            </div>
+
+            <div class="bg-black/30 p-2 rounded">
+              <span class="text-accent font-bold">2. Merge two lowest: D and C</span>
+              <p class="mt-1">Combine D(0.10) and C(0.15) into an internal parent node Node_CD with frequency 0.25.</p>
+              <pre class="mt-2 text-yellow-300">
+     (0.25)
+     /    \
+  D(0.1)  C(0.15)
+              </pre>
+              <p class="mt-1">Queue updated: [ Node_CD(0.25), B(0.35), A(0.40) ]</p>
+            </div>
+
+            <div class="bg-black/30 p-2 rounded">
+              <span class="text-accent font-bold">3. Merge Node_CD and B</span>
+              <p class="mt-1">Combine Node_CD(0.25) and B(0.35) into Node_CDB with frequency 0.60.</p>
+              <pre class="mt-2 text-yellow-300">
+           (0.60)
+          /      \
+      (0.25)    B(0.35)
+      /    \
+   D(0.1)  C(0.15)
+              </pre>
+              <p class="mt-1">Queue updated: [ A(0.40), Node_CDB(0.60) ]</p>
+            </div>
+
+            <div class="bg-green-950/20 border border-green-500/20 p-2 rounded">
+              <span class="text-green-300 font-bold">4. Final Merge: A and Node_CDB</span>
+              <p class="mt-1">Combine to form the Root with frequency 1.00.</p>
+              <pre class="mt-2 text-green-400">
+               Root (1.00)
+              /           \
+           A(0.40)       (0.60)
+                        /      \
+                    (0.25)    B(0.35)
+                    /    \
+                 D(0.1)  C(0.15)
+              </pre>
+              <p class="mt-2 text-blue-300 font-sans">Assign '0' to Left branch, '1' to Right branch:</p>
+              <ul class="list-disc pl-5 mt-1 font-sans text-gray-200">
+                <li><strong>A:</strong> <code>0</code> (1 bit)</li>
+                <li><strong>B:</strong> <code>11</code> (2 bits)</li>
+                <li><strong>C:</strong> <code>101</code> (3 bits)</li>
+                <li><strong>D:</strong> <code>100</code> (3 bits)</li>
+              </ul>
+              <p class="mt-2 font-sans text-xs">
+                <strong>Average Code Length:</strong> $(0.4 \times 1) + (0.35 \times 2) + (0.15 \times 3) + (0.10 \times 3) = \mathbf{1.85}$ bits per char. <br>
+                (Saves 7.5% space compared to a fixed 2-bit representation!)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Not Sorting Dynamically:</strong> Forgetting that after popping two nodes and merging them, the new parent node must be re-inserted into the sorted priority queue at its correct relative position.</li>
+            <li><strong>Code Ambiguity:</strong> Placing characters at internal (non-leaf) nodes of the tree, which ruins the prefix-free guarantee and makes decoding impossible.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Using the tree from our trace, decode the binary stream <code>011101100</code>.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1 text-gray-200 leading-relaxed">
+                Step by step decoding starting from the root:<br>
+                &bull; <code>0</code> &rarr; <strong>A</strong><br>
+                &bull; <code>11</code> &rarr; <strong>B</strong><br>
+                &bull; <code>101</code> &rarr; <strong>C</strong><br>
+                &bull; <code>100</code> &rarr; <strong>D</strong><br>
+                The decoded sequence is <strong>ABCD</strong>.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Huffman, D. A. (1952). A Method for the Construction of Minimum-Redundancy Codes. Proceedings of the IRE.
+          </p>
         </div>
       </div>
     `,
-    code: `// Huffman Leaf and Node creation logic
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm Huffman(C[0..n-1], F[0..n-1])
+    let PQ be an empty priority queue
+    for i <- 0 to n - 1 do
+        node <- CreateNode(C[i], F[i])
+        Insert node into PQ sorted by frequency
+        
+    while size(PQ) > 1 do
+        left <- PopMin(PQ)
+        right <- PopMin(PQ)
+        parent <- CreateNode(null, left.freq + right.freq)
+        parent.left <- left
+        parent.right <- right
+        Insert parent into PQ
+        
+    return PopMin(PQ) // root of the Huffman tree
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: O(n log n) where n is the number of characters.
+- Space Complexity: O(n) auxiliary space to store tree nodes.
+- Reason: Each insertion and deletion from a min-heap or priority queue takes O(log n) time. The algorithm performs n merges, yielding a total time of O(n log n).
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+import java.util.PriorityQueue;
+
+class HuffmanNode implements Comparable&lt;HuffmanNode&gt; {
+    char character;
+    int frequency;
+    HuffmanNode left;
+    HuffmanNode right;
+
+    public HuffmanNode(char character, int frequency) {
+        this.character = character;
+        this.frequency = frequency;
+    }
+
+    @Override
+    public int compareTo(HuffmanNode other) {
+        return Integer.compare(this.frequency, other.frequency);
+    }
+}
+
+public class HuffmanTree {
+    public static HuffmanNode buildTree(char[] chars, int[] freqs) {
+        PriorityQueue&lt;HuffmanNode&gt; pq = new PriorityQueue&lt;&gt;();
+        for (int i = 0; i &lt; chars.length; i++) {
+            pq.add(new HuffmanNode(chars[i], freqs[i]));
+        }
+        
+        while (pq.size() &gt; 1) {
+            HuffmanNode left = pq.poll();
+            HuffmanNode right = pq.poll();
+            HuffmanNode parent = new HuffmanNode('\0', left.frequency + right.frequency);
+            parent.left = left;
+            parent.right = right;
+            pq.add(parent);
+        }
+        return pq.poll();
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
 class HuffmanNode {
-    constructor(char, freq, left = null, right = null) {
+    char: string | null;
+    freq: number;
+    left: HuffmanNode | null;
+    right: HuffmanNode | null;
+
+    constructor(char: string | null, freq: number, left: HuffmanNode | null = null, right: HuffmanNode | null = null) {
         this.char = char;
         this.freq = freq;
         this.left = left;
@@ -4946,16 +5977,65 @@ class HuffmanNode {
     }
 }
 
-// DFS to extract prefix-free codes
-function generateCodes(root, code, codesDict) {
-    if (!root) return;
-    if (!root.left && !root.right) {
-        codesDict[root.char] = code;
-        return;
+function buildHuffmanTree(chars: string[], freqs: number[]): HuffmanNode | null {
+    const pq: HuffmanNode[] = chars.map((char, index) =&gt; new HuffmanNode(char, freqs[index]));
+    
+    while (pq.length &gt; 1) {
+        // Sort ascending to get two nodes with lowest frequencies
+        pq.sort((a, b) =&gt; a.freq - b.freq);
+        
+        const left = pq.shift()!;
+        const right = pq.shift()!;
+        
+        const parent = new HuffmanNode(null, left.freq + right.freq, left, right);
+        pq.push(parent);
     }
-    generateCodes(root.left, code + "0", codesDict);
-    generateCodes(root.right, code + "1", codesDict);
-}`
+    return pq[0] ?? null;
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+import heapq
+
+class HuffmanNode:
+    def __init__(self, char, freq):
+        self.char = char
+        self.freq = freq
+        self.left = None
+        self.right = None
+        
+    def __lt__(self, other):
+        return self.freq &lt; other.freq
+
+def build_huffman_tree(chars, freqs):
+    pq = []
+    for i in range(len(chars)):
+        heapq.heappush(pq, HuffmanNode(chars[i], freqs[i]))
+        
+    while len(pq) &gt; 1:
+        left = heapq.heappop(pq)
+        right = heapq.heappop(pq)
+        
+        parent = HuffmanNode(None, left.freq + right.freq)
+        parent.left = left
+        parent.right = right
+        heapq.heappush(pq, parent)
+        
+    return heapq.heappop(pq)
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Huffman coding is the foundational block of many classic compression protocols, notably DEFLATE (used in ZIP and PNG formats), where it is paired with LZ77.
+          </div>
+        </div>
+      </div>
+    `
   },
 
   // ============================================
@@ -4967,31 +6047,168 @@ function generateCodes(root, code, codesDict) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">The DP Philosophy</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Solve optimization problems with overlapping sub-problems. It solves each sub-problem exactly <strong>once</strong> and records it in a table (memoization or tabulation) to prevent exponential re-calculations.
+            **Dynamic Programming (DP)** is an algorithmic paradigm that solves a complex problem by breaking it down into sub-problems, solving each sub-problem exactly once, and storing their solutions in a lookup table (tabulation or memoization). This completely avoids the exponential work of re-computing overlapping states. DP was coined by **Richard Bellman** in the 1950s.
           </p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Overlapping Sub-problems:</strong> The recursive tree of the problem repeatedly visits the exact same sub-problems rather than generating unique ones (unlike Divide & Conquer).</li>
+            <li><strong>Optimal Substructure:</strong> An optimal solution to an instance of the problem can be constructed from optimal solutions to its sub-problems.</li>
+            <li><strong>Tabulation (Bottom-Up):</strong> Solving sub-problems iteratively from the smallest base cases, building up a multi-dimensional grid.</li>
+            <li><strong>Memoization (Top-Down):</strong> Storing recursive call returns in an auxiliary hashmap or array to prune tree branches.</li>
+          </ul>
+        </div>
+
         <div class="step-card">
-          <span class="step-title">Principle of Optimality</span>
-          <p class="text-xs leading-relaxed font-sans">
-            An optimal solution to any instance of the problem is made up of optimal solutions to its sub-problem instances.
+          <span class="step-title">The Fibonacci Speedup Tracing ($N = 5$)</span>
+          <p class="text-sm mb-4">
+            While naive recursion takes $O(2^N)$ time by drawing a massive duplicate tree, bottom-up DP evaluates each state in a linear sequence.
+          </p>
+          <div class="glass p-4 rounded-lg border border-white/10 text-center">
+            <h4 class="font-bold text-xs text-accent mb-2">1D Tabulation Array Tracing</h4>
+            <div class="grid grid-cols-6 gap-2 font-mono text-sm">
+              <div class="text-gray-400 border-b border-white/5">State</div>
+              <div>F[0]</div><div>F[1]</div><div>F[2]</div><div>F[3]</div><div>F[4]</div>
+              
+              <div class="text-gray-400 text-left pl-1 border-b border-white/5">Calculated</div>
+              <div class="bg-blue-500/20 rounded">0</div>
+              <div class="bg-blue-500/20 rounded">1</div>
+              <div class="bg-yellow-500/20 rounded">1</div>
+              <div class="bg-yellow-500/20 rounded">2</div>
+              <div class="bg-yellow-500/20 rounded">3</div>
+            </div>
+            <p class="text-xs text-left mt-3 opacity-80 font-sans">
+              &bull; $F[2] = F[1] + F[0] = 1 + 0 = \mathbf{1}$<br>
+              &bull; $F[3] = F[2] + F[1] = 1 + 1 = \mathbf{2}$<br>
+              &bull; $F[4] = F[3] + F[2] = 2 + 1 = \mathbf{3}$
+            </p>
+          </div>
+        </div>
+
+        <div class="step-card border-l-4 border-purple-500 bg-purple-950/10">
+          <span class="step-title">Optimization: Space Compression</span>
+          <p class="text-xs md:text-sm">
+            To calculate $F[i]$, we only ever need $F[i-1]$ and $F[i-2]$. We don't need to keep the entire historical list in memory. By holding just two primitive variables (<code>prev1</code> and <code>prev2</code>) and sliding them forward, we compress auxiliary space complexity from $\Theta(n)$ to <span class="text-accent font-bold">$\Theta(1)$</span>.
           </p>
         </div>
-        <div class="warn-box text-xs">
-          <strong>Key Limitation (State Explosion):</strong> If sub-problems are not ordered or have many independent variables (e.g. Traveling Salesperson without ordering), the table size grows exponentially, rendering DP infeasible.
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Missing Base Cases:</strong> Failing to initialize $F[0]$ or $F[1]$, leading to array boundary errors or infinite NaN recursive loops.</li>
+            <li><strong>Subproblem Overlap Missing:</strong> Using DP for problems that do not have overlapping sub-problems (e.g. Merge Sort). Naive recursion or iterative splits are better suited here, as there's no duplicate work.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Write out the recurrence relation for the number of ways to climb $N$ steps if you can take either $1$ or $2$ steps at a time.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <div class="mt-1 text-gray-200 leading-relaxed">
+                Let $W(N)$ be the number of ways. To reach step $N$, you must have either taken $1$ step from step $N-1$, or $2$ steps from step $N-2$. <br>
+                Thus, the recurrence relation is: <br>
+                <strong>$W(N) = W(N-1) + W(N-2)$</strong> with base cases $W(1) = 1, W(2) = 2$. (This is isomorphic to the Fibonacci sequence!)
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Bellman, R. (1957). Dynamic Programming. Princeton University Press.
+          </p>
         </div>
       </div>
     `,
-    code: `// Dynamic Programming (Tabulation - Bottom-Up)
-function fibDP(n) {
-    let f = Array(n + 1).fill(0);
-    f[0] = 0; f[1] = 1;
-    for (let i = 2; i <= n; i++) {
-        f[i] = f[i - 1] + f[i - 2]; // Lookup from table
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm FibonacciDP(n)
+    let F[0..n] be an array
+    F[0] <- 0
+    F[1] <- 1
+    for i <- 2 to n do
+        F[i] <- F[i-1] + F[i-2]
+    return F[n]
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(n)
+- Space Complexity: Θ(n) (Can be reduced to Θ(1) by storing only two previous values)
+- Reason: The bottom-up loop runs exactly n times, doing constant-time operations inside. This reduces naive recursion's exponential O(2^n) time to linear.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class FibonacciDP {
+    public static long calculate(int n) {
+        if (n &lt;= 1) return n;
+        long[] F = new long[n + 1];
+        F[0] = 0;
+        F[1] = 1;
+        for (int i = 2; i &lt;= n; i++) {
+            F[i] = F[i - 1] + F[i - 2];
+        }
+        return F[n];
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function fibDP(n: number): number {
+    if (n &lt;= 1) return n;
+    const f = Array(n + 1).fill(0);
+    f[0] = 0;
+    f[1] = 1;
+    for (let i = 2; i &lt;= n; i++) {
+        f[i] = f[i - 1] + f[i - 2];
     }
     return f[n];
-} // Cuts recursive recursion from O(2^n) to Θ(n) time!`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def fib_dp(n):
+    if n &lt;= 1:
+        return n
+    f = [0] * (n + 1)
+    f[0] = 0
+    f[1] = 1
+    for i in range(2, n + 1):
+        f[i] = f[i - 1] + f[i - 2]
+    return f[n]
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Dynamic programming is used in real compilers and interpreter runtimes (such as V8 regex engine memoization states) to guard against backtracking complexity attacks.
+          </div>
+        </div>
+      </div>
+    `
   },
   dyn_change: {
     id: 'dyn_change',
@@ -4999,44 +6216,201 @@ function fibDP(n) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Optimal Coin Changing</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Find the minimum number of coins to make amount $n$ using denominations $D = \{d_1, d_2 \\dots d_m\}$. Unlike Greedy, DP guarantees an optimal solution for <em>any</em> coin set.
+            While the Greedy changer works only for specific "canonical" coin sets, **Dynamic Programming** guarantees an optimal solution containing the absolute minimum number of coins for **any** denomination set. It computes the minimum coins needed for every sub-amount from $1$ up to the target, caching results.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">The Recurrence</span>
-          <div class="latex-output">$F(n) = \\min_{j: n \\ge d_j} \\{ F(n - d_j) \\} + 1$</div>
-          <p class="text-xs opacity-80 mt-1">Base case: $F(0) = 0$.</p>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Coin Change Recurrence:</strong> For a target amount $i$ and coin values $d_1, d_2, \dots, d_m$, the recurrence is:
+              <div class="my-2 p-2 bg-black/40 rounded font-mono text-center text-yellow-300">
+                $F(i) = \min_{j: i \ge d_j} \{ F(i - d_j) \} + 1$
+              </div>
+              with base case $F(0) = 0$.
+            </li>
+            <li><strong>Unreachable Amount:</strong> A state where no combination of coins can sum to the amount, represented by storing Infinity in the cache array.</li>
+          </ul>
         </div>
+
         <div class="step-card">
-          <span class="step-title">Exam Explanation (Loop States)</span>
-          <p class="text-xs leading-relaxed">
-            1. <strong>"Iterate 1 to n":</strong> We solve for every sub-amount $i$ from 1 up to $n$ sequentially.<br>
-            2. <strong>"temp stores current max":</strong> We initialize a temporary minimum variable to Infinity before searching.<br>
-            3. <strong>"Iterate j over denominations":</strong> We try subtracting every coin $d_j$ that is $\\le i$.<br>
-            4. <strong>"Check less than temp":</strong> We look up $F(i - d_j)$. If it is smaller than our current best, we lower our target.<br>
-            5. <strong>"Update by adding 1":</strong> We add the coin we just picked: $F(i) = temp + 1$.
+          <span class="step-title">Trace Example: Coins = {1, 3, 4}, Target = 6</span>
+          <p class="text-sm mb-4">Let's build the 1D DP lookup table iteratively from $0$ to $6$.</p>
+          
+          <div class="overflow-x-auto mb-4">
+            <table class="w-full text-center text-xs border border-white/10 font-mono">
+              <thead>
+                <tr class="bg-white/5">
+                  <th class="p-2 border">Sub-Amount ($i$)</th>
+                  <th class="p-2 border">0</th>
+                  <th class="p-2 border">1</th>
+                  <th class="p-2 border">2</th>
+                  <th class="p-2 border">3</th>
+                  <th class="p-2 border">4</th>
+                  <th class="p-2 border">5</th>
+                  <th class="p-2 border text-accent">6</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="p-2 border font-sans font-bold text-left">Min Coins ($F(i)$)</td>
+                  <td class="p-2 border bg-blue-500/10">0</td>
+                  <td class="p-2 border">1</td>
+                  <td class="p-2 border">2</td>
+                  <td class="p-2 border text-yellow-200">1</td>
+                  <td class="p-2 border text-yellow-200">1</td>
+                  <td class="p-2 border">2</td>
+                  <td class="p-2 border bg-green-500/20 text-green-300 font-bold">2</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="text-xs space-y-2 leading-relaxed opacity-90">
+            <p>&bull; <strong>$F(1)$:</strong> Min of $\{F(1-1)\} + 1 = F(0)+1 = 1$</p>
+            <p>&bull; <strong>$F(2)$:</strong> Min of $\{F(2-1)\} + 1 = F(1)+1 = 2$</p>
+            <p>&bull; <strong>$F(3)$:</strong> Min of $\{F(3-1), F(3-3)\} + 1 = \min(F(2), F(0)) + 1 = 0 + 1 = \mathbf{1}$ <span class="text-yellow-400 font-mono">(Coin used: 3)</span></p>
+            <p>&bull; <strong>$F(4)$:</strong> Min of $\{F(4-1), F(4-3), F(4-4)\} + 1 = \min(F(3), F(1), F(0)) + 1 = 0 + 1 = \mathbf{1}$ <span class="text-yellow-400 font-mono">(Coin used: 4)</span></p>
+            <p>&bull; <strong>$F(5)$:</strong> Min of $\{F(4), F(2), F(1)\} + 1 = \min(1, 2, 1) + 1 = 1 + 1 = \mathbf{2}$ <span class="text-yellow-400 font-mono">(Coin used: 4 or 1)</span></p>
+            <p>&bull; <strong>$F(6)$:</strong> Min of $\{F(5), F(3), F(2)\} + 1 = \min(2, 1, 2) + 1 = 1 + 1 = \mathbf{2}$ <span class="text-green-400 font-semibold">(Coin used: 3 &rarr; $3+3$)</span></p>
+          </div>
+          <p class="text-xs text-green-400 mt-2 font-bold font-mono">Result: 2 coins (Unlike Greedy, which picks [4, 1, 1] &mdash; 3 coins!)</p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Infinite Loops with Missing Check:</strong> Forgetting to check if $i \ge d_j$ before looking up $F(i - d_j)$, which causes index out-of-bounds or looking up undefined negative array locations.</li>
+            <li><strong>Not Handling Unreachable amounts:</strong> Forgetting to verify if the result remains Infinity before returning, which can result in returning misleading garbage values (e.g., Infinity + 1 causing integer overflow or NaN).</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>If we want to reconstruct the coin values instead of just returning the minimum count, what auxiliary data should we store?</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1 text-gray-200 leading-relaxed">
+                Maintain a second array <code>coinUsed[0..amount]</code>. Whenever we update <code>dp[i]</code> with a smaller count using coin $d_j$, we store the coin value: <code>coinUsed[i] = d_j</code>. Once the table is filled, we backtrack from the target amount: subtract <code>coinUsed[amount]</code> from the amount iteratively until reaching 0.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Neapolitan, R. E. (2015). Foundations of Algorithms (5th Edition). Jones & Bartlett Learning.
           </p>
         </div>
       </div>
     `,
-    code: `// DP Change Maker
-function getMinCoins(coins, amount) {
-    let dp = Array(amount + 1).fill(Infinity);
-    dp[0] = 0; // Base Case
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm MinCoinsChange(Coins[0..m-1], Amount)
+    let DP[0..Amount] be an array filled with Infinity
+    DP[0] <- 0
     
-    for (let i = 1; i <= amount; i++) {
-        let temp = Infinity;
-        for (let j = 0; j < coins.length; j++) {
-            if (i >= coins[j]) {
-                temp = Math.min(temp, dp[i - coins[j]]);
+    for i <- 1 to Amount do
+        for j <- 0 to m - 1 do
+            if i >= Coins[j] then
+                if DP[i - Coins[j]] != Infinity then
+                    DP[i] <- min(DP[i], DP[i - Coins[j]] + 1)
+                    
+    return if DP[Amount] == Infinity then -1 else DP[Amount]
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(N * m) where N is the amount and m is the number of coin denominations.
+- Space Complexity: Θ(N) auxiliary space
+- Reason: The algorithm employs two nested loops. The outer loop runs N times and the inner loop runs m times, resulting in a product-bound complexity of N * m.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+import java.util.Arrays;
+
+public class CoinChangeDP {
+    public static int getMinCoins(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        
+        for (int i = 1; i &lt;= amount; i++) {
+            for (int coin : coins) {
+                if (i &gt;= coin) {
+                    int subProblem = dp[i - coin];
+                    if (subProblem != Integer.MAX_VALUE) {
+                        dp[i] = Math.min(dp[i], subProblem + 1);
+                    }
+                }
             }
         }
-        dp[i] = temp + 1;
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function getMinCoins(coins: number[], amount: number): number {
+    const dp = Array(amount + 1).fill(Infinity);
+    dp[0] = 0; // Base Case
+    
+    for (let i = 1; i &lt;= amount; i++) {
+        for (let j = 0; j &lt; coins.length; j++) {
+            const coin = coins[j];
+            if (i &gt;= coin) {
+                const subProblem = dp[i - coin];
+                if (subProblem !== Infinity) {
+                    dp[i] = Math.min(dp[i], subProblem + 1);
+                }
+            }
+        }
     }
     return dp[amount] === Infinity ? -1 : dp[amount];
-}`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def get_min_coins(coins, amount):
+    dp = [float('inf')] * (amount + 1)
+    dp[0] = 0
+    
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if i &gt;= coin:
+                dp[i] = min(dp[i], dp[i - coin] + 1)
+                
+    return dp[amount] if dp[amount] != float('inf') else -1
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+This is a standard pseudo-polynomial dynamic programming problem. If the amount is extremely large, memory scaling becomes a bottleneck.
+          </div>
+        </div>
+      </div>
+    `
   },
   dyn_warshall: {
     id: 'dyn_warshall',
@@ -5044,41 +6418,200 @@ function getMinCoins(coins, amount) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Transitive Closure</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Find if a directed path exists between any two vertices $i$ and $j$ in a directed graph of size $n$, represented as a boolean matrix.
+            **Warshall's Algorithm** is a dynamic programming algorithm used to compute the **transitive closure** of a directed graph. In simple terms, it determines whether there is a directed path of any length between every pair of vertices. The graph is represented as a boolean adjacency matrix.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">The Dynamic Programming Formulation</span>
-          <p class="text-xs md:text-sm">
-            Let $R^{(k)}[i, j]$ be $1$ if there is a path from $i$ to $j$ using only vertices in $\{1 \\dots k\}$ as intermediates.
-          </p>
-          <div class="bg-black/30 p-3 rounded font-mono text-center text-xs my-2">
-            R(k)[i, j] = R(k-1)[i, j] OR ( R(k-1)[i, k] AND R(k-1)[k, j] )
-          </div>
-          <ul class="list-disc pl-5 text-xs space-y-1 opacity-85">
-            <li>We increment $k$ from $1$ to $n$.</li>
-            <li>At stage $k$, we use the $k$-th row and $k$-th column of the previous matrix to discover new paths.</li>
-            <li>Complexity: $\\Theta(n^3)$ time, $\\Theta(n^2)$ space.</li>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Transitive Closure ($R$):</strong> A boolean matrix where $R[i, j] = 1$ if there exists a directed path from vertex $i$ to vertex $j$, and $0$ otherwise.</li>
+            <li><strong>Intermediate Vertices:</strong> Vertices that may be traversed along a path between two nodes. Warshall's algorithm incrementally allows vertices $\{1, 2, \dots, k\}$ as potential intermediate nodes.</li>
           </ul>
+        </div>
+
+        <div class="step-card">
+          <span class="step-title">The Dynamic Programming Recurrence</span>
+          <p class="text-xs md:text-sm">
+            Let $R^{(k)}[i, j]$ be 1 if there is a path from $i$ to $j$ using only vertices in $\{1 \dots k\}$ as intermediates.
+          </p>
+          <div class="bg-black/30 p-3 rounded font-mono text-center text-xs my-2 border border-white/5">
+            $R^{(k)}[i, j] = R^{(k-1)}[i, j] \lor \left( R^{(k-1)}[i, k] \land R^{(k-1)}[k, j] \right)$
+          </div>
+          <p class="text-xs opacity-80">
+            <strong>Intuition:</strong> A path exists from $i$ to $j$ using vertices up to $k$ if: <br>
+            1. There was already a path using only vertices up to $k-1$ (i.e. $R^{(k-1)}[i, j]$), OR <br>
+            2. There is a path from $i$ to $k$ AND a path from $k$ to $j$ using only vertices up to $k-1$.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-title">Worked Trace: 3-Vertex directed graph (1 &rarr; 2 &rarr; 3)</span>
+          <p class="text-sm mb-3">We have edges $(1,2)$ and $(2,3)$. We want to discover that $1 \to 3$ exists via transitivity.</p>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 font-mono text-[11px] text-center">
+            <div class="bg-black/40 p-2 rounded">
+              <span class="text-yellow-400 font-bold border-b border-white/10 block mb-1">R(0) (Base)</span>
+              <pre class="text-left mt-1">
+[0  1  0]
+[0  0  1]
+[0  0  0]</pre>
+            </div>
+            <div class="bg-black/40 p-2 rounded">
+              <span class="text-yellow-400 font-bold border-b border-white/10 block mb-1">R(1) (k=1)</span>
+              <pre class="text-left mt-1">
+[0  1  0]
+[0  0  1]
+[0  0  0]</pre>
+              <span class="text-[9px] text-gray-400 block mt-1">No paths bypass vertex 1.</span>
+            </div>
+            <div class="bg-green-950/20 border border-green-500/20 p-2 rounded">
+              <span class="text-green-400 font-bold border-b border-white/10 block mb-1">R(2) (k=2)</span>
+              <pre class="text-left mt-1">
+[0  1  <span class="text-green-300 font-bold">1</span>]
+[0  0  1]
+[0  0  0]</pre>
+              <span class="text-[9px] text-green-300 block mt-1">Path 1&rarr;3 found via 2! (R[1,2]&and;R[2,3])</span>
+            </div>
+            <div class="bg-black/40 p-2 rounded">
+              <span class="text-yellow-400 font-bold border-b border-white/10 block mb-1">R(3) (k=3)</span>
+              <pre class="text-left mt-1">
+[0  1  1]
+[0  0  1]
+[0  0  0]</pre>
+              <span class="text-[9px] text-gray-400 block mt-1">Final closure matrix.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Incorrect Loop Nesting Order:</strong> Placing the intermediate node loop $k$ as the inner-most loop rather than the outer-most loop. The nesting MUST be: <code>k</code> (outer), then <code>i</code> (middle), then <code>j</code> (inner). Breaking this nesting destroys the recurrence logic.</li>
+            <li><strong>Matrix Deep Copy Failure:</strong> Modifying the input adjacency matrix directly in languages like JavaScript, affecting original graphs due to shallow reference sharing.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>What is the transitive closure of a directed cycle graph of size $3$ ($1 \to 2 \to 3 \to 1$)?</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1 text-gray-200 leading-relaxed">
+                Since every vertex can reach every other vertex (including itself through the loop), the transitive closure is a $3 \times 3$ matrix filled entirely with 1s: <br>
+                <code>[[1, 1, 1], [1, 1, 1], [1, 1, 1]]</code>.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Warshall, S. (1962). A Theorem on Boolean Matrices. Journal of the ACM.
+          </p>
         </div>
       </div>
     `,
-    code: `// Warshall's Algorithm
-function warshall(adjMatrix) {
-    let n = adjMatrix.length;
-    let R = adjMatrix.map(row => [...row]); // Copy initial matrix
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm Warshall(A[0..n-1, 0..n-1])
+    let R be copy of A
+    for k <- 0 to n - 1 do
+        for i <- 0 to n - 1 do
+            for j <- 0 to n - 1 do
+                R[i, j] <- R[i, j] or (R[i, k] and R[k, j])
+    return R
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(n³)
+- Space Complexity: Θ(n²) auxiliary space
+- Reason: The algorithm uses three nested loops, each running exactly n times. The updates inside require only constant-time boolean logic.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class WarshallTransitive {
+    public static boolean[][] transitiveClosure(boolean[][] adjMatrix) {
+        int n = adjMatrix.length;
+        boolean[][] R = new boolean[n][n];
+        
+        // Copy initial adjacency matrix
+        for (int i = 0; i &lt; n; i++) {
+            System.arraycopy(adjMatrix[i], 0, R[i], 0, n);
+        }
+        
+        // Warshall's triple loop
+        for (int k = 0; k &lt; n; k++) {
+            for (int i = 0; i &lt; n; i++) {
+                for (int j = 0; j &lt; n; j++) {
+                    R[i][j] = R[i][j] || (R[i][k] && R[k][j]);
+                }
+            }
+        }
+        return R;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function warshall(adjMatrix: boolean[][]): boolean[][] {
+    const n = adjMatrix.length;
+    // Deep copy matrix
+    const R = adjMatrix.map(row =&gt; [...row]);
     
-    for (let k = 0; k < n; k++) { // Intermediate node k
-        for (let i = 0; i < n; i++) { // Source node i
-            for (let j = 0; j < n; j++) { // Destination node j
+    for (let k = 0; k &lt; n; k++) {
+        for (let i = 0; i &lt; n; i++) {
+            for (let j = 0; j &lt; n; j++) {
                 R[i][j] = R[i][j] || (R[i][k] && R[k][j]);
             }
         }
     }
     return R;
-}`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def warshall(adj_matrix):
+    n = len(adj_matrix)
+    # Deep copy
+    R = [row[:] for row in adj_matrix]
+    
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                R[i][j] = R[i][j] or (R[i][k] and R[k][j])
+                
+    return R
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Using bitwise shifts or packed integers (where each row is a bitset) speeds up Warshall's algorithm by a factor of 32 or 64 on modern CPU architectures.
+          </div>
+        </div>
+      </div>
+    `
   },
   dyn_floyd: {
     id: 'dyn_floyd',
@@ -5086,41 +6619,205 @@ function warshall(adjMatrix) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Shortest Paths</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Find the shortest directed path weights between every pair of vertices in a weighted graph. It is the weighted equivalent of Warshall's.
+            **Floyd's Algorithm** (also known as Floyd-Warshall) is a dynamic programming algorithm used to find the shortest path distances between **every** pair of vertices in a weighted graph. It can handle negative edge weights, as long as the graph does not contain any negative weight cycles.
           </p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>All-Pairs Shortest Path:</strong> Finding the minimum path weights between every pair of vertices $(i, j)$ in the graph, outputting a 2D distance matrix.</li>
+            <li><strong>Path Relaxation:</strong> Evaluating if a path from $i$ to $j$ can be shortened by detouring through an intermediate vertex $k$.</li>
+            <li><strong>Negative Cycle:</strong> A cycle in a weighted graph whose total weight sum is less than zero. Floyd's algorithm cannot resolve paths when negative cycles exist.</li>
+          </ul>
+        </div>
+
         <div class="step-card">
           <span class="step-title">The Relaxation Formula</span>
           <p class="text-xs md:text-sm">
             Let $D^{(k)}[i, j]$ represent the shortest path weight from $i$ to $j$ using only intermediate nodes up to $k$.
           </p>
-          <div class="latex-output">$D^{(k)}[i, j] = \\min \\left( D^{(k-1)}[i, j], D^{(k-1)}[i, k] + D^{(k-1)}[k, j] \\right)$</div>
-          <ul class="list-disc pl-5 text-xs space-y-1 opacity-80 mt-2">
-            <li><strong>Initialize $D^{(0)}$:</strong> Adjacency matrix of weights (0 on diagonal, $\\infty$ for missing edges).</li>
-            <li>At stage $k$, we check if path $i \\to k \\to j$ is shorter than direct path $i \\to j$.</li>
-            <li>Complexity: $\\Theta(n^3)$ time.</li>
+          <div class="latex-output my-2 p-2 bg-black/40 rounded text-center text-yellow-300">
+            $D^{(k)}[i, j] = \min \left( D^{(k-1)}[i, j], D^{(k-1)}[i, k] + D^{(k-1)}[k, j] \right)$
+          </div>
+          <p class="text-xs opacity-80 mt-1">
+            <strong>Initialize $D^{(0)}$:</strong> Adjacency matrix of weights (0 on diagonal, $\infty$ for missing edges).
+          </p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-title">Worked Trace: Graph Relaxation (3 nodes)</span>
+          <p class="text-sm mb-3">Vertices 1, 2, 3 with edge $1 \to 2$ (wt=4), $2 \to 3$ (wt=3) and $1 \to 3$ (wt=9).</p>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 font-mono text-[11px] text-center">
+            <div class="bg-black/40 p-2 rounded">
+              <span class="text-yellow-400 font-bold border-b border-white/10 block mb-1">D(0) (Base)</span>
+              <pre class="text-left mt-1">
+[0   4   9]
+[&infin;   0   3]
+[&infin;  &infin;   0]</pre>
+            </div>
+            <div class="bg-black/40 p-2 rounded">
+              <span class="text-yellow-400 font-bold border-b border-white/10 block mb-1">D(1) (k=1)</span>
+              <pre class="text-left mt-1">
+[0   4   9]
+[&infin;   0   3]
+[&infin;  &infin;   0]</pre>
+              <span class="text-[9px] text-gray-400 block mt-1">No detours via vertex 1 help.</span>
+            </div>
+            <div class="bg-green-950/20 border border-green-500/20 p-2 rounded">
+              <span class="text-green-400 font-bold border-b border-white/10 block mb-1">D(2) (k=2)</span>
+              <pre class="text-left mt-1">
+[0   4   <span class="text-green-300 font-bold">7</span>]
+[&infin;   0   3]
+[&infin;  &infin;   0]</pre>
+              <span class="text-[9px] text-green-300 block mt-1">Path 1&rarr;3 relaxed! (4+3=7 &lt; 9)</span>
+            </div>
+            <div class="bg-black/40 p-2 rounded">
+              <span class="text-yellow-400 font-bold border-b border-white/10 block mb-1">D(3) (k=3)</span>
+              <pre class="text-left mt-1">
+[0   4   7]
+[&infin;   0   3]
+[&infin;  &infin;   0]</pre>
+              <span class="text-[9px] text-gray-400 block mt-1">Final relaxed distance matrix.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Integer Overflow with Infinity:</strong> Using <code>Integer.MAX_VALUE</code> in languages like Java or C++ directly in comparisons without caution. Evaluating <code>MAX_VALUE + weight</code> wraps around to negative integers, which can trick the algorithm into registering nonexistent, highly optimal negative shortcut paths.</li>
+            <li><strong>Cycle Instabilities:</strong> Running Floyd's on graphs with negative cycles without verifying the diagonal values. (If <code>D[i][i] &lt; 0</code>, a negative cycle exists).</li>
           </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>How can you use the final matrix of Floyd's algorithm to detect if a graph contains a negative cycle?</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1 text-gray-200 leading-relaxed">
+                Inspect the main diagonal values of the final distance matrix $D^{(n)}$. Since $D^{(0)}[i,i] = 0$, any diagonal value that drops below zero (i.e. $D^{(n)}[i,i] < 0$ for any $i$) indicates that vertex $i$ can reach itself through a negative-weight cycle.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Floyd, R. W. (1962). Algorithm 97: Shortest Path. Communications of the ACM.
+          </p>
         </div>
       </div>
     `,
-    code: `// Floyd's Algorithm for All-Pairs Shortest Path
-function floyd(weights) {
-    let n = weights.length;
-    let D = weights.map(row => [...row]); // Copy initial weights
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm Floyd(W[0..n-1, 0..n-1])
+    let D be copy of W
+    for k <- 0 to n - 1 do
+        for i <- 0 to n - 1 do
+            for j <- 0 to n - 1 do
+                if D[i, k] != Infinity and D[k, j] != Infinity then
+                    D[i, j] <- min(D[i, j], D[i, k] + D[k, j])
+    return D
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(n³)
+- Space Complexity: Θ(n²) auxiliary space
+- Reason: The algorithm maintains a 2D distance grid of size n * n, updating weights inside a triple loop that executes n³ times.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class FloydAllPairsShortest {
+    private static final double INF = Double.POSITIVE_INFINITY;
+
+    public static double[][] floyd(double[][] weights) {
+        int n = weights.length;
+        double[][] D = new double[n][n];
+        
+        // Copy initial adjacency matrix
+        for (int i = 0; i &lt; n; i++) {
+            System.arraycopy(weights[i], 0, D[i], 0, n);
+        }
+        
+        // Floyd's algorithm
+        for (int k = 0; k &lt; n; k++) {
+            for (int i = 0; i &lt; n; i++) {
+                for (int j = 0; j &lt; n; j++) {
+                    if (D[i][k] != INF && D[k][j] != INF) {
+                        D[i][j] = Math.min(D[i][j], D[i][k] + D[k][j]);
+                    }
+                }
+            }
+        }
+        return D;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function floyd(weights: number[][]): number[][] {
+    const n = weights.length;
+    // Deep copy weights matrix
+    const D = weights.map(row =&gt; [...row]);
     
-    for (let k = 0; k < n; k++) {
-        for (let i = 0; i < n; i++) {
-            for (let j = 0; j < n; j++) {
-                if (D[i][k] + D[k][j] < D[i][j]) {
-                    D[i][j] = D[i][k] + D[k][j]; // Path relaxation
+    for (let k = 0; k &lt; n; k++) {
+        for (let i = 0; i &lt; n; i++) {
+            for (let j = 0; j &lt; n; j++) {
+                if (D[i][k] !== Infinity && D[k][j] !== Infinity) {
+                    D[i][j] = Math.min(D[i][j], D[i][k] + D[k][j]);
                 }
             }
         }
     }
     return D;
-}`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def floyd(weights):
+    n = len(weights)
+    D = [row[:] for row in weights]
+    
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if D[i][k] != float('inf') and D[k][j] != float('inf'):
+                    D[i][j] = min(D[i][j], D[i][k] + D[k][j])
+                    
+    return D
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Floyd's algorithm is extremely cache-friendly compared to running Dijkstra's from every vertex, as its memory access pattern is sequentially localized.
+          </div>
+        </div>
+      </div>
+    `
   },
   dyn_knap: {
     id: 'dyn_knap',
@@ -5128,43 +6825,171 @@ function floyd(weights) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Overcoming Exponential Time</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Solve the Knapsack problem for $n$ items and capacity $W$ in polynomial $O(nW)$ time instead of exhaustive $O(2^n)$ subsets.
+            The **0/1 Knapsack Problem** challenges us to select a subset of $n$ items, each with a weight $w_i$ and value $v_i$, to maximize total value without exceeding a maximum weight capacity $W$. The "0/1" constraint means we cannot divide items; we either pick an item fully or leave it. This is NP-hard, but dynamic programming solves it in pseudo-polynomial $O(nW)$ time.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Knapsack Recurrence Relation</span>
-          <p class="text-xs md:text-sm">
-            Let $V[i, j]$ be the max value using a subset of the first $i$ items with intermediate capacity $j$.
-          </p>
-          <div class="latex-output">$V[i, j] = \\max \\left( V[i-1, j], v_i + V[i-1, j - w_i] \\right) \\quad \\text{if } j \\ge w_i$</div>
-          <p class="text-xs opacity-75 mt-1">If item weight exceeds capacity ($j < w_i$), we simply inherit previous row: $V[i, j] = V[i-1, j]$.</p>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Knapsack Recurrence:</strong> Let $V[i, j]$ be the maximum value obtained using a subset of the first $i$ items with capacity $j$:
+              <div class="my-2 p-2 bg-black/40 rounded font-mono text-center text-yellow-300">
+                $V[i, j] = \max \left( V[i-1, j], v_i + V[i-1, j - w_i] \right) \quad \text{if } j \ge w_i$
+              </div>
+              Otherwise, if $j < w_i$, then $V[i, j] = V[i-1, j]$.
+            </li>
+            <li><strong>Backtracking:</strong> Scanning the solved 2D grid backwards from $V[n, W]$ to identify the precise item subset chosen.</li>
+          </ul>
         </div>
+
         <div class="step-card">
-          <span class="step-title">Knapsack Backtracking Proof</span>
-          <p class="text-xs leading-relaxed">
-            How do we find <strong>which</strong> items are in the optimal subset after filling the grid? <br>
-            Start at bottom-right corner $V[n, W]$:
+          <span class="step-title">Worked Trace: Capacity $W=5$, 3 Items</span>
+          <p class="text-[11px] mb-3">Items: 1 (wt=1, val=6), 2 (wt=2, val=10), 3 (wt=3, val=12).</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-center text-xs border border-white/10 font-mono">
+              <thead>
+                <tr class="bg-white/5 text-[10px]">
+                  <th class="p-2 border">Item ($i$)</th>
+                  <th class="p-2 border">Cap 0</th>
+                  <th class="p-2 border">Cap 1</th>
+                  <th class="p-2 border">Cap 2</th>
+                  <th class="p-2 border">Cap 3</th>
+                  <th class="p-2 border">Cap 4</th>
+                  <th class="p-2 border text-accent font-bold">Cap 5</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="p-2 border font-sans text-left">0 (None)</td>
+                  <td class="p-2 border">0</td><td class="p-2 border">0</td><td class="p-2 border">0</td><td class="p-2 border">0</td><td class="p-2 border">0</td><td class="p-2 border">0</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border font-sans text-left">1 (wt=1,v=6)</td>
+                  <td class="p-2 border">0</td><td class="p-2 border">6</td><td class="p-2 border">6</td><td class="p-2 border">6</td><td class="p-2 border">6</td><td class="p-2 border">6</td>
+                </tr>
+                <tr>
+                  <td class="p-2 border font-sans text-left">2 (wt=2,v=10)</td>
+                  <td class="p-2 border">0</td><td class="p-2 border">6</td><td class="p-2 border">10</td><td class="p-2 border">16</td><td class="p-2 border">16</td><td class="p-2 border">16</td>
+                </tr>
+                <tr class="bg-green-500/10">
+                  <td class="p-2 border font-sans text-left font-bold text-green-300">3 (wt=3,v=12)</td>
+                  <td class="p-2 border">0</td><td class="p-2 border">6</td><td class="p-2 border">10</td><td class="p-2 border">16</td><td class="p-2 border">18</td><td class="p-2 border text-green-300 font-bold">22</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-[11px] mt-3 space-y-1">
+            <p class="font-bold text-accent">How to Backtrack from V[3,5] = 22:</p>
+            <p>&bull; Compare $V[3,5]$ (22) with $V[2,5]$ (16). They are different &rarr; <span class="text-green-300 font-bold">Item 3 is SELECTED</span>. Remaining capacity &rarr; $5 - 3 = 2$.</p>
+            <p>&bull; Compare $V[2,2]$ (10) with $V[1,2]$ (6). They are different &rarr; <span class="text-green-300 font-bold">Item 2 is SELECTED</span>. Remaining capacity &rarr; $2 - 2 = 0$.</p>
+            <p>&bull; Since remaining capacity is 0, we terminate. Items in Knapsack: <span class="text-accent font-bold">[Item 2, Item 3]</span> &mdash; Weight: 5, Max Value: 22.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Offset Indexing OffbyOne:</strong> Blending 1-based table indices $i$ with 0-based item weight/value arrays, accidentally accessing weights using $i$ instead of $i-1$, which shifts the item properties and invalidates calculations.</li>
+            <li><strong>Table Initialization:</strong> Neglecting to size the DP matrix to $N+1$ rows and $W+1$ columns, leading to crash exceptions on boundary indexes.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm">
+            <p class="font-bold text-accent">Exercise 1:</p>
+            <p>Can we use this dynamic programming approach to solve the Knapsack problem if item weights are fractional (e.g. 1.5kg)?</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+              <p class="mt-1 text-gray-200 leading-relaxed">
+                <strong>No.</strong> Standard tabulation requires discrete contiguous indices. If weights are fractional, the grid coordinates would be non-integers, making standard table lookups impossible. (We would have to scale weights up to integers first, or use branch-and-bound optimization).
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Martello, S., & Toth, P. (1990). Knapsack Problems: Algorithms and Computer Implementations. Wiley.
           </p>
-          <ol class="list-decimal pl-5 mt-1 text-xs space-y-1">
-            <li>If $V[i, j] == V[i-1, j]$: Item $i$ was <strong>NOT</strong> selected. Backtrack up to cell $V[i-1, j]$.</li>
-            <li>If $V[i, j] > V[i-1, j]$: Item $i$ <strong>WAS</strong> selected. Backtrack diagonally to cell $V[i-1, j - w_i]$ and add item $i$ to our list of items.</li>
-            <li>Repeat until $i=0$ or $j=0$.</li>
-          </ol>
         </div>
       </div>
     `,
-    code: `// Knapsack DP Tabulation
-function knapsackDP(weights, values, capacity) {
-    let n = weights.length;
-    let V = Array.from({length: n + 1}, () => Array(capacity + 1).fill(0));
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm KnapsackDP(Weights[0..n-1], Values[0..n-1], Capacity)
+    let V[0..n, 0..Capacity] be a 2D array filled with 0
     
-    for (let i = 1; i <= n; i++) {
-        let wt = weights[i - 1];
-        let val = values[i - 1];
-        for (let j = 0; j <= capacity; j++) {
-            if (j >= wt) {
+    for i <- 1 to n do
+        wt <- Weights[i - 1]
+        val <- Values[i - 1]
+        for j <- 0 to Capacity do
+            if j >= wt then
+                V[i, j] <- max(V[i-1, j], val + V[i-1, j - wt])
+            else
+                V[i, j] <- V[i-1, j]
+                
+    return V[n, Capacity]
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity: Θ(n * W) where n is the number of items and W is the capacity.
+- Space Complexity: Θ(n * W) auxiliary space (Can be reduced to Θ(W) by using a 1D state array)
+- Reason: The algorithm uses two nested loops of sizes n and W+1, filling the 2D grid cells iteratively.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class Knapsack01DP {
+    public static int solve(int[] weights, int[] values, int capacity) {
+        int n = weights.length;
+        int[][] V = new int[n + 1][capacity + 1];
+        
+        for (int i = 1; i &lt;= n; i++) {
+            int wt = weights[i - 1];
+            int val = values[i - 1];
+            for (int j = 0; j &lt;= capacity; j++) {
+                if (j &gt;= wt) {
+                    V[i][j] = Math.max(V[i - 1][j], val + V[i - 1][j - wt]);
+                } else {
+                    V[i][j] = V[i - 1][j];
+                }
+            }
+        }
+        return V[n][capacity];
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+interface KnapsackResult {
+    maxValue: number;
+    itemsIndices: number[];
+}
+
+function knapsackDP(weights: number[], values: number[], capacity: number): KnapsackResult {
+    const n = weights.length;
+    const V = Array.from({ length: n + 1 }, () =&gt; Array(capacity + 1).fill(0));
+    
+    for (let i = 1; i &lt;= n; i++) {
+        const wt = weights[i - 1];
+        const val = values[i - 1];
+        for (let j = 0; j &lt;= capacity; j++) {
+            if (j &gt;= wt) {
                 V[i][j] = Math.max(V[i - 1][j], val + V[i - 1][j - wt]);
             } else {
                 V[i][j] = V[i - 1][j];
@@ -5172,17 +6997,59 @@ function knapsackDP(weights, values, capacity) {
         }
     }
     
-    // Backtracking to find items
-    let j = capacity;
-    let selected = [];
-    for (let i = n; i > 0; i--) {
-        if (V[i][j] !== V[i - 1][j]) {
-            selected.push(i - 1); // Selected item index
-            j -= weights[i - 1];
+    // Backtracking to find item selections
+    let tempCap = capacity;
+    const selected: number[] = [];
+    for (let i = n; i &gt; 0; i--) {
+        if (V[i][tempCap] !== V[i - 1][tempCap]) {
+            selected.push(i - 1); // Store 0-based item index
+            tempCap -= weights[i - 1];
         }
     }
     
-    return { maxValue: V[n][capacity], itemsIndices: selected };
-}`
+    return {
+        maxValue: V[n][capacity],
+        itemsIndices: selected.reverse()
+    };
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def knapsack_dp(weights, values, capacity):
+    n = len(weights)
+    V = [[0] * (capacity + 1) for _ in range(n + 1)]
+    
+    for i in range(1, n + 1):
+        wt = weights[i - 1]
+        val = values[i - 1]
+        for j in range(capacity + 1):
+            if j &gt;= wt:
+                V[i][j] = max(V[i - 1][j], val + V[i - 1][j - wt])
+            else:
+                V[i][j] = V[i - 1][j]
+                
+    # Backtrack
+    temp_cap = capacity
+    selected = []
+    for i in range(n, 0, -1):
+        if V[i][temp_cap] != V[i - 1][temp_cap]:
+            selected.append(i - 1)
+            temp_cap -= weights[i - 1]
+            
+    return V[n][capacity], sorted(selected)
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+The 0/1 Knapsack is an NP-complete problem. The Dynamic Programming solution works in pseudo-polynomial time because it depends on the numerical value of the capacity W.
+          </div>
+        </div>
+      </div>
+    `
   }
 };
