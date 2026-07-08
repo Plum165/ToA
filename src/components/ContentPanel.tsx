@@ -5,6 +5,8 @@ import ComplexityChart from './Visualizers/ComplexityChart';
 import WarshallTracer from './Visualizers/WarshallTracer';
 import FloydTracer from './Visualizers/FloydTracer';
 import KnapsackTracer from './Visualizers/KnapsackTracer';
+import GreedyChangeTracer from './Visualizers/GreedyChangeTracer';
+import HuffmanTracer from './Visualizers/HuffmanTracer';
 import ExercisePanel from './ExercisePanel';
 
 interface ContentPanelProps {
@@ -54,6 +56,10 @@ export default function ContentPanel({ topic }: ContentPanelProps) {
         return <FloydTracer />;
       case 'dyn_knap':
         return <KnapsackTracer />;
+      case 'gre_intro':
+        return <GreedyChangeTracer />;
+      case 'gre_huff':
+        return <HuffmanTracer />;
       default:
         return null;
     }
