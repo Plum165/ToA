@@ -2935,40 +2935,274 @@ QuickSelect is also known as Hoare's Selection Algorithm. It is highly optimized
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">The Concept</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Divide the problem of size $n$ into several sub-problems of size $n/2$, solve them recursively, and merge their solutions.
+            <strong>Merge Sort</strong> is a classic, highly efficient, comparison-based sorting algorithm invented by John von Neumann in 1945. It represents the quintessential application of the <strong>Divide and Conquer</strong> paradigm.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Merge Sort Analysis</span>
-          <p class="text-sm">Sort the array $A$ by sorting halves recursively and merging.</p>
-          <div class="latex-output">$T(n) = 2T(n/2) + \\Theta(n)$</div>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-80">
-            <li>$a = 2, b = 2, d = 1$. Since $a = b^d$, Master Theorem case 2 applies.</li>
-            <li><strong>Asymptotic Cost:</strong> Always $\\Theta(n \\log n)$ (best, worst, average).</li>
-            <li><strong>Space Cost:</strong> Requires $\\Theta(n)$ extra memory buffer for merge operations.</li>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Divide:</strong> Partition the unsorted list of size $n$ into two equal sublists of size $n/2$ around a calculated midpoint.</li>
+            <li><strong>Conquer:</strong> Recursively sort both sublists using Merge Sort until base cases (sublists of size $\le 1$) are reached.</li>
+            <li><strong>Combine:</strong> Merge the two sorted sublists back into a single sorted list in linear time.</li>
+            <li><strong>Stable Sorting:</strong> A sorting algorithm is stable if it preserves the relative order of equal elements. Merge Sort is inherently stable.</li>
           </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Explanation</h3>
+          <p class="leading-relaxed text-sm">
+            Merge Sort processes data recursively. The recursive structure splits the problem size down to $1$ before building back up. In the merge phase, we maintain pointers at the head of both sorted subarrays and repeatedly move the smaller element into the target array.
+          </p>
+        </div>
+
+        <!-- --- VISUAL RECURSION TRACE --- -->
+        <div class="step-card">
+          <span class="step-title">Visual Trace: Sorting [7, 2, 1, 6, 4]</span>
+          <div class="space-y-4 my-2 text-center text-xs">
+            <div>
+              <p class="text-blue-300 font-bold uppercase mb-1">1. Division Stage (Split)</p>
+              <div class="flex flex-col items-center gap-2">
+                <span class="p-1.5 bg-white/5 rounded border border-white/10 font-mono text-sm">[7, 2, 1, 6, 4]</span>
+                <span class="text-gray-400">↓</span>
+                <div class="flex gap-4">
+                  <span class="p-1.5 bg-blue-500/10 rounded border border-blue-500/30 font-mono">[7, 2]</span>
+                  <span class="p-1.5 bg-red-500/10 rounded border border-red-500/30 font-mono">[1, 6, 4]</span>
+                </div>
+                <span class="text-gray-400">↓</span>
+                <div class="flex gap-4">
+                  <span class="p-1 bg-blue-500/10 rounded border border-blue-500/30 font-mono">[7] | [2]</span>
+                  <span class="p-1 bg-red-500/10 rounded border border-red-500/30 font-mono">[1] | [6, 4]</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p class="text-green-300 font-bold uppercase mb-1">2. Merge Stage (Combine)</p>
+              <div class="flex flex-col items-center gap-2">
+                <div class="flex gap-4">
+                  <span class="p-1 bg-green-500/10 rounded border border-green-500/30 font-mono text-green-300">[2, 7]</span>
+                  <span class="p-1 bg-green-500/10 rounded border border-green-500/30 font-mono text-green-300">[1, 4, 6]</span>
+                </div>
+                <span class="text-gray-400">↓</span>
+                <span class="p-1.5 bg-green-500/20 rounded border border-green-500 font-mono text-sm font-bold">[1, 2, 4, 6, 7]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Recurrence & Complexity Analysis</h3>
+          <p class="text-sm">The running time of Merge Sort satisfies the recurrence relation:</p>
+          <div class="latex-output text-center">$$T(n) = 2T(n/2) + f(n)$$</div>
+          <p class="text-sm mt-2">
+            Where $f(n) = \Theta(n)$ is the cost of merging. Applying the <strong>Master Theorem</strong>:
+          </p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-xs md:text-sm font-mono opacity-85">
+            <li>$a = 2$ (2 subproblems)</li>
+            <li>$b = 2$ (problem size split by 2)</li>
+            <li>$d = 1$ (merge overhead is linear $\Theta(n^1)$)</li>
+            <li>Since $a = b^d \implies 2 = 2^1$, this falls under <strong>Case 2</strong> of the Master Theorem.</li>
+            <li><strong>Conclusion:</strong> $T(n) \in \Theta(n \log n)$ across best, worst, and average cases.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Auxiliary Memory:</strong> Merge Sort is NOT in-place. It requires an extra $\Theta(n)$ temporary array to complete the merge.</li>
+            <li><strong>Midpoint Calculations:</strong> Using <code class="font-mono text-xs">mid = (low + high) / 2</code> can cause integer overflow in languages like Java if array indices are huge; prefer <code class="font-mono text-xs">low + (high - low) / 2</code>.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm space-y-3">
+            <div>
+              <p class="font-bold text-accent">Exercise 1:</p>
+              <p>Prove that Merge Sort maintains sorting stability during the merge step.</p>
+              <details class="mt-2 text-xs text-gray-400">
+                <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+                <p class="mt-1">
+                  Stability is preserved by the comparison condition in the merge step: <code class="font-mono text-[11px]">if (left[i] <= right[j])</code>. By selecting the element from the left subarray first in the case of a tie, original ordering is preserved.
+                </p>
+              </details>
+            </div>
+            <div>
+              <p class="font-bold text-accent">Exercise 2:</p>
+              <p>What is the maximum number of comparisons performed when merging two sorted arrays of size $n/2$?</p>
+              <details class="mt-2 text-xs text-gray-400">
+                <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+                <p class="mt-1">
+                  The maximum comparisons needed to merge two arrays of size $k$ is $2k - 1$. For two subarrays of size $n/2$, this equates to exactly $n - 1$ comparisons.
+                </p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            CLRS: Introduction to Algorithms, Third Edition, Chapter 2.2 | Donald Knuth: The Art of Computer Programming, Volume 3.
+          </p>
         </div>
       </div>
     `,
-    code: `// Merge Sort recursive function
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm MergeSort(A[0..n-1])
+    // Sorts array A by recursive splitting and merging
+    if n > 1
+        mid <- floor(n / 2)
+        copy A[0..mid-1] to B[0..mid-1]
+        copy A[mid..n-1] to C[0..n-mid-1]
+        MergeSort(B)
+        MergeSort(C)
+        Merge(B, C, A)
+
+Algorithm Merge(B[0..p-1], C[0..q-1], A[0..p+q-1])
+    // Merges sorted sub-arrays B and C into A
+    i <- 0; j <- 0; k <- 0
+    while i < p and j < q do
+        if B[i] <= C[j]
+            A[k] <- B[i]
+            i <- i + 1
+        else
+            A[k] <- C[j]
+            j <- j + 1
+        k <- k + 1
+    if i = p
+        copy C[j..q-1] to A[k..p+q-1]
+    else
+        copy B[i..p-1] to A[k..p+q-1]
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity:
+  - Best Case: Θ(n log n) comparisons
+  - Worst Case: Θ(n log n) comparisons
+  - Average Case: Θ(n log n) comparisons
+- Space Complexity: Θ(n) auxiliary storage
+- Reason: The recursion splits the inputs into halves at each level down to size 1 (log n height tree). Recombining the results requires a linear scan of elements at each of the log n levels, performing Θ(n) work per level.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class MergeSort {
+    public static void mergeSort(int[] a) {
+        int n = a.length;
+        if (n < 2) return;
+        int mid = n / 2;
+        int[] l = new int[mid];
+        int[] r = new int[n - mid];
+
+        System.arraycopy(a, 0, l, 0, mid);
+        System.arraycopy(a, mid, r, 0, n - mid);
+
+        mergeSort(l);
+        mergeSort(r);
+        merge(a, l, r);
+    }
+
+    private static void merge(int[] a, int[] l, int[] r) {
+        int i = 0, j = 0, k = 0;
+        while (i < l.length && j < r.length) {
+            if (l[i] <= r[j]) {
+                a[k++] = l[i++];
+            } else {
+                a[k++] = r[j++];
+            }
+        }
+        while (i < l.length) {
+            a[k++] = l[i++];
+        }
+        while (j < r.length) {
+            a[k++] = r[j++];
+        }
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
 function mergeSort(arr) {
     if (arr.length <= 1) return arr;
-    let mid = Math.floor(arr.length / 2);
-    let left = mergeSort(arr.slice(0, mid));
-    let right = mergeSort(arr.slice(mid));
+    const mid = Math.floor(arr.length / 2);
+    const left = mergeSort(arr.slice(0, mid));
+    const right = mergeSort(arr.slice(mid));
     return merge(left, right);
 }
 
 function merge(left, right) {
-    let result = [], i = 0, j = 0;
+    const result = [];
+    let i = 0;
+    let j = 0;
+
     while (i < left.length && j < right.length) {
-        if (left[i] < right[j]) result.push(left[i++]);
-        else result.push(right[j++]);
+        if (left[i] <= right[j]) {
+            result.push(left[i++]);
+        } else {
+            result.push(right[j++]);
+        }
     }
+
     return result.concat(left.slice(i)).concat(right.slice(j));
-}`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+        
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+    
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+            
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Merge Sort's stable nature and predictable running time make it highly popular for sorting linked lists (where memory is not contiguous and nodes can be merged in O(1) space) and in external sorting algorithms handling data sets too large to fit in main memory.
+          </div>
+        </div>
+      </div>
+    `
   },
   div_quick: {
     id: 'div_quick',
@@ -2976,45 +3210,275 @@ function merge(left, right) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Divide by Value</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Unlike MergeSort which splits purely by index position, QuickSort partitions elements around a <strong>pivot value</strong>.
+            <strong>QuickSort</strong> is a highly efficient, in-place sorting algorithm developed by British computer scientist Tony Hoare in 1959. Unlike Merge Sort, it is an <em>unstable</em> sorting algorithm, but it is typically faster in practice due to lower constant factors.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">QuickSort Analysis</span>
-          <ul class="list-disc pl-5 mt-2 text-xs space-y-1 opacity-85">
-            <li><strong>Best/Average Case:</strong> Pivot always splits in half. $T(n) = 2T(n/2) + n \\in \\Theta(n \\log n)$.</li>
-            <li><strong>Worst Case:</strong> Pivot is always maximum or minimum (such as sorting an already sorted list). $T(n) = T(n-1) + n \\in \\Theta(n^2)$.</li>
-            <li><strong>Space:</strong> Work is in-place, but recursive call stack uses $O(\\log n)$ space.</li>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Pivot:</strong> A selected item from the array (e.g. first, last, or median) used to partition values.</li>
+            <li><strong>Partitioning:</strong> Rearranging the array such that all elements smaller than the pivot reside on its left, and all elements larger than the pivot reside on its right.</li>
+            <li><strong>In-Place:</strong> Performs sorting operations within the original array without allocating linear auxiliary memory arrays.</li>
           </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Explanation</h3>
+          <p class="leading-relaxed text-sm">
+            Unlike Merge Sort, which divides purely by index position, QuickSort divides elements by <strong>value</strong>. By placing a chosen Pivot in its correct final sorted position during partitioning, the problem splits into two smaller independent sub-sorting tasks.
+          </p>
+        </div>
+
+        <!-- --- VISUAL PIVOT AND SWAP DETAILS --- -->
+        <div class="step-card">
+          <span class="step-title">Visual Partition Trace (Hoare Logic) on [5, 3, 8, 4, 2, 7, 1, 6]</span>
+          <div class="space-y-3 font-mono text-xs my-2">
+            <div class="bg-black/30 p-2.5 rounded">
+              <p class="text-yellow-400 font-bold mb-1">Choosing pivot (First Element): 5</p>
+              <div class="flex justify-center gap-1.5 text-sm">
+                <span class="p-1 bg-yellow-500/20 border border-yellow-500 font-bold">[5]</span>
+                <span class="p-1 border border-white/10">3</span>
+                <span class="p-1 border border-white/10">8</span>
+                <span class="p-1 border border-white/10">4</span>
+                <span class="p-1 border border-white/10">2</span>
+                <span class="p-1 border border-white/10">7</span>
+                <span class="p-1 border border-white/10">1</span>
+                <span class="p-1 border border-white/10">6</span>
+              </div>
+            </div>
+
+            <div class="bg-black/30 p-2.5 rounded">
+              <p class="text-blue-300 font-bold mb-1">Scanning pointers i (left) and j (right):</p>
+              <p class="text-[11px] opacity-80">Pointer i finds 8 (&gt;5). Pointer j finds 1 (&lt;5). Swap them:</p>
+              <div class="flex justify-center gap-1.5 text-sm mt-1">
+                <span class="p-1 bg-yellow-500/10 border border-yellow-500/30">5</span>
+                <span class="p-1">3</span>
+                <span class="p-1 bg-red-500/20 border border-red-500 font-bold">1</span>
+                <span class="p-1">4</span>
+                <span class="p-1">2</span>
+                <span class="p-1">7</span>
+                <span class="p-1 bg-red-500/20 border border-red-500 font-bold">8</span>
+                <span class="p-1">6</span>
+              </div>
+            </div>
+
+            <div class="bg-black/30 p-2.5 rounded">
+              <p class="text-green-300 font-bold mb-1">Pointers cross (i &gt; j). Swap pivot with element at index j (2):</p>
+              <div class="flex justify-center gap-1.5 text-sm">
+                <span class="p-1 bg-green-500/20 border border-green-500 font-bold">2</span>
+                <span class="p-1">3</span>
+                <span class="p-1">1</span>
+                <span class="p-1">4</span>
+                <span class="p-1 bg-yellow-500/20 border border-yellow-500 font-bold">5</span>
+                <span class="p-1">7</span>
+                <span class="p-1">8</span>
+                <span class="p-1">6</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-1">Pivot 5 is now in correct final position. Recurse left of 5 and right of 5.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Efficiency Analysis</h3>
+          <ul class="space-y-2 text-sm font-mono">
+            <li><strong>Best Case:</strong> $\Theta(n \log n)$ <span class="opacity-70">(Pivot splits array perfectly in half)</span></li>
+            <li><strong>Average Case:</strong> $\Theta(n \log n)$ <span class="opacity-70">(Highly likely on random pivot strategies)</span></li>
+            <li><strong>Worst Case:</strong> $\Theta(n^2)$ <span class="opacity-70">(Array already sorted, pivot always picks min/max element)</span></li>
+            <li><strong>Space Complexity:</strong> $\Theta(\log n)$ average recursion stack depth (can degenerate to $O(n)$ in the worst case).</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Pivot Selection:</strong> Naive selection of first/last elements as pivot triggers $O(n^2)$ worst-case on pre-sorted arrays. Always recommend <em>randomized pivot</em> or <em>median-of-three</em> strategies.</li>
+            <li><strong>Infinite Loops:</strong> Pointers can get stuck on values equal to the pivot if boundary checks (e.g., <code class="font-mono text-xs">&lt;</code> vs <code class="font-mono text-xs">&lt;=</code>) are set incorrectly.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm space-y-3">
+            <div>
+              <p class="font-bold text-accent">Exercise 1:</p>
+              <p>What is the recursion tree depth of QuickSort in the absolute worst case?</p>
+              <details class="mt-2 text-xs text-gray-400">
+                <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+                <p class="mt-1">
+                  In the worst case (where one partition contains $n-1$ elements and the other has $0$), the recursion tree depth is exactly $n - 1$, leading to $O(n^2)$ comparisons.
+                </p>
+              </details>
+            </div>
+            <div>
+              <p class="font-bold text-accent">Exercise 2:</p>
+              <p>How does the Median-of-Three pivot selection method work?</p>
+              <details class="mt-2 text-xs text-gray-400">
+                <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+                <p class="mt-1">
+                  It takes the first, middle, and last elements of the subarray, finds their median, swaps it with the first element, and uses it as the pivot. This guarantees that we avoid the absolute worst-case split on pre-sorted arrays.
+                </p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            C.A.R. Hoare: Quicksort, Computer Journal 5(1):10-16, 1962 | Robert Sedgewick: Quicksort, Garland Publishing, 1980.
+          </p>
         </div>
       </div>
     `,
-    code: `// QuickSort recursive implementation
-function quickSort(arr, left = 0, right = arr.length - 1) {
-    if (left < right) {
-        let pivotIndex = partition(arr, left, right);
-        quickSort(arr, left, pivotIndex - 1);
-        quickSort(arr, pivotIndex + 1, right);
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm QuickSort(A, low, high)
+    // Sorts the subarray A[low..high]
+    if low < high
+        s <- Partition(A, low, high) // s is the pivot position
+        QuickSort(A, low, s - 1)
+        QuickSort(A, s + 1, high)
+
+Algorithm Partition(A, low, high)
+    // Partitions A around pivot (using Hoare's logic)
+    pivot <- A[low]
+    i <- low + 1
+    j <- high
+    while i <= j do
+        while i <= high and A[i] <= pivot do i <- i + 1
+        while j >= low and A[j] > pivot do j <- j - 1
+        if i < j
+            Swap A[i] and A[j]
+    Swap A[low] and A[j]
+    return j
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity:
+  - Best Case: Θ(n log n)
+  - Worst Case: Θ(n²)
+  - Average Case: Θ(n log n)
+- Space Complexity: Θ(log n) stack frame space (worst case Θ(n))
+- Reason: At each level of the recursion, we spend linear time partitioning elements. If splits are balanced, we solve subproblems of size n/2, needing log n levels. If highly skewed, we split into size 1 and n-1, needing n levels.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class QuickSort {
+    public static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivotIdx = partition(arr, low, high);
+            quickSort(arr, low, pivotIdx - 1);
+            quickSort(arr, pivotIdx + 1, high);
+        }
+    }
+
+    private static int partition(int[] arr, int low, int high) {
+        int pivot = arr[low];
+        int i = low + 1;
+        int j = high;
+
+        while (i <= j) {
+            while (i <= high && arr[i] <= pivot) i++;
+            while (j >= low && arr[j] > pivot) j--;
+            if (i < j) {
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, low, j);
+        return j;
+    }
+
+    private static void swap(int[] arr, int x, int y) {
+        int temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+function quickSort(arr, low = 0, high = arr.length - 1) {
+    if (low < high) {
+        const pivotIndex = partition(arr, low, high);
+        quickSort(arr, low, pivotIndex - 1);
+        quickSort(arr, pivotIndex + 1, high);
     }
     return arr;
 }
 
-function partition(arr, left, right) {
-    let pivot = arr[left];
-    let i = left + 1;
-    let j = right;
+function partition(arr, low, high) {
+    const pivot = arr[low];
+    let i = low + 1;
+    let j = high;
+
     while (i <= j) {
-        while (i <= right && arr[i] <= pivot) i++;
-        while (j >= left && arr[j] > pivot) j--;
+        while (i <= high && arr[i] <= pivot) i++;
+        while (j >= low && arr[j] > pivot) j--;
         if (i < j) {
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
     }
-    [arr[left], arr[j]] = [arr[j], arr[left]];
+    [arr[low], arr[j]] = [arr[j], arr[low]];
     return j;
-}`
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def quick_sort(arr, low=0, high=None):
+    if high is None:
+        high = len(arr) - 1
+        
+    if low < high:
+        pivot_idx = partition(arr, low, high)
+        quick_sort(arr, low, pivot_idx - 1)
+        quick_sort(arr, pivot_idx + 1, high)
+    return arr
+
+def partition(arr, low, high):
+    pivot = arr[low]
+    i = low + 1
+    j = high
+    
+    while i <= j:
+        while i <= high and arr[i] <= pivot:
+            i += 1
+        while j >= low and arr[j] > pivot:
+            j -= 1
+        if i < j:
+            arr[i], arr[j] = arr[j], arr[i]
+            
+    arr[low], arr[j] = arr[j], arr[low]
+    return j
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Modern systems use hybrid sorting algorithms like Timsort (used in Python and Java) or introsort (which uses QuickSort initially, then switches to Heapsort if recursion exceeds limits, ensuring O(n log n) worst-case performance).
+          </div>
+        </div>
+      </div>
+    `
   },
   div_strassen: {
     id: 'div_strassen',
@@ -3022,34 +3486,231 @@ function partition(arr, left, right) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Matrix Multiplication Optimization</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Standard matrix multiplication requires $O(n^3)$ operations. A naive divide-and-conquer strategy splits them into $2 \\times 2$ blocks, requiring 8 half-size multiplications: $T(n) = 8T(n/2) + n^2 \\in \\Theta(n^3)$.
+            In 1969, Volker Strassen shook the mathematics and computer science community by proving that standard $O(n^3)$ matrix multiplication is asymptotically suboptimal. He developed a divide-and-conquer algorithm that operates in strictly sub-cubic time.
           </p>
         </div>
-        <div class="step-card">
-          <span class="step-title">Strassen's Formula</span>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Naive Block Multiplication:</strong> Splitting two $n \times n$ matrices into four submatrices of size $n/2 \times n/2$, which requires 8 separate multiplications.</li>
+            <li><strong>Strassen's Reduction:</strong> An algebraic approach that reduces block multiplications from 8 to 7, introducing 18 additions/subtractions in exchange.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Explanation</h3>
+          <p class="leading-relaxed text-sm">
+            Given matrices $A$ and $B$, we divide each into 4 blocks of size $n/2 \times n/2$:
+          </p>
+          <div class="bg-black/30 p-2 text-center rounded font-mono text-xs my-2">
+            A = [[A11, A12], [A21, A22]],  B = [[B11, B12], [B21, B22]]
+          </div>
           <p class="text-sm">
-            Volker Strassen discovered that by taking clever linear combinations, we can multiply blocks using only <strong>7 multiplications</strong> instead of 8.
+            Strassen defines 7 recursive multiplication variables ($P_1$ to $P_7$) of size $n/2 \times n/2$:
           </p>
-          <div class="latex-output">$T(n) = 7T(n/2) + \\Theta(n^2)$</div>
-          <p class="text-xs opacity-75 mt-2">
-            According to the Master Theorem, $a = 7, b = 2, d = 2$. Since $7 > 2^2 = 4$, Case 3 applies.
-          </p>
-          <p class="text-sm font-bold text-green-400 mt-1">
-            Asymptotic Cost: $O(n^{\\log_2 7}) \\approx O(n^{2.807})$
+          <div class="latex-output font-mono text-[11px] bg-black/40 p-3 rounded space-y-1 text-yellow-300">
+            $$P_1 = A_{11}(B_{12} - B_{22})$$<br>
+            $$P_2 = (A_{11} + A_{12})B_{22}$$<br>
+            $$P_3 = (A_{21} + A_{22})B_{11}$$<br>
+            $$P_4 = A_{22}(B_{21} - B_{11})$$<br>
+            $$P_5 = (A_{11} + A_{22})(B_{11} + B_{22})$$<br>
+            $$P_6 = (A_{12} - A_{22})(B_{21} + B_{22})$$<br>
+            $$P_7 = (A_{11} - A_{21})(B_{11} + B_{12})$$
+          </div>
+          <p class="text-sm mt-3">Using these variables, the quadrants of the product matrix $C$ are merged:</p>
+          <div class="latex-output font-mono text-[11px] bg-black/40 p-3 rounded text-green-300">
+            $$C_{11} = P_5 + P_4 - P_2 + P_6$$<br>
+            $$C_{12} = P_1 + P_2$$<br>
+            $$C_{21} = P_3 + P_4$$<br>
+            $$C_{22} = P_5 + P_1 - P_3 - P_7$$
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Recurrence Analysis (Master Theorem Case 3)</h3>
+          <p class="text-sm">The recurrence relation for Strassen is:</p>
+          <div class="latex-output text-center">$$T(n) = 7T(n/2) + \Theta(n^2)$$</div>
+          <div class="bg-black/30 p-3 rounded mt-2 text-xs font-mono space-y-1">
+            <p>1. Parameters: $a = 7$ (7 recursive multiplication calls), $b = 2$ (matrix dimensions halved), $d = 2$ (addition overhead is $\Theta(n^2)$).</p>
+            <p>2. Inequality comparison: $a$ vs $b^d \implies 7 > 2^2 \implies 7 > 4$.</p>
+            <p>3. Because $a > b^d$, **Case 3** of the Master Theorem applies.</p>
+            <p>4. Running time: $T(n) \in \Theta(n^{\log_2 7}) \approx \Theta(n^{2.807})$.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Hidden Constants:</strong> Due to the 18 matrix additions, Strassen's has higher constant overhead than the standard loop multiplication. It is only faster in practice for matrix dimensions $n > 64$ or $n > 128$.</li>
+            <li><strong>Numerical Stability:</strong> Strassen's algorithm exhibits slightly lower numerical precision stability due to addition-subtraction groupings, which can amplify floating-point errors.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm space-y-2">
+            <p class="font-bold text-accent">Exercise:</p>
+            <p>Substitute the definitions of $P_5, P_4, P_2, P_6$ into the formula for $C_{11}$ and prove it mathematically yields $A_{11}B_{11} + A_{12}B_{21}$.</p>
+            <details class="mt-2 text-xs text-gray-400">
+              <summary class="cursor-pointer hover:text-white font-mono">View Solution Proof</summary>
+              <div class="mt-1 font-mono text-[11px] bg-black/40 p-2 rounded">
+                C11 = P5 + P4 - P2 + P6<br>
+                = (A11 + A22)(B11 + B22) + A22(B21 - B11) - (A11 + A12)B22 + (A12 - A22)(B21 + B22)<br>
+                = [A11*B11 + A11*B22 + A22*B11 + A22*B22] + [A22*B21 - A22*B11] - [A11*B22 + A12*B22] + [A12*B21 + A12*B22 - A22*B21 - A22*B22]<br>
+                = A11*B11 + A12*B21 (All other terms cancel out perfectly).
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Volker Strassen: Gaussian Elimination is not Optimal, Numerische Mathematik 13: 354–356, 1969.
           </p>
         </div>
       </div>
     `,
-    code: `// Strassen's reduction overview:
-// We compute 7 matrices of size (n/2 x n/2):
-// P1 = A11 * (B12 - B22)
-// P2 = (A11 + A12) * B22
-// ... up to P7
-// Then combine quadrants:
-// C11 = P5 + P4 - P2 + P6
-// ... C12, C21, C22`
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm Strassen(A, B, n)
+    // Multiplies square matrices A and B of size n x n
+    if n <= Threshold
+        return NaiveMatrixMultiply(A, B, n)
+        
+    Divide A into A11, A12, A21, A22
+    Divide B into B11, B12, B21, B22
+    
+    P1 <- Strassen(A11, B12 - B22, n/2)
+    P2 <- Strassen(A11 + A12, B22, n/2)
+    P3 <- Strassen(A21 + A22, B11, n/2)
+    P4 <- Strassen(A22, B21 - B11, n/2)
+    P5 <- Strassen(A11 + A22, B11 + B22, n/2)
+    P6 <- Strassen(A12 - A22, B21 + B22, n/2)
+    P7 <- Strassen(A11 - A21, B11 + B12, n/2)
+    
+    C11 <- P5 + P4 - P2 + P6
+    C12 <- P1 + P2
+    C21 <- P3 + P4
+    C22 <- P5 + P1 - P3 - P7
+    
+    Combine C11, C12, C21, C22 into C
+    return C
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity:
+  - Best / Worst / Average Case: Θ(n^2.807)
+- Space Complexity: Θ(n^2) due to block copying at each recursive call
+- Reason: Traditional block multiplication makes 8 recursive calls, yielding T(n) = 8T(n/2) + O(n^2) -> O(n^3). Strassen requires only 7 calls, satisfying T(n) = 7T(n/2) + O(n^2) -> O(n^log_2 7) ~ O(n^2.807).
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+// Overview block structure representing Strassen allocation
+public class StrassenMultiplying {
+    public static double[][] multiply(double[][] a, double[][] b) {
+        int n = a.length;
+        if (n <= 64) {
+            return naiveMultiply(a, b);
+        }
+        // Allocations and additions to construct submatrices...
+        // double[][] p1 = multiply(a11, sub(b12, b22));
+        // double[][] p2 = multiply(add(a11, a12), b22);
+        // ...
+        // Reassemble into result double[][] c.
+        return new double[n][n];
+    }
+
+    private static double[][] naiveMultiply(double[][] a, double[][] b) {
+        int n = a.length;
+        double[][] c = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < n; k++) {
+                    c[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return c;
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+// Recursive helper outline
+function strassenMultiply(A, B) {
+    const n = A.length;
+    if (n <= 2) {
+        return naiveMultiply(A, B);
+    }
+    // Splitting, subtracting, adding, recursive calling, and rejoining blocks...
+    // P1 = strassenMultiply(A11, subtract(B12, B22))
+    // P2 = strassenMultiply(add(A11, A12), B22)
+    // ...
+    // C11 = add(subtract(add(P5, P4), P2), P6)
+    return A;
+}
+
+function naiveMultiply(A, B) {
+    const n = A.length;
+    const C = Array.from({ length: n }, () => Array(n).fill(0));
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            for (let k = 0; k < n; k++) {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    return C;
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+def strassen_multiply(A, B):
+    n = len(A)
+    if n <= 2:
+        return naive_multiply(A, B)
+    # Perform Strassen algebra with P1..P7 recursive steps...
+    # return reassembled_matrix
+    return A
+
+def naive_multiply(A, B):
+    n = len(A)
+    C = [[0]*n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            for k in range(n):
+                C[i][j] += A[i][k] * B[k][j]
+    return C
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+Due to memory lookup spatial layouts, hardware caches perform far better with linear block multiplications. In practice, modern optimized matrix libraries (like BLAS or LAPACK) utilize highly tuned cache block tiling in O(n^3) rather than Strassen's algorithm for standard sizes.
+          </div>
+        </div>
+      </div>
+    `
   },
   div_geom: {
     id: 'div_geom',
@@ -3057,27 +3718,240 @@ function partition(arr, left, right) {
     notes: `
       <div class="space-y-6">
         <div>
-          <h3 class="text-xl font-bold text-accent mb-2">Geometric Optimization</h3>
+          <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Divide-and-conquer can speed up closest-pair from $\\Theta(n^2)$ to $\\Theta(n \\log n)$, and Convex Hull (QuickHull) from $\\Theta(n^3)$ to average $\\Theta(n \\log n)$.
+            Divide and Conquer is not restricted to numbers. It works exceptionally well in computational geometry. Two signature examples are finding the <strong>Closest Pair of Points</strong> (Shamos & Hoey, 1975) and building a <strong>Convex Hull</strong> (QuickHull).
           </p>
         </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Definitions</h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm">
+            <li><strong>Closest Pair:</strong> Find two points in 2D space separated by the minimum Euclidean distance $d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$.</li>
+            <li><strong>Convex Hull:</strong> The smallest convex boundary enclosing a set of points (often described as the shape of a rubber band snapped around pegs).</li>
+            <li><strong>Straddle Zone (Strip):</strong> A vertical region of width $2d$ around the dividing line where points from different partitions could be closer than the current min distance $d$.</li>
+          </ul>
+        </div>
+
+        <!-- --- CLOSEST PAIR VISUAL --- -->
         <div class="step-card">
-          <span class="step-title">D&C Closest Pair Step</span>
-          <ol class="list-decimal pl-5 text-xs space-y-1">
-            <li>Sort points by X-coordinate. Split into left and right halves.</li>
-            <li>Solve closest-pair recursively in each half. Let $d$ be the minimum of these distances.</li>
-            <li>In the <strong>Straddle Zone</strong> (vertical strip of width $2d$), sort points by Y-coordinate. For each point, check only the next <strong>7 points</strong>.</li>
-            <li>Merge cost is linear, yielding $T(n) = 2T(n/2) + n \\in \\Theta(n \\log n)$.</li>
-          </ol>
+          <span class="step-title">Closest Pair: Straddle Zone Concept</span>
+          <div class="relative h-44 w-full bg-black/40 rounded-lg border border-white/10 my-2 overflow-hidden">
+            <div class="absolute left-0 top-0 h-full w-1/2 border-r border-dashed border-white/20 flex items-center justify-center text-[10px] text-gray-500">Left Side (dL)</div>
+            <div class="absolute right-0 top-0 h-full w-1/2 flex items-center justify-center text-[10px] text-gray-500">Right Side (dR)</div>
+            <div class="absolute left-1/2 top-0 h-full w-20 -translate-x-1/2 bg-yellow-500/10 border-x border-yellow-500/30 flex items-center justify-center">
+              <span class="text-[9px] text-yellow-300 font-bold uppercase tracking-tighter text-center">Straddle Strip<br>Width 2d</span>
+            </div>
+            {/* Points */}
+            <div class="absolute left-[20%] top-[40%] w-2 h-2 bg-blue-400 rounded-full"></div>
+            <div class="absolute right-[15%] top-[20%] w-2 h-2 bg-red-400 rounded-full"></div>
+            {/* Straddlers */}
+            <div class="absolute left-[47%] top-[55%] w-2 h-2 bg-green-400 rounded-full shadow-[0_0_5px_#4ade80]"></div>
+            <div class="absolute left-[52%] top-[58%] w-2 h-2 bg-green-400 rounded-full shadow-[0_0_5px_#4ade80]"></div>
+          </div>
+          <p class="text-xs text-center opacity-80">
+            We only scan strip points sorted by Y. For each point, we check at most the next <strong>7 points</strong>, keeping combine linear!
+          </p>
+        </div>
+
+        <!-- --- QUICKHULL VISUAL --- -->
+        <div class="step-card">
+          <span class="step-title">QuickHull Concept (Excluding Internal Points)</span>
+          <div class="bg-black/30 p-2 rounded-lg my-2 text-center">
+            <svg viewBox="0 0 200 110" class="w-full h-36">
+              <polygon points="30,80 170,80 100,20" fill="rgba(34, 197, 94, 0.15)" stroke="#22c55e" stroke-width="1.5" />
+              <line x1="30" y1="80" x2="170" y2="80" stroke="#facc15" stroke-dasharray="3" />
+              <circle cx="30" cy="80" r="3.5" fill="#fff" />
+              <circle cx="170" cy="80" r="3.5" fill="#fff" />
+              <circle cx="100" cy="20" r="4.5" fill="#facc15" />
+              <text x="30" y="93" fill="white" font-size="9">P1 (MinX)</text>
+              <text x="170" y="93" fill="white" font-size="9">P2 (MaxX)</text>
+              <text x="100" y="14" fill="#facc15" font-size="9" text-anchor="middle" font-weight="bold">Pmax (Furthest)</text>
+              <circle cx="90" cy="65" r="2.5" fill="#666" />
+              <circle cx="110" cy="55" r="2.5" fill="#666" />
+              <text x="100" y="60" fill="#777" font-size="8" text-anchor="middle">Ignored Inside Triangle</text>
+            </svg>
+            <p class="text-[11px] opacity-75">
+              Triangle P1-P2-Pmax acts as a shield. Points inside are discarded; recursion runs on outside regions.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold text-accent mb-2">Complexity Analysis</h3>
+          <ul class="space-y-2 text-sm font-mono">
+            <li><strong>Closest Pair (Divide & Conquer):</strong> Satisfies $T(n) = 2T(n/2) + O(n \log n)$ which reduces to $\Theta(n \log n)$ using pre-sorting on X and Y coords.</li>
+            <li><strong>QuickHull:</strong>
+              <ul class="list-disc pl-5 mt-1 space-y-0.5">
+                <li><strong>Average Case:</strong> $\Theta(n \log n)$ when points are distributed uniformly and many get excluded.</li>
+                <li><strong>Worst Case:</strong> $\Theta(n^2)$ when all points lie on the boundary (e.g. distributed along a circle).</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Common Mistakes</h3>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-red-200">
+            <li><strong>Y-Sorting in Strip:</strong> If we do not sort the strip points by their Y-coordinate at each merge step (or maintain pre-sorted arrays), the merge step becomes $O(n^2)$, degrading the total runtime to $O(n \log^2 n)$ or $O(n^2)$.</li>
+            <li><strong>Precision Errors:</strong> In QuickHull, calculating which side of a line a point resides on uses cross-products. Double-precision float stability must be checked for collinear points.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold text-white mb-2">Exercises</h3>
+          <div class="bg-black/20 p-3 rounded-lg border border-white/5 text-sm space-y-3">
+            <div>
+              <p class="font-bold text-accent">Exercise 1:</p>
+              <p>Why is it mathematically guaranteed that checking only the next 7 points in the closest-pair Y-sorted strip is sufficient?</p>
+              <details class="mt-2 text-xs text-gray-400">
+                <summary class="cursor-pointer hover:text-white font-mono">View Solution</summary>
+                <p class="mt-1">
+                  By geometric packing arguments, we know that no two points in the left/right sub-strips can be closer than $d$. In a $d \times 2d$ rectangular bounding box, at most 8 points can exist under this condition. Thus, comparing a point with the next 7 in Y-sorted order is sufficient.
+                </p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
+          <p class="text-xs opacity-75">
+            Preparata, M. I., & Shamos, M. I.: Computational Geometry: An Introduction, Springer-Verlag, 1985.
+          </p>
         </div>
       </div>
     `,
-    code: `// QuickHull: Average-case Θ(n log n)
-// 1. Draw a line between extreme points P1 (min X) and P2 (max X).
-// 2. Find furthest point Pmax from line. It is part of the Hull.
-// 3. Discard all points inside the triangle P1-P2-Pmax (they cannot be on the Hull).
-// 4. Repeat recursively on left of P1-Pmax and left of Pmax-P2.`
+    code: `
+      <div class="space-y-6 text-sm">
+        <div>
+          <h4 class="font-bold text-accent mb-2">1. Pseudocode</h4>
+          <pre class="code-box">
+Algorithm ClosestPair(P)
+    // Computes closest distance between points in P
+    Sort points by X-coordinate
+    return ClosestPairRec(P)
+
+Algorithm ClosestPairRec(P)
+    if |P| <= 3
+        return BruteForceClosestPair(P)
+        
+    mid <- |P| / 2
+    dL <- ClosestPairRec(P[0..mid-1])
+    dR <- ClosestPairRec(P[mid..end])
+    d <- min(dL, dR)
+    
+    Strip <- points in P within X-distance d of P[mid]
+    Sort Strip by Y-coordinate
+    
+    for i <- 0 to |Strip|-1 do
+        for k <- i+1 to min(i+7, |Strip|-1) do
+            d <- min(d, Distance(Strip[i], Strip[k]))
+    return d
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">2. Complexity Analysis</h4>
+          <div class="code-box">
+- Time Complexity:
+  - Closest Pair: Θ(n log n)
+  - QuickHull: Average Θ(n log n), Worst Case Θ(n²)
+- Space Complexity: Θ(n)
+- Reason: Sorting points initially takes O(n log n). The recursive splitting satisfies T(n) = 2T(n/2) + O(n) because the strip filtering takes linear time since we only verify up to 7 neighbors for each point.
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">3. Java</h4>
+          <pre class="code-box">
+public class ClosestPoints {
+    public static class Point {
+        double x, y;
+        public Point(double x, double y) { this.x = x; this.y = y; }
+    }
+
+    public static double getClosestDistance(Point[] pts) {
+        // Core structure: sort by X then run recursive binary-splitting
+        // On merging, extract strip, sort by Y, and compare 7 adjacent neighbors.
+        return 0.0; 
+    }
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">4. JavaScript / TypeScript</h4>
+          <pre class="code-box">
+// Core outline for closest pair of points
+function getClosestDistance(points) {
+    points.sort((a, b) => a.x - b.x);
+    return closestPairRec(points);
+}
+
+function closestPairRec(points) {
+    const n = points.length;
+    if (n <= 3) return bruteForce(points);
+
+    const mid = Math.floor(n / 2);
+    const dL = closestPairRec(points.slice(0, mid));
+    const dR = closestPairRec(points.slice(mid));
+    let d = Math.min(dL, dR);
+
+    const strip = points.filter(p => Math.abs(p.x - points[mid].x) < d);
+    strip.sort((a, b) => a.y - b.y);
+
+    for (let i = 0; i < strip.length; i++) {
+        for (let j = i + 1; j < Math.min(i + 8, strip.length); j++) {
+            const dist = Math.hypot(strip[i].x - strip[j].x, strip[i].y - strip[j].y);
+            d = Math.min(d, dist);
+        }
+    }
+    return d;
+}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">5. Python</h4>
+          <pre class="code-box">
+import math
+
+def get_closest_distance(points):
+    points.sort(key=lambda p: p[0]) # sort by X
+    return closest_pair_rec(points)
+
+def closest_pair_rec(points):
+    n = len(points)
+    if n <= 3:
+        return brute_force(points)
+        
+    mid = n // 2
+    dL = closest_pair_rec(points[:mid])
+    dR = closest_pair_rec(points[mid:])
+    d = min(dL, dR)
+    
+    mid_x = points[mid][0]
+    strip = [p for p in points if abs(p[0] - mid_x) < d]
+    strip.sort(key=lambda p: p[1]) # sort by Y
+    
+    for i in range(len(strip)):
+        for j in range(i + 1, min(i + 8, len(strip))):
+            dist = math.hypot(strip[i][0] - strip[j][0], strip[i][1] - strip[j][1])
+            d = min(d, dist)
+            
+    return d
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-accent mb-2">6. Notes</h4>
+          <div class="code-box">
+By keeping points pre-sorted in both X and Y and passing them down the recursion stacks during splits, we can eliminate sorting in the strip completely, satisfying T(n) = 2T(n/2) + O(n) recursively, avoiding the O(n log n) sorting step at each level.
+          </div>
+        </div>
+      </div>
+    `
   },
 
   // ============================================
