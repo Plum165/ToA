@@ -7031,7 +7031,7 @@ def knapsack_dp(weights, values, capacity):
             else:
                 V[i][j] = V[i - 1][j]
                 
-    # Backtrack
+    # Backtrack to find selected items
     temp_cap = capacity
     selected = []
     for i in range(n, 0, -1):
