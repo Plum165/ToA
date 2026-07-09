@@ -75,7 +75,7 @@ export default function App() {
       <footer className="max-w-7xl mx-auto px-6 pt-12 pb-4 text-center text-xs opacity-60 font-medium">
         <p>&copy; {new Date().getFullYear()} Theory of Algorithms. Developed for CSC3003S.</p>
         <p className="mt-1 font-mono text-[10px] text-gray-500">
-          Build v5.1.0 • Designed with Swiss Precision & Offline-First Integrity • Made by Moegamat Samsodien
+           Made by Moegamat Samsodien
         </p>
       </footer>
     </div>

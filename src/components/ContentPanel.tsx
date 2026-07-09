@@ -178,11 +178,6 @@ export default function ContentPanel({ topic }: ContentPanelProps) {
         </div>
       </div>
 
-      {/* Footer hint */}
-      <div className="pt-4 border-t border-white/10 text-[11px] text-gray-400 font-mono flex items-center justify-between relative z-10">
-        <span>Active ID: {topic.id}</span>
-        <span>Render Engine: HTML5 + LaTeX (MathJax)</span>
-      </div>
     </section>
   );
 }
