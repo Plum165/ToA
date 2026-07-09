@@ -168,63 +168,73 @@ export const TOPICS: Record<string, Topic> = {
         </div>
       </div>
     `,
-    code: `// =========================================================================
-// 1. LINEAR SEARCH - O(n) Time Complexity (Worst Case)
-// =========================================================================
-// If the target is at the very end of the array, or doesn't exist, we must
-// iterate through all 'n' elements of the list.
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">LINEAR SEARCH (UPPER BOUND O(n) WORKCASE)</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm LinearSearch(A[0..n-1], target)
+  // Searches for a target value in an array
+  // Input: An array A of n elements, and a target value
+  // Output: The index of target if found, otherwise -1
+  for i <- 0 to n - 1 do
+    if A[i] == target then
+      return i
+  return -1
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: O(n) (Worst Case)
+- Space Complexity: O(1) auxiliary space (in-place)
+- Reason: In the worst-case scenario (where the target element is at the very end of the array, or does not exist at all), the loop must run exactly n times, executing comparisons on each step. This scales linearly with the input size n.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static int linearSearch(int[] arr, int target) {
+    int n = arr.length;
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == target) {
+            return i; // Target found
+        }
+    }
+    return -1; // Target not found
+}
+          </div>
+
+          <span class="code-label">JavaScript / TypeScript</span>
+          <div class="code-box">
 function linearSearch(arr: number[], target: number): number {
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === target) return i; // Found target in 'i' steps
-    }
-    return -1; // Not found: n checks made
-}
-
-// =========================================================================
-// 2. BUBBLE SORT - O(n²) Time Complexity (Worst Case)
-// =========================================================================
-// If the input array is sorted in descending order, the nested loops will
-// perform n * (n - 1) / 2 comparisons and swaps, yielding a quadratic upper bound.
-function bubbleSort(arr: number[]): void {
-    let n = arr.length;
+    const n = arr.length;
     for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                // Perform structural swap
-                let temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
+        if (arr[i] === target) {
+            return i; // Target found
         }
     }
+    return -1; // Target not found
 }
+          </div>
 
-// =========================================================================
-// 3. RECURSIVE FIBONACCI - O(2ⁿ) Time Complexity (Worst Case)
-// =========================================================================
-// Naive recursion branches twice per call without caching intermediate states,
-// constructing a call tree of depth n. The total calls scale exponentially.
-function fibRecursive(n: number): number {
-    if (n <= 1) return n;
-    return fibRecursive(n - 1) + fibRecursive(n - 2);
-}
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def linear_search(arr, target):
+    n = len(arr)
+    for i in range(n):
+        if arr[i] == target:
+            return i # Target found
+    return -1 # Target not found
+          </div>
 
-// =========================================================================
-// 4. POWERSETS GENERATION - O(2ⁿ) Time/Space Complexity
-// =========================================================================
-// Finding all subsets of a set. A set of size n possesses exactly 2ⁿ subsets.
-// Thus, both generating and storing the powerset requires exponential bound.
-function getPowerSet<T>(arr: T[]): T[][] {
-    const result: T[][] = [[]];
-    for (let value of arr) {
-        const length = result.length;
-        for (let i = 0; i < length; i++) {
-            let temp = [...result[i], value];
-            result.push(temp);
-        }
-    }
-    return result;
-}`
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Big-O represents the asymptotic upper bound of an algorithm's growth rate. If an algorithm is O(n), its operations will not scale faster than a linear function of n.
+          </div>
+        </div>
+      </div>
+    `
   },
   omega: {
     id: 'omega',
@@ -383,61 +393,94 @@ function getPowerSet<T>(arr: T[]): T[][] {
         </div>
       </div>
     `,
-    code: `// =========================================================================
-// 1. LINEAR SEARCH - Ω(1) Time Complexity (Best Case)
-// =========================================================================
-// In the absolute best case, the target element is located at index 0 of the
-// array. The search terminates instantly in exactly one operation, Ω(1) constant.
-function linearSearchBestCase<T>(arr: T[], target: T): number {
-    if (arr.length > 0 && arr[0] === target) {
-        return 0; // Terminated in 1 operation
-    }
-    // ... remainder of search continues in loop ...
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === target) return i;
-    }
-    return -1;
-}
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">OPTIMIZED BUBBLE SORT (LOWER BOUND Ω(n) BESTCASE)</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm OptimizedBubbleSort(A[0..n-1])
+  // Sorts a given array with early exit check
+  // Input: An array A[0..n-1] of n elements
+  // Output: Array A sorted in nondecreasing order
+  for i <- 0 to n - 2 do
+    swapped <- false
+    for j <- 0 to n - i - 2 do
+      if A[j] > A[j+1] do
+        Swap A[j] and A[j+1]
+        swapped <- true
+    if not swapped break // Already fully sorted
+          </div>
 
-// =========================================================================
-// 2. OPTIMIZED BUBBLE SORT - Ω(n) Time Complexity (Best Case)
-// =========================================================================
-// If the input array is already fully sorted, a single pass with no swaps
-// allows the algorithm to detect sorted state and terminate early.
-function bubbleSortOptimized(arr: number[]): void {
-    let n = arr.length;
-    let swapped: boolean;
-    do {
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: Ω(n) (Best Case)
+- Space Complexity: Ω(1) auxiliary space (in-place)
+- Reason: When the input array is already fully sorted, the inner loop executes comparisons exactly n-1 times on the first pass. Since no elements are out of order, "swapped" remains false, triggering the early break. Thus, the algorithm takes linear time in the best case.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static void bubbleSort(int[] arr) {
+    int n = arr.length;
+    boolean swapped;
+    for (int i = 0; i < n - 1; i++) {
         swapped = false;
-        for (let i = 0; i < n - 1; i++) {
-            if (arr[i] > arr[i + 1]) {
-                // Perform structural swap
-                let temp = arr[i];
-                arr[i] = arr[i + 1];
-                arr[i + 1] = temp;
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
                 swapped = true;
             }
         }
-        n--; // Optimization: last item of each loop is sorted
-    } while (swapped); // If no items were swapped, array is sorted!
-}
-
-// =========================================================================
-// 3. ITERATIVE FIBONACCI - Ω(n) Time Complexity (Best Case)
-// =========================================================================
-// Calculating Fibonacci iteratively solves each subproblem exactly once,
-// performing exactly n loops. This guarantees a tight linear lower bound Ω(n).
-function fibIterative(n: number): number {
-    if (n <= 1) return n;
-    let prev = 0;
-    let curr = 1;
-    for (let i = 2; i <= n; i++) {
-        let next = prev + curr;
-        prev = curr;
-        curr = next;
+        if (!swapped) break; // Early termination
     }
-    return curr;
-}`
+}
+          </div>
+
+          <span class="code-label">JavaScript / TypeScript</span>
+          <div class="code-box">
+function bubbleSort(arr: number[]): void {
+    const n = arr.length;
+    let swapped: boolean;
+    for (let i = 0; i < n - 1; i++) {
+        swapped = false;
+        for (let j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                const temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                swapped = true;
+            }
+        }
+        if (!swapped) break; // Early termination
+    }
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n - 1):
+        swapped = False
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if not swapped:
+            break # Early termination
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Omega notation (Ω) represents the asymptotic lower bound. An algorithm is Ω(f(n)) if its running time grows at least as fast as f(n). Optimized Bubble Sort guarantees Ω(n) performance when inputs are already sorted.
+          </div>
+        </div>
+      </div>
+    `
   },
   theta: {
     id: 'theta',
@@ -576,59 +619,90 @@ function fibIterative(n: number): number {
         </div>
       </div>
     `,
-    code: `// =========================================================================
-// 1. ARRAY REDUCTION - Θ(n) Time Complexity (Constant Linear Growth)
-// =========================================================================
-// Summing elements of an array. Regardless of values or distribution, we
-// MUST perform exactly n loop iterations and operations. Best, worst, and
-// average case is exactly bounded at Θ(n).
-function sumArray(arr: number[]): number {
-    let total = 0;
-    for (let i = 0; i < arr.length; i++) {
-        total += arr[i]; // Basic operation executed exactly n times
-    }
-    return total;
-}
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">SELECTION SORT (TIGHT BOUND Θ(n²) IN ALL CASES)</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm SelectionSort(A[0..n-1])
+  // Sorts a given array by selection sort
+  // Input: An array A[0..n-1] of orderable elements
+  // Output: Array A sorted in nondecreasing order
+  for i <- 0 to n - 2 do
+    min_idx <- i
+    for j <- i + 1 to n - 1 do
+      if A[j] < A[min_idx] do
+        min_idx <- j
+    Swap A[i] and A[min_idx]
+          </div>
 
-// =========================================================================
-// 2. SELECTION SORT - Θ(n²) Time Complexity (Tight Quadratic Bound)
-// =========================================================================
-// Unlike bubble or insertion sort, selection sort always performs the same
-// number of nested loop element comparisons: n*(n-1)/2, even if the array is
-// already sorted. This represents a perfect tight bound of Θ(n²).
-function selectionSort(arr: number[]): void {
-    let n = arr.length;
-    for (let i = 0; i < n - 1; i++) {
-        let minIdx = i;
-        for (let j = i + 1; j < n; j++) {
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: Θ(n²) (Best, Worst, and Average Cases)
+- Space Complexity: Θ(1) auxiliary space (In-place)
+- Reason: Regardless of whether the array is sorted, reverse-sorted, or completely random, the inner loop always runs n * (n - 1) / 2 times to check for minimum values. Thus, it performs exactly the same quadratic number of key comparisons, resulting in a tight bound of Θ(n²).
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static void selectionSort(int[] arr) {
+    int n = arr.length;
+    for (int i = 0; i < n - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j < n; j++) {
             if (arr[j] < arr[minIdx]) {
-                minIdx = j; // basic operation executed exactly n*(n-1)/2 times
+                minIdx = j;
             }
         }
-        // Swap elements to place minimum in position i
-        let temp = arr[i];
+        // Swap elements
+        int temp = arr[i];
         arr[i] = arr[minIdx];
         arr[minIdx] = temp;
     }
 }
+          </div>
 
-// =========================================================================
-// 3. MATRIX EQUALITY CHECK - Θ(n²) Time Complexity (Two-Dimensional Scan)
-// =========================================================================
-// Checking if two matrices of size n x n are equal. The inner loops run exactly
-// n * n times to check entries. If guaranteed no short-circuit (e.g. comparing
-// identical matrices), then time is bounded tightly at Θ(n²).
-function compareMatrices(A: number[][], B: number[][], n: number): boolean {
-    let isEqual = true;
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            if (A[i][j] !== B[i][j]) {
-                isEqual = false; // Check continues for comprehensive audit
+          <span class="code-label">JavaScript / TypeScript</span>
+          <div class="code-box">
+function selectionSort(arr: number[]): void {
+    const n = arr.length;
+    for (let i = 0; i < n - 1; i++) {
+        let minIdx = i;
+        for (let j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIdx]) {
+                minIdx = j;
             }
         }
+        // Swap elements
+        const temp = arr[i];
+        arr[i] = arr[minIdx];
+        arr[minIdx] = temp;
     }
-    return isEqual;
-}`
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def selection_sort(arr):
+    n = len(arr)
+    for i in range(n - 1):
+        min_idx = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        # Swap elements
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Theta notation (Θ) represents a tight asymptotic bound. An algorithm is Θ(f(n)) if and only if its worst-case is O(f(n)) and its best-case is Ω(f(n)). Selection Sort is a classic example because its key comparison count does not depend on the input values.
+          </div>
+        </div>
+      </div>
+    `
   },
   comp: {
     id: 'comp',
@@ -736,81 +810,95 @@ function compareMatrices(A: number[][], B: number[][], n: number): boolean {
         </div>
       </div>
     `,
-    code: `// =========================================================================
-// 1. CONSTANT TIME - O(1)
-// =========================================================================
-// Operation takes identical time irrespective of array size.
-function getFirstElement<T>(arr: T[]): T | null {
-    return arr.length > 0 ? arr[0] : null;
-}
+    code: `
+      <div class="space-y-8">
+        <div>
+          <div class="code-section-title">BINARY SEARCH (LOGARITHMIC TIME O(log n) CLASS)</div>
+          
+          <span class="code-label">Pseudocode</span>
+          <div class="code-box">
+Algorithm BinarySearch(A[0..n-1], target)
+  // Searches for target in a sorted array
+  // Input: An array A[0..n-1] sorted in ascending order, and a target value
+  // Output: Index of target if found, otherwise -1
+  low <- 0
+  high <- n - 1
+  while low <= high do
+    mid <- floor((low + high) / 2)
+    if A[mid] == target return mid
+    else if A[mid] < target low <- mid + 1
+    else high <- mid - 1
+  return -1
+          </div>
 
-// =========================================================================
-// 2. LOGARITHMIC TIME - O(log n)
-// =========================================================================
-// Search space is halved at each recursion level. Bounded at O(log n).
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: O(log n) (Worst and Average Cases)
+- Space Complexity: O(1) auxiliary space (Iterative approach)
+- Reason: At each iteration of the loop, the algorithm narrows the active search window size by exactly half. Solving the recurrence relation T(n) = T(n/2) + O(1) via the Master Theorem yields a logarithmic growth rate, O(log n).
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static int binarySearch(int[] arr, int target) {
+    int low = 0;
+    int high = arr.length - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == target) {
+            return mid; // Found
+        } else if (arr[mid] < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return -1; // Not found
+}
+          </div>
+
+          <span class="code-label">JavaScript / TypeScript</span>
+          <div class="code-box">
 function binarySearch(arr: number[], target: number): number {
     let low = 0;
     let high = arr.length - 1;
     while (low <= high) {
-        let mid = Math.floor((low + high) / 2);
-        if (arr[mid] === target) return mid;
-        else if (arr[mid] < target) low = mid + 1;
-        else high = mid - 1;
-    }
-    return -1;
-}
-
-// =========================================================================
-// 3. LINEAR TIME - O(n)
-// =========================================================================
-// Work scales one-to-one with input size n.
-function countTargetOccurrence<T>(arr: T[], target: T): number {
-    let count = 0;
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === target) count++;
-    }
-    return count;
-}
-
-// =========================================================================
-// 4. LINEARITHMIC TIME - O(n log n)
-// =========================================================================
-// Standard split-and-combine recursive sorting (Merge Sort).
-function mergeSort(arr: number[]): number[] {
-    if (arr.length <= 1) return arr;
-    const mid = Math.floor(arr.length / 2);
-    const left = mergeSort(arr.slice(0, mid));
-    const right = mergeSort(arr.slice(mid));
-    
-    // Merge helper
-    const merge = (l: number[], r: number[]): number[] => {
-        let res: number[] = [], i = 0, j = 0;
-        while (i < l.length && j < r.length) {
-            if (l[i] < r[j]) res.push(l[i++]);
-            else res.push(r[j++]);
-        }
-        return [...res, ...l.slice(i), ...r.slice(j)];
-    };
-    return merge(left, right);
-}
-
-// =========================================================================
-// 5. FACTORIAL TIME - O(n!)
-// =========================================================================
-// Extremely dangerous complexity class. Bounded at factorial permutations.
-function generatePermutations<T>(arr: T[]): T[][] {
-    if (arr.length === 0) return [[]];
-    const result: T[][] = [];
-    for (let i = 0; i < arr.length; i++) {
-        const current = arr[i];
-        const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
-        const subPerms = generatePermutations(remaining);
-        for (let perm of subPerms) {
-            result.push([current, ...perm]);
+        const mid = Math.floor((low + high) / 2);
+        if (arr[mid] === target) {
+            return mid; // Found
+        } else if (arr[mid] < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
         }
     }
-    return result;
-}`
+    return -1; // Not found
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def binary_search(arr, target):
+    low = 0
+    high = len(arr) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid # Found
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1 # Not found
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Asymptotic complexity classes form a hierarchy: O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ) < O(n!). Improving an algorithm's complexity class is the single most effective way to scale software performance.
+          </div>
+        </div>
+      </div>
+    `
   },
 
   // ============================================
@@ -887,35 +975,66 @@ function generatePermutations<T>(arr: T[]): T[][] {
     code: `
       <div class="space-y-8">
         <div>
-          <div class="code-section-title">MATRIX ADDITION ANALYSIS</div>
+          <div class="code-section-title">MATRIX ADDITION (NESTED SUMMATION LOOPS)</div>
           
-          <span class="code-label">Algorithm Code</span>
+          <span class="code-label">Pseudocode</span>
           <div class="code-box">
-// Adding two n x n matrices
-void addMatrix(int[][] A, int[][] B, int n) {
+Algorithm MatrixAddition(A[0..n-1, 0..n-1], B[0..n-1, 0..n-1])
+  // Adds two n x n matrices iteratively
+  // Input: Two n x n matrices A and B of orderable elements
+  // Output: An n x n matrix C where C[i, j] = A[i, j] + B[i, j]
+  for i <- 0 to n - 1 do
+    for j <- 0 to n - 1 do
+      C[i, j] <- A[i, j] + B[i, j]
+  return C
+          </div>
+
+          <span class="code-label">Complexity Analysis</span>
+          <div class="code-box">
+- Time Complexity: Θ(n²) (Tight Quadratic Bound)
+- Space Complexity: Θ(n²) auxiliary space to store the output matrix C
+- Reason: The basic operation is the addition of two matrix elements. The outer loop runs exactly n times. The inner loop also runs exactly n times for each outer loop iteration, leading to exactly n * n = n² additions. Formal derivation: Sum_{i=0}^{n-1} [ Sum_{j=0}^{n-1} 1 ] = Sum_{i=0}^{n-1} n = n².
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static int[][] addMatrices(int[][] A, int[][] B, int n) {
+    int[][] C = new int[n][n];
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            C[i][j] = A[i][j] + B[i][j]; // Basic Op
+            C[i][j] = A[i][j] + B[i][j]; // Basic Operation
         }
     }
+    return C;
 }
           </div>
 
-          <span class="code-label">Formal Derivation</span>
+          <span class="code-label">JavaScript / TypeScript</span>
           <div class="code-box">
-// 1. Setup Summation
-// Outer runs 0 to n-1. Inner runs 0 to n-1.
-// Cost is 1 per inner step.
-// Sum(i=0 to n-1) [ Sum(j=0 to n-1) [ 1 ] ]
+function addMatrices(A: number[][], B: number[][], n: number): number[][] {
+    const C = Array.from({ length: n }, () => Array(n).fill(0));
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            C[i][j] = A[i][j] + B[i][j]; // Basic Operation
+        }
+    }
+    return C;
+}
+          </div>
 
-// 2. Solve Inner
-// Sum(j=0 to n-1) of 1 = (n-1 - 0 + 1) = n
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def add_matrices(A, B, n):
+    C = [[0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            C[i][j] = A[i][j] + B[i][j] # Basic Operation
+    return C
+          </div>
 
-// 3. Solve Outer
-// Sum(i=0 to n-1) of n
-// = n * (n - 0) = n^2
-
-// Conclusion: Theta(n^2)
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+To analyze nested loops, express the total executions as a nested sum. Work from the innermost loop outwards using summation formulas like Sum_{i=a}^{b} c = c(b - a + 1) and Sum_{i=1}^{n} i = n(n + 1)/2.
           </div>
         </div>
       </div>
@@ -990,73 +1109,57 @@ void addMatrix(int[][] A, int[][] B, int n) {
     `,
     code: `
       <div class="space-y-8">
-        <!-- --- EXAMPLE 1 --- -->
         <div>
-          <div class="code-section-title">1. FACTORIAL (Linear Recursion)</div>
+          <div class="code-section-title">FACTORIAL (RECURSION RELATION THETA(n) ANALYSIS)</div>
           
           <span class="code-label">Pseudocode</span>
           <div class="code-box">
-Algorithm F(n)
+Algorithm Factorial(n)
+  // Computes n! recursively
+  // Input: A nonnegative integer n
+  // Output: The value of n!
   if n == 0 return 1
-  return F(n-1) * n
+  return Factorial(n-1) * n
           </div>
 
-          <span class="code-label">Java Code</span>
+          <span class="code-label">Complexity Analysis</span>
           <div class="code-box">
-int factorial(int n) {
-    if (n == 0) return 1;
-    return factorial(n - 1) * n;
+- Time Complexity: Θ(n)
+- Space Complexity: Θ(n) recursion stack space
+- Recurrence Relation: Let T(n) be the number of multiplications. For n > 0, T(n) = T(n-1) + 1, with base case T(0) = 0. Solving by backward substitution: T(n) = T(n-1) + 1 = [T(n-2) + 1] + 1 = T(n-2) + 2 = ... = T(n-k) + k. At the base case k = n, T(n) = T(0) + n = n, which represents Θ(n) total operations.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static int factorial(int n) {
+    if (n == 0) {
+        return 1; // Base case
+    }
+    return factorial(n - 1) * n; // Recursive call
 }
           </div>
 
-          <span class="code-label">JavaScript Code (Analysis)</span>
+          <span class="code-label">JavaScript / TypeScript</span>
           <div class="code-box">
-// Recurrence Relation:
-// M(n) = M(n-1) + 1
-// M(0) = 0
-// By Backward Substitution:
-// M(n) = [M(n-2)+1] + 1 = M(n-2) + 2
-// ... = M(n-k) + k
-// At base case k=n: M(0) + n = n
-// Complexity: Theta(n)
-          </div>
-        </div>
-
-        <!-- --- EXAMPLE 2 --- -->
-        <div>
-          <div class="code-section-title">2. MERGE SORT (Divide & Conquer)</div>
-          
-          <span class="code-label">Pseudocode</span>
-          <div class="code-box">
-Algorithm MergeSort(A)
-  if A.size > 1
-    copy A[0..n/2] to B
-    copy A[n/2..n] to C
-    MergeSort(B)
-    MergeSort(C)
-    Merge(B, C, A)
-          </div>
-
-          <span class="code-label">Java Code</span>
-          <div class="code-box">
-void mergeSort(int[] arr) {
-    if (arr.length < 2) return;
-    int mid = arr.length / 2;
-    // ... split array logic ...
-    mergeSort(left);
-    mergeSort(right);
-    merge(left, right, arr);
+function factorial(n: number): number {
+    if (n === 0) {
+        return 1; // Base case
+    }
+    return factorial(n - 1) * n; // Recursive call
 }
           </div>
 
-          <span class="code-label">JavaScript Code (Analysis)</span>
+          <span class="code-label">Python</span>
           <div class="code-box">
-// Relation: T(n) = 2T(n/2) + c*n
-// Here: a=2, b=2, d=1 (since merge is linear)
-// Compare a vs b^d:
-// 2 vs 2^1  =>  2 = 2
-// Case 2 of Master Theorem applies.
-// Complexity: Theta(n^d log n) = Theta(n log n)
+def factorial(n):
+    if n == 0:
+        return 1 # Base case
+    return factorial(n - 1) * n # Recursive call
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Recurrence relations define the mathematical run-time of recursive functions. Unrolling (backward substitution) is used for linear recurrences, while the recursion tree and Master Theorem are standard for divide-and-conquer recurrences (e.g., T(n) = 2T(n/2) + Θ(n) => Θ(n log n)).
           </div>
         </div>
       </div>
@@ -1092,28 +1195,47 @@ void mergeSort(int[] arr) {
     code: `
       <div class="space-y-8">
         <div>
-          <div class="code-section-title">CLOSEST PAIR ALGORITHM</div>
+          <div class="code-section-title">CLOSEST PAIR (BRUTE FORCE OPTIMIZATION)</div>
           
           <span class="code-label">Pseudocode</span>
           <div class="code-box">
-dmin <- infinity
-for i <- 1 to n-1 do
-  for j <- i+1 to n do
-    d <- sqrt( (xi - xj)^2 + (yi - yj)^2 )
-    if d < dmin
-      dmin <- d
-      index1 <- i
-      index2 <- j
-return index1, index2
+Algorithm BruteForceClosestPair(P[0..n-1])
+  // Finds the two closest 2D points in a set using brute force
+  // Input: An array P of n points
+  // Output: The minimum distance between two points, and the points themselves
+  dmin <- infinity
+  for i <- 0 to n - 2 do
+    for j <- i + 1 to n - 1 do
+      d <- sqrt( (P[i].x - P[j].x)^2 + (P[i].y - P[j].y)^2 )
+      if d < dmin do
+        dmin <- d
+        p1 <- P[i]
+        p2 <- P[j]
+  return p1, p2, dmin
           </div>
 
-          <span class="code-label">Java Implementation</span>
+          <span class="code-label">Complexity Analysis</span>
           <div class="code-box">
-public double findClosest(Point[] points) {
+- Time Complexity: Θ(n²) comparisons
+- Space Complexity: Θ(1) auxiliary space (in-place)
+- Reason: The algorithm computes the Euclidean distance between every distinct pair of points. The outer loop runs n-1 times and the inner loop runs n-1-i times, resulting in a total number of distance comparisons equal to Sum_{i=0}^{n-2} (n - 1 - i) = n * (n - 1) / 2. This represents a tight quadratic bound.
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static class Point {
+    public double x, y;
+    public Point(double x, double y) { this.x = x; this.y = y; }
+}
+
+public static double findClosest(Point[] points) {
     double minDist = Double.MAX_VALUE;
-    for (int i = 0; i < points.length; i++) {
-        for (int j = i + 1; j < points.length; j++) {
-            double dist = points[i].distance(points[j]);
+    int n = points.length;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            double dx = points[i].x - points[j].x;
+            double dy = points[i].y - points[j].y;
+            double dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < minDist) {
                 minDist = dist;
             }
@@ -1123,27 +1245,55 @@ public double findClosest(Point[] points) {
 }
           </div>
 
-          <span class="code-label">JavaScript (Live Logic)</span>
+          <span class="code-label">JavaScript / TypeScript</span>
           <div class="code-box">
-function bruteClosestPair(points) {
-    let minInfo = { p1: null, p2: null, dist: Infinity };
-    
-    // Compare every point with every other point
-    for(let i = 0; i < points.length; i++){
-        for(let j = i + 1; j < points.length; j++){
-            let dx = points[i].x - points[j].x;
-            let dy = points[i].y - points[j].y;
-            let d = Math.sqrt(dx*dx + dy*dy);
-            
-            if(d < minInfo.dist){
-                minInfo.dist = d;
-                minInfo.p1 = points[i];
-                minInfo.p2 = points[j];
+interface Point {
+    x: number;
+    y: number;
+}
+
+function findClosestPair(points: Point[]): { p1: Point; p2: Point; dist: number } {
+    let minDist = Infinity;
+    let p1 = points[0], p2 = points[1];
+    const n = points.length;
+    for (let i = 0; i < n - 1; i++) {
+        for (let j = i + 1; j < n; j++) {
+            const dx = points[i].x - points[j].x;
+            const dy = points[i].y - points[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < minDist) {
+                minDist = dist;
+                p1 = points[i];
+                p2 = points[j];
             }
         }
     }
-    return minInfo;
+    return { p1, p2, dist: minDist };
 }
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+import math
+
+def brute_force_closest_pair(points):
+    min_dist = float('inf')
+    p1, p2 = None, None
+    n = len(points)
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            dx = points[i][0] - points[j][0]
+            dy = points[i][1] - points[j][1]
+            dist = math.sqrt(dx*dx + dy*dy)
+            if dist < min_dist:
+                min_dist = dist
+                p1, p2 = points[i], points[j]
+    return p1, p2, min_dist
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Computing Euclidean distances between all pairs of points is conceptually robust but computationally expensive, Θ(n²). Advanced divide-and-conquer strategies or sweep-line algorithms reduce this closest-pair lookup to O(n log n).
           </div>
         </div>
       </div>
@@ -1183,45 +1333,82 @@ function bruteClosestPair(points) {
     code: `
       <div class="space-y-8">
         <div>
-          <div class="code-section-title">1. STRING MATCHING</div>
+          <div class="code-section-title">STRING MATCHING (BRUTE FORCE SCANS)</div>
           
           <span class="code-label">Pseudocode</span>
           <div class="code-box">
 Algorithm BruteForceStringMatch(T[0..n-1], P[0..m-1])
-  // Align pattern at every possible starting index i
+  // Implements brute-force string matching
+  // Input: An array T[0..n-1] of n characters (text) and P[0..m-1] of m characters (pattern)
+  // Output: The index of the first character in the text that starts the match, otherwise -1
   for i <- 0 to n - m do
     j <- 0
-    // Compare characters while they match
-    while j < m AND P[j] == T[i + j] do
+    while j < m and T[i + j] == P[j] do
       j <- j + 1
     if j == m return i
   return -1
           </div>
 
-          <span class="code-label">Java Code</span>
+          <span class="code-label">Complexity Analysis</span>
           <div class="code-box">
-int bruteForceSearch(String txt, String pat) {
-    int n = txt.length();
-    int m = pat.length();
-    
+- Time Complexity: O(n * m) worst case, O(n + m) average case (natural language text)
+- Space Complexity: O(1) auxiliary space (in-place)
+- Reason: In the worst-case scenario (e.g., matching a pattern of "AAAAAB" in a text of "AAAAAAAAAA..."), the inner loop runs exactly m comparisons for each of the (n - m + 1) outer loop configurations. This yields a total of m * (n - m + 1) operations, which is asymptotically O(n * m).
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+public static int bruteForceStringMatch(String text, String pattern) {
+    int n = text.length();
+    int m = pattern.length();
     for (int i = 0; i <= n - m; i++) {
         int j = 0;
-        while (j < m && txt.charAt(i + j) == pat.charAt(j)) {
+        while (j < m && text.charAt(i + j) == pattern.charAt(j)) {
             j++;
         }
-        if (j == m) return i; // Found at index i
+        if (j == m) {
+            return i; // Found pattern at index i
+        }
     }
-    return -1;
+    return -1; // Pattern not found
 }
           </div>
 
-          <span class="code-label">Analysis</span>
+          <span class="code-label">JavaScript / TypeScript</span>
           <div class="code-box">
-// Outer loop runs (n - m + 1) times.
-// Inner while loop runs at most m times.
-// Total comparisons = m * (n - m + 1)
-// Since n usually >> m, we drop lower terms.
-// Complexity: O(n * m)
+function bruteForceStringMatch(text: string, pattern: string): number {
+    const n = text.length;
+    const m = pattern.length;
+    for (let i = 0; i <= n - m; i++) {
+        let j = 0;
+        while (j < m && text[i + j] === pattern[j]) {
+            j++;
+        }
+        if (j === m) {
+            return i; // Found pattern at index i
+        }
+    }
+    return -1; // Pattern not found
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def brute_force_string_match(text, pattern):
+    n = len(text)
+    m = len(pattern)
+    for i in range(n - m + 1):
+        j = 0
+        while j < m and text[i + j] == pattern[j]:
+            j += 1
+        if j == m:
+            return i # Found pattern at index i
+    return -1 # Pattern not found
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+While Brute Force is easy to write, more efficient algorithms exist for string matching. Knuth-Morris-Pratt (KMP) or Boyer-Moore skip redundant comparisons based on pattern pre-processing, yielding linear O(n + m) worst-case performance.
           </div>
         </div>
       </div>
@@ -1272,66 +1459,166 @@ int bruteForceSearch(String txt, String pat) {
     `,
     code: `
       <div class="space-y-8">
-        <!-- --- EXAMPLE 1: Closest Pair --- -->
         <div>
-          <div class="code-section-title">1. CLOSEST PAIR (Quadratic)</div>
+          <div class="code-section-title">CONVEX HULL (BRUTE FORCE CUBIC O(n³) GEOMETRY)</div>
           
           <span class="code-label">Pseudocode</span>
           <div class="code-box">
-Algorithm ClosestPair(P)
-  dmin <- infinity
-  for i <- 1 to n-1 do
-    for j <- i+1 to n do
-      d <- sqrt((xi - xj)^2 + (yi - yj)^2)
-      if d < dmin
-        dmin <- d; index1 <- i; index2 <- j
-  return index1, index2
+Algorithm BruteForceConvexHull(P[0..n-1])
+  // Solves the Convex Hull problem using brute force
+  // Input: A set P of n >= 3 2D points
+  // Output: A set of line segments representing the edges of the convex hull
+  E <- empty set
+  for i <- 0 to n - 2 do
+    for j <- i + 1 to n - 1 do
+      a <- P[j].y - P[i].y
+      b <- P[i].x - P[j].x
+      c <- P[i].x * P[j].y - P[i].y * P[j].x
+      
+      all_on_same_side <- true
+      sign <- 0
+      for k <- 0 to n - 1 do
+        if k != i and k != j do
+          val <- a * P[k].x + b * P[k].y - c
+          if val != 0 do
+            if sign == 0 do
+              sign <- sign(val)
+            else if sign(val) != sign do
+              all_on_same_side <- false
+              break
+      if all_on_same_side do
+        Add segment (P[i], P[j]) to E
+  return E
           </div>
 
-          <span class="code-label">Java Code</span>
+          <span class="code-label">Complexity Analysis</span>
           <div class="code-box">
-double closestPair(Point[] p) {
-    double min = Double.MAX_VALUE;
-    int n = p.length;
+- Time Complexity: O(n³) worst and best cases
+- Space Complexity: O(n) auxiliary space to store the convex hull segments
+- Reason: The algorithm selects every possible pair of points, which takes n * (n - 1) / 2 = O(n²) steps. For each pair, it draws a line and iterates through all other n-2 points to check which side of the line they lie on, which takes O(n) steps. The overall performance is O(n²) * O(n) = O(n³).
+          </div>
+
+          <span class="code-label">Java</span>
+          <div class="code-box">
+import java.util.ArrayList;
+import java.util.List;
+
+public static class Point {
+    public double x, y;
+    public Point(double x, double y) { this.x = x; this.y = y; }
+}
+
+public static class Segment {
+    public Point p1, p2;
+    public Segment(Point p1, Point p2) { this.p1 = p1; this.p2 = p2; }
+}
+
+public static List<Segment> bruteForceConvexHull(Point[] points) {
+    List<Segment> hull = new ArrayList<>();
+    int n = points.length;
     for (int i = 0; i < n - 1; i++) {
         for (int j = i + 1; j < n; j++) {
-            double dist = p[i].distanceTo(p[j]);
-            if (dist < min) min = dist;
+            double a = points[j].y - points[i].y;
+            double b = points[i].x - points[j].x;
+            double c = points[i].x * points[j].y - points[i].y * points[j].x;
+            boolean allOnSameSide = true;
+            double sign = 0;
+            for (int k = 0; k < n; k++) {
+                if (k != i && k != j) {
+                    double val = a * points[k].x + b * points[k].y - c;
+                    if (Math.abs(val) > 1e-9) {
+                        if (sign == 0) {
+                            sign = Math.signum(val);
+                        } else if (Math.signum(val) != sign) {
+                            allOnSameSide = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (allOnSameSide) {
+                hull.add(new Segment(points[i], points[j]));
+            }
         }
     }
-    return min;
+    return hull;
 }
           </div>
 
-          <span class="code-label">Analysis</span>
+          <span class="code-label">JavaScript / TypeScript</span>
           <div class="code-box">
-// Basic Operation: Distance Calculation
-// Summation: Sum(i=1 to n-1) of [ (n) - (i+1) + 1 ]
-// = (n-1) + (n-2) + ... + 1
-// = n(n-1)/2
-// Complexity: Theta(n^2)
-          </div>
-        </div>
+interface Point {
+    x: number;
+    y: number;
+}
 
-        <!-- --- EXAMPLE 2: Convex Hull --- -->
-        <div>
-          <div class="code-section-title">2. CONVEX HULL (Cubic)</div>
-          
-          <span class="code-label">Pseudocode Logic</span>
-          <div class="code-box">
-For each pair of points (p1, p2):
-  Determine a line equation ax + by = c
-  Check all other n-2 points:
-    Do they lie on the same side of line?
-  If True -> Add (p1, p2) to hull boundary.
+interface Segment {
+    p1: Point;
+    p2: Point;
+}
+
+function bruteForceConvexHull(points: Point[]): Segment[] {
+    const hull: Segment[] = [];
+    const n = points.length;
+    for (let i = 0; i < n - 1; i++) {
+        for (let j = i + 1; j < n; j++) {
+            const a = points[j].y - points[i].y;
+            const b = points[i].x - points[j].x;
+            const c = points[i].x * points[j].y - points[i].y * points[j].x;
+            let allOnSameSide = true;
+            let sign = 0;
+            for (let k = 0; k < n; k++) {
+                if (k !== i && k !== j) {
+                    const val = a * points[k].x + b * points[k].y - c;
+                    if (Math.abs(val) > 1e-9) {
+                        if (sign === 0) {
+                            sign = Math.sign(val);
+                        } else if (Math.sign(val) !== sign) {
+                            allOnSameSide = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (allOnSameSide) {
+                hull.push({ p1: points[i], p2: points[j] });
+            }
+        }
+    }
+    return hull;
+}
           </div>
 
-          <span class="code-label">Analysis</span>
+          <span class="code-label">Python</span>
           <div class="code-box">
-// 1. Pairs of points: O(n^2)
-// 2. Checking all other points: O(n)
-// Total Efficiency: O(n^2) * O(n) = O(n^3)
-// This is very slow. Better algorithms exist (e.g., QuickHull).
+def brute_force_convex_hull(points):
+    hull = []
+    n = len(points)
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            a = points[j][1] - points[i][1]
+            b = points[i][0] - points[j][0]
+            c = points[i][0] * points[j][1] - points[i][1] * points[j][0]
+            all_on_same_side = True
+            sign = 0
+            for k in range(n):
+                if k != i and k != j:
+                    val = a * points[k][0] + b * points[k][1] - c
+                    if abs(val) > 1e-9:
+                        current_sign = 1 if val > 0 else -1
+                        if sign == 0:
+                            sign = current_sign
+                        elif current_sign != sign:
+                            all_on_same_side = False
+                            break
+            if all_on_same_side:
+                hull.append((points[i], points[j]))
+    return hull
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+The brute-force Convex Hull algorithm is highly inefficient at O(n³). Practical software applications involving spatial analysis, game design, or pathfinding rely on Graham's Scan or QuickHull, which achieve O(n log n) efficiency.
           </div>
         </div>
       </div>
@@ -1460,69 +1747,106 @@ For each pair of points (p1, p2):
     `,
     code: `
       <div class="space-y-8">
-        <!-- --- EXAMPLE 1: TSP --- -->
         <div>
-          <div class="code-section-title">1. TSP ALGORITHM (Permutations)</div>
+          <div class="code-section-title">KNAPSACK (BRUTE FORCE EXHAUSTIVE SUBSET SCAN)</div>
+          
           <span class="code-label">Pseudocode</span>
           <div class="code-box">
-Algorithm TSP(Cities C)
-  min_dist <- infinity
-  best_path <- null
-  // Generate every possible order
-  foreach permutation P of C do
-    if cost(P) < min_dist
-      min_dist <- cost(P)
-      best_path <- P
-  return best_path
-          </div>
-          <span class="code-label">Analysis</span>
-          <div class="code-box">
-// Cities = n
-// Number of permutations = (n-1)!
-// We divide by 2 because A->B... is same dist as ...B->A
-// Complexity: Theta(n!)
-          </div>
-        </div>
-
-        <!-- --- EXAMPLE 2: KNAPSACK --- -->
-        <div>
-          <div class="code-section-title">2. KNAPSACK (Subsets)</div>
-          <span class="code-label">Pseudocode</span>
-          <div class="code-box">
-Algorithm Knapsack(Weights W, Values V, Capacity C)
-  max_val <- 0
-  // Iterate 0 to 2^n - 1 (Binary representation of subsets)
+Algorithm BruteForceKnapsack(weights[0..n-1], values[0..n-1], W)
+  // Solves the 0/1 Knapsack problem by generating all 2^n subsets
+  // Input: Arrays weights and values of n items, and capacity W
+  // Output: The maximum value of items that fit in the knapsack
+  max_value <- 0
   for i <- 0 to 2^n - 1 do
-    subset <- getItemsFromBinary(i)
-    if weight(subset) <= C
-      if value(subset) > max_val
-        max_val <- value(subset)
-  return max_val
+    current_weight <- 0
+    current_value <- 0
+    for j <- 0 to n - 1 do
+      // Check if j-th item is included in subset i (using bitwise check)
+      if (i AND 2^j) != 0 do
+        current_weight <- current_weight + weights[j]
+        current_value <- current_value + values[j]
+    if current_weight <= W and current_value > max_value do
+      max_value <- current_value
+  return max_value
           </div>
-        </div>
 
-        <!-- --- EXAMPLE 3: ASSIGNMENT --- -->
-        <div>
-          <div class="code-section-title">3. ASSIGNMENT (Permutations)</div>
-          <span class="code-label">Pseudocode</span>
+          <span class="code-label">Complexity Analysis</span>
           <div class="code-box">
-Algorithm Assignment(CostMatrix C[0..n-1, 0..n-1])
-  min_cost <- infinity
-  // Generate permutations of columns {0, 1, ..., n-1}
-  foreach permutation p of {0...n-1} do
-    current_cost <- 0
-    for i <- 0 to n-1 do
-      // p[i] is the job assigned to person i
-      current_cost <- current_cost + C[i, p[i]]
-    
-    if current_cost < min_cost
-      min_cost <- current_cost
-      best_assignment <- p
-  return best_assignment
+- Time Complexity: Θ(n * 2ⁿ) worst and best cases
+- Space Complexity: Θ(1) auxiliary space (bitwise state representation)
+- Reason: For n items, there are exactly 2ⁿ possible subsets of items that can be chosen. The algorithm iterates from 0 to 2ⁿ - 1. In each of those steps, it performs n bitwise comparisons to evaluate the weight and value of the active subset. Thus, the total time complexity is Θ(n * 2ⁿ).
           </div>
+
+          <span class="code-label">Java</span>
           <div class="code-box">
-// Note: Exhaustive search is impractical for n > 12.
-// The Hungarian Algorithm solves this in O(n^3).
+public static int bruteForceKnapsack(int[] weights, int[] values, int W) {
+    int n = weights.length;
+    int maxValue = 0;
+    int numSubsets = 1 << n; // 2^n subsets
+    
+    for (int i = 0; i < numSubsets; i++) {
+        int currentWeight = 0;
+        int currentValue = 0;
+        for (int j = 0; j < n; j++) {
+            if ((i & (1 << j)) != 0) {
+                currentWeight += weights[j];
+                currentValue += values[j];
+            }
+        }
+        if (currentWeight <= W && currentValue > maxValue) {
+            maxValue = currentValue;
+        }
+    }
+    return maxValue;
+}
+          </div>
+
+          <span class="code-label">JavaScript / TypeScript</span>
+          <div class="code-box">
+function bruteForceKnapsack(weights: number[], values: number[], W: number): number {
+    const n = weights.length;
+    let maxValue = 0;
+    const numSubsets = 1 << n; // 2^n subsets
+    
+    for (let i = 0; i < numSubsets; i++) {
+        let currentWeight = 0;
+        let currentValue = 0;
+        for (let j = 0; j < n; j++) {
+            if ((i & (1 << j)) !== 0) {
+                currentWeight += weights[j];
+                currentValue += values[j];
+            }
+        }
+        if (currentWeight <= W && currentValue > maxValue) {
+            maxValue = currentValue;
+        }
+    }
+    return maxValue;
+}
+          </div>
+
+          <span class="code-label">Python</span>
+          <div class="code-box">
+def brute_force_knapsack(weights, values, W):
+    n = len(weights)
+    max_value = 0
+    num_subsets = 1 << n # 2^n subsets
+    
+    for i in range(num_subsets):
+        current_weight = 0
+        current_value = 0
+        for j in range(n):
+            if (i & (1 << j)) != 0:
+                current_weight += weights[j]
+                current_value += values[j]
+        if current_weight <= W and current_value > max_value:
+            max_value = current_value
+    return max_value
+          </div>
+
+          <span class="code-label">Notes</span>
+          <div class="code-box">
+Exhaustive search generates all candidates to guarantee an optimal solution. It is extremely slow for large n, since O(2ⁿ) or O(n!) subsets/permutations quickly crash modern systems. Dynamic programming (for Knapsack) or the Hungarian Algorithm (for Assignment) solve these in polynomial time.
           </div>
         </div>
       </div>
@@ -7031,7 +7355,7 @@ def knapsack_dp(weights, values, capacity):
             else:
                 V[i][j] = V[i - 1][j]
                 
-    # Backtrack to find selected items
+    # Backtrack
     temp_cap = capacity
     selected = []
     for i in range(n, 0, -1):
