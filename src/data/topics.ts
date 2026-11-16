@@ -1864,7 +1864,7 @@ Exhaustive search generates all candidates to guarantee an optimal solution. It 
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">The Decrease & Conquer Strategy</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            The core principle of **Decrease & Conquer** is to solve a problem by reducing an instance of size $n$ to a smaller instance of the same problem, solving the smaller instance, and then extending that solution to solve the original instance.
+            The core principle of <strong>Decrease & Conquer</strong> is to solve a problem by reducing an instance of size $n$ to a smaller instance of the same problem, solving the smaller instance, and then extending that solution to solve the original instance.
           </p>
         </div>
         <div class="step-card">
@@ -1984,7 +1984,7 @@ Insertion sort is highly efficient for small datasets and partially sorted array
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Definition & Applications</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            For a **Directed Acyclic Graph (DAG)**, a topological sort is a linear ordering of its vertices such that for every directed edge $u \to v$, vertex $u$ comes before $v$ in the ordering.
+            For a <strong>Directed Acyclic Graph (DAG)</strong>, a topological sort is a linear ordering of its vertices such that for every directed edge $u \to v$, vertex $u$ comes before $v$ in the ordering.
           </p>
           <p class="text-xs opacity-75 mt-2">
             Topological sorting is widely used for task scheduling, resolving build dependencies (e.g., packages), and instruction pipelining.
@@ -2089,7 +2089,7 @@ Insertion sort is highly efficient for small datasets and partially sorted array
         <div class="step-card">
           <span class="step-title">Source Removal Algorithm</span>
           <p class="text-sm">
-            Topological Sort can be elegantly solved using **Decrease & Conquer** via Kahn's Source Removal Algorithm.
+            Topological Sort can be elegantly solved using <strong>Decrease & Conquer</strong> via Kahn's Source Removal Algorithm.
           </p>
           <ol class="list-decimal pl-5 mt-2 space-y-1 text-sm">
             <li>Identify a vertex with <strong>in-degree 0</strong> (called a source).</li>
@@ -2268,7 +2268,7 @@ The Source Removal method is also known as Kahn's Algorithm. An alternative appr
             Each integer $i$ has an associated direction arrow pointing left ($\leftarrow$) or right ($\rightarrow$).
           </p>
           <ul class="list-disc pl-5 space-y-1 text-xs md:text-sm">
-            <li>An integer is **Mobile** if its arrow points to an adjacent neighbor that is **smaller** than itself.</li>
+            <li>An integer is <strong>Mobile</strong> if its arrow points to an adjacent neighbor that is <strong>smaller</strong> than itself.</li>
             <li>Initially, all integers point left: $\leftarrow 1 \quad \leftarrow 2 \quad \dots \quad \leftarrow n$.</li>
           </ul>
         </div>
@@ -3850,7 +3850,7 @@ Modern systems use hybrid sorting algorithms like Timsort (used in Python and Ja
           <div class="bg-black/30 p-3 rounded mt-2 text-xs font-mono space-y-1">
             <p>1. Parameters: $a = 7$ (7 recursive multiplication calls), $b = 2$ (matrix dimensions halved), $d = 2$ (addition overhead is $\Theta(n^2)$).</p>
             <p>2. Inequality comparison: $a$ vs $b^d \implies 7 > 2^2 \implies 7 > 4$.</p>
-            <p>3. Because $a > b^d$, **Case 3** of the Master Theorem applies.</p>
+            <p>3. Because $a > b^d$, <strong>Case 3</strong> of the Master Theorem applies.</p>
             <p>4. Running time: $T(n) \in \Theta(n^{\log_2 7}) \approx \Theta(n^{2.807})$.</p>
           </div>
         </div>
@@ -4529,7 +4529,7 @@ Although a hash set can perform this check in average O(n) time, sorting uses O(
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Evaluating a polynomial $P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_0$ naively takes quadratic $\Theta(n^2)$ time. **Horner's Rule** is a classic **Representation Change** algorithm that rewrites the polynomial in a nested multiply-add format, lowering multiplications to exactly $n$.
+            Evaluating a polynomial $P(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_0$ naively takes quadratic $\Theta(n^2)$ time. <strong>Horner's Rule</strong> is a classic <strong>Representation Change</strong> algorithm that rewrites the polynomial in a nested multiply-add format, lowering multiplications to exactly $n$.
           </p>
         </div>
 
@@ -4674,7 +4674,7 @@ This process is mathematically equivalent to synthetic division. The intermediat
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            Computing $a^n$ naively requires $n-1$ multiplications. By applying **Representation Change**, we express the exponent $n$ in binary and scan it **Left-to-Right** using Horner-style doubling (squaring) and adding (multiplying). This reduces multiplications to logarithmic $\Theta(\log n)$ bounds.
+            Computing $a^n$ naively requires $n-1$ multiplications. By applying <strong>Representation Change</strong>, we express the exponent $n$ in binary and scan it <strong>Left-to-Right</strong> using Horner-style doubling (squaring) and adding (multiplying). This reduces multiplications to logarithmic $\Theta(\log n)$ bounds.
           </p>
         </div>
 
@@ -4839,7 +4839,7 @@ This algorithm is central to modular exponentiation in cryptosystems like RSA, w
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            **Problem Reduction** is one of the most powerful paradigms in Computer Science. Instead of designing a new algorithm, we map or transform problem $P$ to another problem $Q$ with a known, highly efficient solver. Once solved, we map the results back to answer the original task.
+            <strong>Problem Reduction</strong> is one of the most powerful paradigms in Computer Science. Instead of designing a new algorithm, we map or transform problem $P$ to another problem $Q$ with a known, highly efficient solver. Once solved, we map the results back to answer the original task.
           </p>
         </div>
 
@@ -4996,7 +4996,7 @@ Reduction is central to computational complexity theory, where we reduce NP-comp
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            The **Space-Time Tradeoff** states that we can reduce the running time of an algorithm by consuming more memory (space). In modern computing, memory is cheap, so we often trade space to gain speed. A prime example is **Counting Sort**, which sorts keys in linear time by using an auxiliary array to count element frequencies.
+            The <strong>Space-Time Tradeoff</strong> states that we can reduce the running time of an algorithm by consuming more memory (space). In modern computing, memory is cheap, so we often trade space to gain speed. A prime example is <strong>Counting Sort</strong>, which sorts keys in linear time by using an auxiliary array to count element frequencies.
           </p>
           <div class="mt-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded text-sm">
             <strong class="text-purple-300">Did you know?</strong> <strong>Dynamic Programming</strong> is a classic Space-Time Tradeoff. We store solutions to sub-problems in memory (Space) to avoid re-calculating them later (Time).
@@ -5269,7 +5269,7 @@ Counting Sort is a non-comparison sort. It completely bypasses the lower bound o
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            **Horspool's Algorithm** is a highly efficient string-matching algorithm that utilizes the **Input Enhancement** technique. Rather than checking characters and moving the pattern forward by exactly 1 index upon a mismatch, it pre-computes a **Shift Table** for the pattern. This allows the algorithm to skip over multiple characters at a time, checking alignments from **Right-to-Left**.
+            <strong>Horspool's Algorithm</strong> is a highly efficient string-matching algorithm that utilizes the <strong>Input Enhancement</strong> technique. Rather than checking characters and moving the pattern forward by exactly 1 index upon a mismatch, it pre-computes a <strong>Shift Table</strong> for the pattern. This allows the algorithm to skip over multiple characters at a time, checking alignments from <strong>Right-to-Left</strong>.
           </p>
         </div>
 
@@ -5549,7 +5549,7 @@ Horspool is a simplified variant of the Boyer-Moore algorithm, dropping the Good
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            The **Boyer-Moore Algorithm** is widely considered the gold standard for sequential string matching. Similar to Horspool, it scans the pattern from **Right-to-Left**. However, instead of relying on a single skip table, it uses **two independent heuristics** at each alignment window: the **Bad Symbol** rule and the **Good Suffix** rule. It evaluates both rules and makes the largest safe shift.
+            The <strong>Boyer-Moore Algorithm</strong> is widely considered the gold standard for sequential string matching. Similar to Horspool, it scans the pattern from <strong>Right-to-Left</strong>. However, instead of relying on a single skip table, it uses <strong>two independent heuristics</strong> at each alignment window: the <strong>Bad Symbol</strong> rule and the <strong>Good Suffix</strong> rule. It evaluates both rules and makes the largest safe shift.
           </p>
           <div class="mt-2 p-3 bg-purple-500/10 border border-purple-500/30 rounded text-center font-mono text-sm">
             $Shift = \max( \text{Bad\_Symbol\_Shift}, \text{Good\_Suffix\_Shift} )$
@@ -5841,7 +5841,7 @@ Boyer-Moore is a linear string-matching algorithm when the pattern doesn't conta
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            The **Greedy Technique** is a design paradigm that builds up a solution piece by piece, always making the choice that offers the most obvious and immediate benefit at that specific moment. This is a <strong>locally optimal choice</strong> made with the hope that it will lead to a <strong>globally optimal solution</strong>. Greedy choices are irrevocable: once made, they can never be reconsidered or backtracked.
+            The <strong>Greedy Technique</strong> is a design paradigm that builds up a solution piece by piece, always making the choice that offers the most obvious and immediate benefit at that specific moment. This is a <strong>locally optimal choice</strong> made with the hope that it will lead to a <strong>globally optimal solution</strong>. Greedy choices are irrevocable: once made, they can never be reconsidered or backtracked.
           </p>
         </div>
 
@@ -6047,7 +6047,7 @@ Greedy change-making works perfectly for US currency coins because it forms a "m
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            **Huffman Coding** is a lossless data compression algorithm. The basic idea is to assign variable-length codes to input characters, with lengths based on their frequencies. The most frequent character gets the shortest code, and the least frequent character gets the longest. To ensure unambiguous decoding, the codes must be **prefix-free** (no code is a prefix of another).
+            <strong>Huffman Coding</strong> is a lossless data compression algorithm. The basic idea is to assign variable-length codes to input characters, with lengths based on their frequencies. The most frequent character gets the shortest code, and the least frequent character gets the longest. To ensure unambiguous decoding, the codes must be <strong>prefix-free</strong> (no code is a prefix of another).
           </p>
         </div>
 
@@ -6315,7 +6315,7 @@ Huffman coding is the foundational block of many classic compression protocols, 
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            **Dynamic Programming (DP)** is an algorithmic paradigm that solves a complex problem by breaking it down into sub-problems, solving each sub-problem exactly once, and storing their solutions in a lookup table (tabulation or memoization). This completely avoids the exponential work of re-computing overlapping states. DP was coined by **Richard Bellman** in the 1950s.
+            <strong>Dynamic Programming (DP)</strong> is an algorithmic paradigm that solves a complex problem by breaking it down into sub-problems, solving each sub-problem exactly once, and storing their solutions in a lookup table (tabulation or memoization). This completely avoids the exponential work of re-computing overlapping states. DP was coined by <strong>Richard Bellman</strong> in the 1950s.
           </p>
         </div>
 
@@ -6479,7 +6479,7 @@ Dynamic programming is used in real compilers and interpreter runtimes (such as 
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            While the Greedy changer works only for specific "canonical" coin sets, **Dynamic Programming** guarantees an optimal solution containing the absolute minimum number of coins for **any** denomination set. It computes the minimum coins needed for every sub-amount from $1$ up to the target, caching results.
+            While the Greedy changer works only for specific "canonical" coin sets, <strong>Dynamic Programming</strong> guarantees an optimal solution containing the absolute minimum number of coins for <strong>any</strong> denomination set. It computes the minimum coins needed for every sub-amount from $1$ up to the target, caching results.
           </p>
         </div>
 
@@ -6676,7 +6676,7 @@ This is a standard pseudo-polynomial dynamic programming problem. If the amount 
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            **Warshall's Algorithm** is a dynamic programming algorithm used to compute the **transitive closure** of a directed graph. In simple terms, it determines whether there is a directed path of any length between every pair of vertices. The graph is represented as a boolean adjacency matrix.
+            <strong>Warshall's Algorithm</strong> is a dynamic programming algorithm used to compute the <strong>transitive closure</strong> of a directed graph. In simple terms, it determines whether there is a directed path of any length between every pair of vertices. The graph is represented as a boolean adjacency matrix.
           </p>
         </div>
 
@@ -6872,7 +6872,7 @@ Using bitwise shifts or packed integers (where each row is a bitset) speeds up W
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            **Floyd's Algorithm** (also known as Floyd-Warshall) is a dynamic programming algorithm used to find the shortest path distances between **every** pair of vertices in a weighted graph. It can handle negative edge weights, as long as the graph does not contain any negative weight cycles.
+            <strong>Floyd's Algorithm</strong> (also known as Floyd-Warshall) is a dynamic programming algorithm used to find the shortest path distances between <strong>every</strong> pair of vertices in a weighted graph. It can handle negative edge weights, as long as the graph does not contain any negative weight cycles.
           </p>
         </div>
 
@@ -7073,7 +7073,7 @@ Floyd's algorithm is extremely cache-friendly compared to running Dijkstra's fro
         <div>
           <h3 class="text-xl font-bold text-accent mb-2">Introduction</h3>
           <p class="leading-relaxed text-sm md:text-base">
-            The **0/1 Knapsack Problem** challenges us to select a subset of $n$ items, each with a weight $w_i$ and value $v_i$, to maximize total value without exceeding a maximum weight capacity $W$. The "0/1" constraint means we cannot divide items; we either pick an item fully or leave it. This is NP-hard, but dynamic programming solves it in pseudo-polynomial $O(nW)$ time.
+            The <strong>0/1 Knapsack Problem</strong> challenges us to select a subset of $n$ items, each with a weight $w_i$ and value $v_i$, to maximize total value without exceeding a maximum weight capacity $W$. The "0/1" constraint means we cannot divide items; we either pick an item fully or leave it. This is NP-hard, but dynamic programming solves it in pseudo-polynomial $O(nW)$ time.
           </p>
         </div>
 
