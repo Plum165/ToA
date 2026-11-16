@@ -3367,14 +3367,9 @@ QuickSelect is also known as Hoare's Selection Algorithm. It is highly optimized
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            CLRS: Introduction to Algorithms, Third Edition, Chapter 2.2 | Donald Knuth: The Art of Computer Programming, Volume 3.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `CLRS: Introduction to Algorithms, Third Edition, Chapter 2.2 | Donald Knuth: The Art of Computer Programming, Volume 3.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -3650,14 +3645,9 @@ Merge Sort's stable nature and predictable running time make it highly popular f
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            C.A.R. Hoare: Quicksort, Computer Journal 5(1):10-16, 1962 | Robert Sedgewick: Quicksort, Garland Publishing, 1980.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `C.A.R. Hoare: Quicksort, Computer Journal 5(1):10-16, 1962 | Robert Sedgewick: Quicksort, Garland Publishing, 1980.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -3890,14 +3880,9 @@ Modern systems use hybrid sorting algorithms like Timsort (used in Python and Ja
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Volker Strassen: Gaussian Elimination is not Optimal, Numerische Mathematik 13: 354–356, 1969.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Volker Strassen: Gaussian Elimination is not Optimal, Numerische Mathematik 13: 354–356, 1969.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -4138,14 +4123,9 @@ Due to memory lookup spatial layouts, hardware caches perform far better with li
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Preparata, M. I., & Shamos, M. I.: Computational Geometry: An Introduction, Springer-Verlag, 1985.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Preparata, M. I., & Shamos, M. I.: Computational Geometry: An Introduction, Springer-Verlag, 1985.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -4335,14 +4315,9 @@ By keeping points pre-sorted in both X and Y and passing them down the recursion
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Levitin, A. (2011). Introduction to the Design and Analysis of Algorithms. Chapter 6.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Levitin, A. (2011). Introduction to the Design and Analysis of Algorithms. Chapter 6.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -4464,14 +4439,9 @@ Constructing a balanced BST or a heap transforms unstructured sequences into str
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Cormen, T. H., et al. (2022). Introduction to Algorithms (4th Edition). MIT Press.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Cormen, T. H., et al. (2022). Introduction to Algorithms (4th Edition). MIT Press.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -4620,14 +4590,9 @@ Although a hash set can perform this check in average O(n) time, sorting uses O(
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Knuth, D. E. (1997). The Art of Computer Programming, Vol 2.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Knuth, D. E. (1997). The Art of Computer Programming, Vol 2.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -4775,14 +4740,9 @@ This process is mathematically equivalent to synthetic division. The intermediat
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Menezes, A. J., et al. (1996). Handbook of Applied Cryptography. CRC Press.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Menezes, A. J., et al. (1996). Handbook of Applied Cryptography. CRC Press.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -4946,14 +4906,9 @@ This algorithm is central to modular exponentiation in cryptosystems like RSA, w
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Sipser, M. (2012). Introduction to the Theory of Computation.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Sipser, M. (2012). Introduction to the Theory of Computation.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -5172,14 +5127,9 @@ Reduction is central to computational complexity theory, where we reduce NP-comp
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Cormen, T. H., et al. (2022). Introduction to Algorithms (4th Edition). MIT Press.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Cormen, T. H., et al. (2022). Introduction to Algorithms (4th Edition). MIT Press.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -5361,24 +5311,36 @@ Counting Sort is a non-comparison sort. It completely bypasses the lower bound o
           <div class="space-y-4 font-mono text-xs md:text-sm">
             <div class="bg-black/40 p-3 rounded-lg border border-white/5">
               <span class="text-xs text-yellow-300 font-bold">Frame 1 (Initial Alignment):</span>
-              <pre class="mt-1">JIM_SA<span class="text-red-400 font-bold">W</span>_ME_IN_A_BARBER_SHOP
+              <pre class="mt-1">JIM_S<span class="text-red-400 font-bold">A</span>W_ME_IN_A_BARBER_SHOP
 BARBE<span class="text-red-400 font-bold">R</span></pre>
-              <p class="text-xs text-blue-300 mt-2">Mismatch on W. Look at aligned text character W. ShiftTable[W] = 6. Shift pattern by 6.</p>
+              <p class="text-xs text-blue-300 mt-2">Mismatch on R vs A (index 5). Look at aligned text character A. ShiftTable[A] = 4. Shift pattern by 4.</p>
             </div>
             <div class="bg-black/40 p-3 rounded-lg border border-white/5">
               <span class="text-xs text-yellow-300 font-bold">Frame 2:</span>
-              <pre class="mt-1">JIM_SAW_ME_<span class="text-red-400 font-bold">I</span>N_A_BARBER_SHOP
-      BARBE<span class="text-red-400 font-bold">R</span></pre>
-              <p class="text-xs text-blue-300 mt-2">Mismatch on I. Look at aligned character I. ShiftTable[I] = 6. Shift pattern by 6.</p>
+              <pre class="mt-1">JIM_SAW_M<span class="text-red-400 font-bold">E</span>_IN_A_BARBER_SHOP
+    BARBE<span class="text-red-400 font-bold">R</span></pre>
+              <p class="text-xs text-blue-300 mt-2">Mismatch on R vs E (index 9). Look at aligned text character E. ShiftTable[E] = 1. Shift pattern by 1.</p>
             </div>
             <div class="bg-black/40 p-3 rounded-lg border border-white/5">
               <span class="text-xs text-yellow-300 font-bold">Frame 3:</span>
-              <pre class="mt-1">JIM_SAW_ME_IN_A_B<span class="text-red-400 font-bold">A</span>RBER_SHOP
-            BARBE<span class="text-red-400 font-bold">R</span></pre>
-              <p class="text-xs text-blue-300 mt-2">Mismatch on A. Look at aligned character A. ShiftTable[A] = 4. Shift pattern by 4.</p>
+              <pre class="mt-1">JIM_SAW_ME<span class="text-red-400 font-bold">_</span>IN_A_BARBER_SHOP
+     BARBE<span class="text-red-400 font-bold">R</span></pre>
+              <p class="text-xs text-blue-300 mt-2">Mismatch on R vs _ (index 10). Look at aligned text character _. ShiftTable[_] = 6. Shift pattern by 6.</p>
+            </div>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span class="text-xs text-yellow-300 font-bold">Frame 4:</span>
+              <pre class="mt-1">JIM_SAW_ME_IN_A_<span class="text-red-400 font-bold">B</span>ARBER_SHOP
+           BARBE<span class="text-red-400 font-bold">R</span></pre>
+              <p class="text-xs text-blue-300 mt-2">Mismatch on R vs B (index 16). Look at aligned text character B. ShiftTable[B] = 2. Shift pattern by 2.</p>
+            </div>
+            <div class="bg-black/40 p-3 rounded-lg border border-white/5">
+              <span class="text-xs text-yellow-300 font-bold">Frame 5:</span>
+              <pre class="mt-1">JIM_SAW_ME_IN_A_B<span class="text-red-400 font-bold">A</span><span class="text-green-400 font-bold">R</span>BER_SHOP
+             BARB<span class="text-red-400 font-bold">E</span><span class="text-green-400 font-bold">R</span></pre>
+              <p class="text-xs text-blue-300 mt-2">Right-to-left: R matches R (index 18), then E mismatches A (index 17). Use the text character aligned with the pattern's end (R at index 18): ShiftTable[R] = 3. Shift pattern by 3.</p>
             </div>
             <div class="bg-green-950/30 border border-green-500/30 p-3 rounded-lg">
-              <span class="text-xs text-green-400 font-bold">Frame 4:</span>
+              <span class="text-xs text-green-400 font-bold">Frame 6:</span>
               <pre class="mt-1">JIM_SAW_ME_IN_A_<span class="text-green-400 font-bold">BARBER</span>_SHOP
                 <span class="text-green-400 font-bold">BARBER</span></pre>
               <p class="text-xs text-green-300 mt-2 font-semibold">✔ Match found! Return index 16.</p>
@@ -5434,14 +5396,9 @@ BARBE<span class="text-red-400 font-bold">R</span></pre>
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Horspool, R. N. (1980). Practical Fast Export-Import of String Search Algorithms.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Horspool, R. N. (1980). Practical Fast Export-Import of String Search Algorithms.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -5719,14 +5676,9 @@ SHIFT:         A B C D E F &larr; Full shift of length m = 6</pre>
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Boyer, R. S., & Moore, J. S. (1977). A Fast String Searching Algorithm. ACM Communications.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Boyer, R. S., & Moore, J. S. (1977). A Fast String Searching Algorithm. ACM Communications.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -5993,14 +5945,9 @@ Boyer-Moore is a linear string-matching algorithm when the pattern doesn't conta
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Kleinberg, J., & Tardos, É. (2005). Algorithm Design. Pearson Education.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Kleinberg, J., & Tardos, É. (2005). Algorithm Design. Pearson Education.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -6201,14 +6148,9 @@ Greedy change-making works perfectly for US currency coins because it forms a "m
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Huffman, D. A. (1952). A Method for the Construction of Minimum-Redundancy Codes. Proceedings of the IRE.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Huffman, D. A. (1952). A Method for the Construction of Minimum-Redundancy Codes. Proceedings of the IRE.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -6444,14 +6386,9 @@ Huffman coding is the foundational block of many classic compression protocols, 
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Bellman, R. (1957). Dynamic Programming. Princeton University Press.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Bellman, R. (1957). Dynamic Programming. Princeton University Press.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -6625,14 +6562,9 @@ Dynamic programming is used in real compilers and interpreter runtimes (such as 
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Neapolitan, R. E. (2015). Foundations of Algorithms (5th Edition). Jones & Bartlett Learning.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Neapolitan, R. E. (2015). Foundations of Algorithms (5th Edition). Jones & Bartlett Learning.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -6832,14 +6764,9 @@ This is a standard pseudo-polynomial dynamic programming problem. If the amount 
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Warshall, S. (1962). A Theorem on Boolean Matrices. Journal of the ACM.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Warshall, S. (1962). A Theorem on Boolean Matrices. Journal of the ACM.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -7031,14 +6958,9 @@ Using bitwise shifts or packed integers (where each row is a bitset) speeds up W
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Floyd, R. W. (1962). Algorithm 97: Shortest Path. Communications of the ACM.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Floyd, R. W. (1962). Algorithm 97: Shortest Path. Communications of the ACM.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
@@ -7234,14 +7156,9 @@ Floyd's algorithm is extremely cache-friendly compared to running Dijkstra's fro
           </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Further Reading</h3>
-          <p class="text-xs opacity-75">
-            Martello, S., & Toth, P. (1990). Knapsack Problems: Algorithms and Computer Implementations. Wiley.
-          </p>
         </div>
-      </div>
-    `,
+      `,
+    furtherReading: `Martello, S., & Toth, P. (1990). Knapsack Problems: Algorithms and Computer Implementations. Wiley.`,
     code: `
       <div class="space-y-6 text-sm">
         <div>
